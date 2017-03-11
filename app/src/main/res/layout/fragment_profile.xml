@@ -120,7 +120,7 @@
         android:id="@+id/iv_profile_tc_created"
         android:layout_below="@id/tv_profile_name"
         android:layout_marginTop="10dp"
-        android:src="@drawable/timecapsule_bw2"
+        android:src="@drawable/time_capsule_logo12_sm"
         app:layout_heightPercent="5%"
         app:layout_widthPercent="33.33%" />
 
@@ -149,7 +149,7 @@
         android:layout_below="@id/tv_profile_name"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/iv_profile_tc_created"
-        android:src="@drawable/timecapsule_bw2"
+        android:src="@drawable/time_capsule_logo12_sm"
         app:layout_heightPercent="5%"
         app:layout_widthPercent="33.33%" />
 
@@ -178,7 +178,7 @@
         android:layout_below="@id/tv_profile_name"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/iv_profile_tc_opened"
-        android:src="@drawable/timecapsule_bw2"
+        android:src="@drawable/time_capsule_logo12_sm"
         app:layout_heightPercent="5%"
         app:layout_widthPercent="33.33%" />
 
