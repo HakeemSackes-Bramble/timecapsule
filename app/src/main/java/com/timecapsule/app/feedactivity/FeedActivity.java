@@ -10,12 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Places;
 import com.timecapsule.app.AddMediaFragment;
 import com.timecapsule.app.NotificationsFragment;
-import com.timecapsule.app.SearchFragment;
-
-import com.timecapsule.app.profilefragment.ProfileFragment;
 import com.timecapsule.app.R;
+import com.timecapsule.app.SearchFragment;
+import com.timecapsule.app.profilefragment.ProfileFragment;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -27,6 +29,20 @@ public class FeedActivity extends AppCompatActivity {
     private static final int REQUEST_LOCATION = 201;
     private static final int REQUEST_CAMERA_PERMISSION = 203;
     private BottomNavigationView bottomNavigationView;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        googleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        googleApiClient.disconnect();
+    }
+
+    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +60,13 @@ public class FeedActivity extends AppCompatActivity {
                     .add(R.id.container_main, new FeedFragment())
                     .commit();
         }
+        googleApiClient = new GoogleApiClient
+                .Builder(getApplicationContext())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addApi(LocationServices.API)
+                .build();
+
 
     }
 

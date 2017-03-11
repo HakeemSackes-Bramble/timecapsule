@@ -3,33 +3,66 @@ package com.timecapsule.app;
 import android.Manifest;
 import android.app.Fragment;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by catwong on 3/4/17.
  */
 
-public class SearchFragment extends Fragment implements OnMapReadyCallback {
+public class SearchFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
     private View mRoot;
     private GoogleMap mMap;
+    private Location location;
+    private GoogleApiClient googleApiClient;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        googleApiClient = new GoogleApiClient
+                .Builder(getApplicationContext())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addApi(LocationServices.API)
+                .build();
+        googleApiClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        googleApiClient.disconnect();
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
     }
 
     @Nullable
@@ -40,6 +73,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         return mRoot;
+
     }
 
 
@@ -55,26 +89,38 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(this.getClass().getSimpleName(), "onMapReady: ");
 
-        if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-            LatLng newyork = new LatLng(40.7128, -73.985428); //40.7128° N, -74.0059° W
-            mMap.addMarker(new MarkerOptions().position(newyork).title("Marker in New York"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(newyork));
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(10));
-        } else {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                mMap.setMyLocationEnabled(true);
-                LatLng newyork = new LatLng(40.7128, -73.985428); //40.7128° N, -74.0059° W
-                mMap.addMarker(new MarkerOptions().position(newyork).title("Marker in New York"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(newyork));
-                mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
-            }
+            return;
         }
+        mMap.setMyLocationEnabled(true);
 
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            Log.d("yyyy", "onConnected: shyt");
+             return;
+        }
+        location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude()); //40.7128° N, -74.0059° W
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(10));
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
 
     }
 }

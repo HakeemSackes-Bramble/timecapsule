@@ -137,4 +137,6 @@ public class AddMediaFragment extends Fragment {
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
+
 }
