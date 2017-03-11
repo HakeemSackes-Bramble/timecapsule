@@ -192,7 +192,6 @@ public class AddMediaFragment extends Fragment {
     }
 
 
-
     private void uploadImage() {
         Uri file = Uri.fromFile(image);
         StorageReference imageRef = storageReference.child("images/" + file.getLastPathSegment());
@@ -211,6 +210,5 @@ public class AddMediaFragment extends Fragment {
         });
 
     }
-
 
 }
