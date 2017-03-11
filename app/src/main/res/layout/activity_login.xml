@@ -15,12 +15,10 @@
             android:id="@+id/iv_login_logo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginTop="25dp"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
-            android:src="@drawable/time_capsule_logo10" />
+            android:src="@drawable/time_capsule_logo12" />
     </RelativeLayout>
 
 

@@ -2,6 +2,7 @@ package com.timecapsule.app;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +21,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.addmediafragment.AudioFragment2;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -44,6 +46,7 @@ public class AddMediaFragment extends Fragment {
     private StorageReference storageReference;
     private StorageReference imagesRef;
     private UploadTask uploadTask;
+    private File image;
 
 
     @Override
@@ -125,24 +128,43 @@ public class AddMediaFragment extends Fragment {
             case TAKE_PICTURE:
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
-                        try {
-                            createImageFile();
-                            uploadImage();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        Bundle extras = data.getExtras();
+                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        byte[] dataBAOS = baos.toByteArray();
+                        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                        String imageFileName = "JPEG_" + timeStamp + "_";
+                        String firebaseReference = imageFileName.concat(".jpg");
+                        imagesRef = imagesRef.child(firebaseReference);
+                        StorageReference newImageRef = storageReference.child("images/".concat(firebaseReference));
+                        newImageRef.getName().equals(newImageRef.getName());
+                        newImageRef.getPath().equals(newImageRef.getPath());
+                        UploadTask uploadTask = imagesRef.putBytes(dataBAOS);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                                @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                            }
+                        });
                     }
                 }
-                break;
         }
     }
+
 
     public File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
+        image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
@@ -157,10 +179,13 @@ public class AddMediaFragment extends Fragment {
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
+
     }
 
+
+
     private void uploadImage() {
-        Uri file = Uri.fromFile(new File(mCurrentPhotoPath));
+        Uri file = Uri.fromFile(image);
         StorageReference imageRef = storageReference.child("images/" + file.getLastPathSegment());
         uploadTask = imageRef.putFile(file);
 
@@ -175,6 +200,7 @@ public class AddMediaFragment extends Fragment {
                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
             }
         });
+
     }
 
 
