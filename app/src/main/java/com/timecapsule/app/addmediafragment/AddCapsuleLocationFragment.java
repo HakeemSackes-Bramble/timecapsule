@@ -59,7 +59,7 @@ public class AddCapsuleLocationFragment extends DialogFragment{
         iv_gif_location = (ImageView) mRoot.findViewById(R.id.iv_gif_location);
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(iv_gif_location);
         Glide.with(this)
-                .load(R.drawable.gif_add_location2)
+                .load(R.drawable.giphy2)
                 .crossFade()
                 .into(imageViewTarget);
     }
