@@ -10,9 +10,9 @@
     <ImageView
         android:id="@+id/iv_login_email"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_height="40dp"
         android:layout_marginRight="13dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="31dp"
         android:paddingLeft="24dp"
         android:src="@drawable/ic_email_black_24dp" />
 
@@ -28,12 +28,12 @@
         android:inputType="textEmailAddress"
         android:paddingLeft="24dp"
         android:textColor="#314362"
-        android:textSize="13sp" />
+        android:textSize="16sp" />
 
     <ImageView
         android:id="@+id/iv_login_password"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_height="40dp"
         android:layout_below="@id/et_login_email"
         android:layout_marginRight="13dp"
         android:layout_marginTop="51dp"
@@ -52,7 +52,7 @@
         android:inputType="textPassword"
         android:paddingLeft="24dp"
         android:textColor="#314362"
-        android:textSize="13sp" />
+        android:textSize="16sp" />
 
     <ImageView
         android:id="@+id/iv_signin_bottom"

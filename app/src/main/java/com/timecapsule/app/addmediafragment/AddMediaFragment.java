@@ -105,7 +105,7 @@ public class AddMediaFragment extends Fragment {
     private void goToAudio() {
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container_main, new AudioFragment2())
+                .replace(R.id.container_main, new AudioFragment())
                 .commit();
     }
 

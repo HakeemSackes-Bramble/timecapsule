@@ -33,7 +33,7 @@ import com.timecapsule.app.NotificationsFragment;
 import com.timecapsule.app.R;
 import com.timecapsule.app.SearchFragment;
 import com.timecapsule.app.addmediafragment.AddMediaFragment;
-import com.timecapsule.app.addmediafragment.AudioFragment2;
+import com.timecapsule.app.addmediafragment.AudioFragment;
 import com.timecapsule.app.profilefragment.ProfileFragment;
 
 import java.io.ByteArrayOutputStream;
@@ -63,6 +63,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private StorageReference imagesRef;
     private UploadTask uploadTask;
     private File image;
+    private AudioFragment audioFragment;
 
 
     @Override
@@ -112,7 +113,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setViews() {
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-//        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         iv_add_friend = (ImageView) findViewById(R.id.iv_add_friend);
         fab_photo = (FloatingActionButton) findViewById(R.id.fab_photo);
         fab_audio = (FloatingActionButton) findViewById(R.id.fab_audio);
@@ -153,10 +153,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void goToAudio() {
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container_main, new AudioFragment2())
-                .commit();
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        audioFragment = AudioFragment.newInstance("Audio");
+        audioFragment.show(ft, "audio");
     }
 
     private void clickVideocam() {
