@@ -14,7 +14,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.timecapsule.app.addmediafragment.AudioFragment2;
+import com.timecapsule.app.addmediafragment.AudioFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,7 +81,7 @@ public class GoToMedia extends AppCompatActivity {
     private void goToAudio() {
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container_main, new AudioFragment2())
+                .replace(R.id.container_main, new AudioFragment())
                 .commit();
     }
 
