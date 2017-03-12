@@ -6,15 +6,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_edit_profile_cancel"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/iv_edit_profile_cancel"
+        android:layout_alignBottom="@+id/tv_edit_profile_top"
+        android:layout_alignParentStart="true"
         android:layout_gravity="center"
-        android:layout_marginBottom="5dp"
-        android:background="@color/colorAccent2"
         android:gravity="center"
-        android:text="Cancel"
-        app:layout_heightPercent="8%"
+        android:src="@drawable/ic_clear_black_18dp"
+        app:layout_heightPercent="5%"
         app:layout_widthPercent="33.33%" />
 
     <TextView
@@ -22,26 +21,23 @@
         android:layout_width="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="5dp"
-        android:layout_toRightOf="@id/tv_edit_profile_cancel"
-        android:background="@color/colorAccent2"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/iv_edit_profile_cancel"
         android:gravity="center"
         android:text="Edit Profile"
         android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_heightPercent="8%"
+        app:layout_heightPercent="5%"
         app:layout_widthPercent="33.33%" />
 
 
-    <TextView
-        android:id="@+id/tv_edit_profile_done"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/iv_edit_profile_done"
+        android:layout_alignBottom="@+id/tv_edit_profile_top"
+        android:layout_alignParentEnd="true"
         android:layout_gravity="center"
-        android:layout_marginBottom="5dp"
-        android:layout_toRightOf="@id/tv_edit_profile_top"
-        android:background="@color/colorAccent2"
         android:gravity="center"
-        android:text="Done"
-        app:layout_heightPercent="8%"
+        android:src="@drawable/ic_done_black_18dp"
+        app:layout_heightPercent="5%"
         app:layout_widthPercent="33.33%" />
 
 
@@ -51,6 +47,7 @@
         android:layout_height="80dp"
         android:layout_below="@+id/tv_edit_profile_top"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:src="@drawable/profile_cat" />
 
@@ -71,8 +68,8 @@
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_below="@id/tv_edit_profile_change_photo"
-        android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
         android:paddingLeft="16dp"
         android:src="@drawable/ic_face_black_24dp" />
 
@@ -88,14 +85,14 @@
         android:inputType="text"
         android:paddingLeft="10dp"
         android:textColor="#314362"
-        android:textSize="13sp" />
+        android:textSize="15sp" />
 
     <ImageView
         android:id="@+id/iv_edit_profile_username"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:layout_marginBottom="20dp"
         android:layout_below="@id/iv_edit_profile_name"
+        android:layout_marginBottom="20dp"
         android:layout_marginTop="10dp"
         android:layout_toStartOf="@+id/et_edit_profile_name"
         android:paddingLeft="16dp"
@@ -113,18 +110,18 @@
         android:inputType="text"
         android:paddingLeft="10dp"
         android:textColor="#314362"
-        android:textSize="13sp" />
+        android:textSize="15sp" />
 
     <ImageView
         android:id="@+id/iv_edit_profile_email"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
+        android:layout_alignParentStart="true"
         android:layout_below="@id/iv_edit_profile_username"
         android:layout_marginTop="10dp"
+        android:layout_toStartOf="@+id/et_edit_profile_username"
         android:paddingLeft="16dp"
-        android:src="@drawable/ic_email_black_24dp_profile"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/et_edit_profile_username" />
+        android:src="@drawable/ic_email_black_24dp_profile" />
 
     <EditText
         android:id="@+id/et_edit_profile_email"
@@ -138,8 +135,7 @@
         android:inputType="textEmailAddress"
         android:paddingLeft="10dp"
         android:textColor="#314362"
-        android:textSize="13sp" />
-
+        android:textSize="15sp" />
 
 
 </android.support.percent.PercentRelativeLayout>

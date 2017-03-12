@@ -15,10 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.FacebookSdk;
-import com.facebook.share.model.AppInviteContent;
-import com.facebook.share.widget.AppInviteDialog;
-import com.squareup.picasso.Picasso;
 import com.timecapsule.app.R;
 import com.timecapsule.app.profilefragment.controller.ProfileCapsulesCreatedAdapter;
 
@@ -32,7 +28,6 @@ public class ProfileFragment extends Fragment {
     private String USERNAME_KEY = "usernameKey";
     private String PROFILE_PHOTO_KEY = "profilePhotoKey";
     private Button bt_edit_profile;
-    private ImageView iv_add_friend;
     private ImageView iv_profile_photo;
     private TextView tv_profile_username;
     private TextView tv_profile_name;
@@ -43,7 +38,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(FacebookSdk.getApplicationContext());
     }
 
     @Nullable
@@ -54,7 +48,6 @@ public class ProfileFragment extends Fragment {
         setViews();
         setSharedPrefs();
         clickEditProfile();
-        clickAddFriend();
         return mRoot;
     }
 
@@ -69,17 +62,16 @@ public class ProfileFragment extends Fragment {
 
     public void setViews() {
         bt_edit_profile = (Button) mRoot.findViewById(R.id.bt_edit_profile);
-        iv_add_friend = (ImageView) mRoot.findViewById(R.id.iv_add_friend);
         iv_profile_photo = (ImageView) mRoot.findViewById(R.id.iv_profile_photo);
         tv_profile_username = (TextView) mRoot.findViewById(R.id.tv_profile_username);
         tv_profile_name = (TextView) mRoot.findViewById(R.id.tv_profile_name);
         profile = (ImageView) mRoot.findViewById(R.id.test_photo);
 
-        Picasso.with(getActivity())
-                .load(R.drawable.profile_cat) //extract as User instance method
-                .transform(new CropCircleTransformation())
-                .resize(125,125)
-                .into(iv_profile_photo);
+//        Picasso.with(getActivity())
+//                .load(R.drawable.profile_cat) //extract as User instance method
+//                .transform(new CropCircleTransformation())
+//                .resize(125,125)
+//                .into(iv_profile_photo);
     }
 
     public void setSharedPrefs() {
@@ -107,28 +99,5 @@ public class ProfileFragment extends Fragment {
                 .commit();
     }
 
-    private void clickAddFriend() {
-        iv_add_friend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setAddFriend();
-            }
-        });
-    }
-
-    public void setAddFriend() {
-        String appLinkUrl;
-        String previewImageUrl;
-
-        appLinkUrl = "https://fb.me/1777539359241152";
-        previewImageUrl = "https://sarahasousa.files.wordpress.com/2014/11/time-capsule.gif";
-
-        AppInviteContent content = new AppInviteContent.Builder()
-                .setApplinkUrl(appLinkUrl)
-                .setPreviewImageUrl(previewImageUrl)
-                .build();
-        AppInviteDialog.show(getActivity(), content);
-
-    }
 
 }
