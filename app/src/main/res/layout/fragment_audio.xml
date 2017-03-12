@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_audio"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#66FF66"
+    android:layout_height="300dp"
     android:gravity="center_horizontal"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.timecapsule.app.timecapsule.com.c4q.hakeemsackes_bramble.timecapsule.audioactivity.AudioFragment">
+    tools:context="com.timecapsule.app.addmediafragment.AudioFragment">
 
     <ImageView
         android:id="@+id/iv_audio_cassette"
@@ -19,70 +18,53 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="11dp"
-        android:layout_marginTop="51dp"
-        android:src="@drawable/cassette_icon" />
+        android:layout_centerInParent="true" />
 
     <SeekBar
         android:id="@+id/seek_bar"
         android:layout_width="250dp"
-        android:progressTint="@color/colorPrimaryDark"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_audio_time"
-        android:layout_marginBottom="31dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="21dp"
+        android:progressTint="@color/colorPrimaryDark" />
 
     <TextView
         android:id="@+id/tv_audio_time"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:textColor="#000000"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_audio_cassette"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/iv_audio_cassette"/>
+        android:textColor="#000000" />
 
     <ImageView
         android:id="@+id/iv_audio_record"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_below="@id/seek_bar"
-        android:layout_marginBottom="21dp"
         android:gravity="center_horizontal"
         android:src="@drawable/ic_fiber_manual_record_black_48dp"
-        app:layout_widthPercent="50%" />
+        app:layout_widthPercent="33.33%" />
+
+    <ImageView
+        android:id="@+id/iv_audio_play"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignTop="@+id/iv_audio_record"
+        android:layout_toStartOf="@+id/iv_audio_stop_record"
+        android:gravity="center_horizontal"
+        android:src="@drawable/ic_play_arrow_black_48dp"
+        app:layout_widthPercent="33.33%" />
 
     <ImageView
         android:id="@+id/iv_audio_stop_record"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/seek_bar"
-        android:layout_marginBottom="21dp"
+        android:layout_alignTop="@+id/iv_audio_play"
         android:gravity="center_horizontal"
         android:src="@drawable/ic_stop_black_48dp"
-        app:layout_widthPercent="50%" />
-
-    <ImageView
-        android:id="@+id/iv_audio_play"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:gravity="center_horizontal"
-        android:src="@drawable/ic_play_arrow_black_48dp"
-        app:layout_widthPercent="50%"
-        android:layout_below="@+id/iv_audio_record"
-        android:layout_centerHorizontal="true" />
-
-    <!--<ImageView-->
-        <!--android:id="@+id/iv_audio_stop"-->
-        <!--android:layout_width="48dp"-->
-        <!--android:layout_height="48dp"-->
-        <!--android:layout_below="@id/iv_audio_stop_record"-->
-        <!--android:layout_toRightOf="@id/iv_audio_play"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:src="@drawable/ic_stop_black_48dp"-->
-        <!--app:layout_widthPercent="50%" />-->
-
-
+        app:layout_widthPercent="33.33%" />
 
 
 </android.support.percent.PercentRelativeLayout>
