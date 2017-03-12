@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="125dp"
         android:layout_gravity="center"
-        card_view:cardBackgroundColor="@color/colorPrimary"
+        card_view:cardBackgroundColor="#04b1db"
         card_view:cardCornerRadius="10dp"
         card_view:cardUseCompatPadding="true">
 

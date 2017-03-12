@@ -15,30 +15,32 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.widget.AppInviteDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Places;
-import com.timecapsule.app.AddMediaFragment;
 import com.timecapsule.app.NotificationsFragment;
 import com.timecapsule.app.R;
 import com.timecapsule.app.SearchFragment;
+import com.timecapsule.app.addmediafragment.AddMediaFragment;
 import com.timecapsule.app.addmediafragment.AudioFragment2;
 import com.timecapsule.app.profilefragment.ProfileFragment;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import com.timecapsule.app.profilefragment.ProfileFragment;
+
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -106,17 +108,15 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 .addApi(Places.PLACE_DETECTION_API)
                 .addApi(LocationServices.API)
                 .build();
-
-
     }
 
     private void setViews() {
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+//        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         iv_add_friend = (ImageView) findViewById(R.id.iv_add_friend);
         fab_photo = (FloatingActionButton) findViewById(R.id.fab_photo);
         fab_audio = (FloatingActionButton) findViewById(R.id.fab_audio);
         fab_videocam = (FloatingActionButton) findViewById(R.id.fab_videocam);
-
     }
 
     @Override
