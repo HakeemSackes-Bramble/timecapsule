@@ -1,238 +1,54 @@
 package com.timecapsule.app.addmediafragment;
 
-import android.app.Fragment;
-import android.content.pm.PackageManager;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.R;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
-import static android.Manifest.permission.RECORD_AUDIO;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+/**
+ * Created by catwong on 3/6/17.
+ */
 
+public class AudioFragment extends DialogFragment {
 
-public class AudioFragment extends Fragment implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
-
-    private static final String TAG = "AUDIO FRAGMENT";
-    Random random;
-    String outputFile = "ABCDEFGHIJKLMNOP";
     Handler handler;
-    private int MAX_DURATION = 30000;
-    private View mRoot;
-    private MediaRecorder mRecorder;
-    private MediaPlayer mPlayer;
+    int recordTime;
+    int playTime;
+    MediaRecorder mRecorder;
     private SeekBar mSeekBar;
-    private int recordTime;
-    private int playTime;
+    private MediaPlayer mPlayer;
+    private View mRoot;
+    private String fileName;
+    private Boolean isRecording;
     private ImageView iv_audio_record;
     private ImageView iv_audio_stop_record;
     private ImageView iv_audio_play;
-    private ImageView iv_audio_stop;
     private TextView tv_audio_time;
-    private boolean isRecording;
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        mRoot = inflater.inflate(R.layout.fragment_audio, parent, false);
-        setViews();
-        setRecord();
-        setStopRecord();
-        setPlay();
-        setStop();
-        return mRoot;
-    }
-
-    private void setViews() {
-        iv_audio_record = (ImageView) mRoot.findViewById(R.id.iv_audio_record);
-        iv_audio_stop_record = (ImageView) mRoot.findViewById(R.id.iv_audio_stop_record);
-        iv_audio_play = (ImageView) mRoot.findViewById(R.id.iv_audio_play);
-//        iv_audio_stop = (ImageView) mRoot.findViewById(R.id.iv_audio_stop);
-        tv_audio_time = (TextView) mRoot.findViewById(R.id.tv_audio_time);
-        mSeekBar = (SeekBar) mRoot.findViewById(R.id.seek_bar);
-        mSeekBar.setMax(30);
-
-    }
-
-    public boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getActivity(),
-                WRITE_EXTERNAL_STORAGE);
-        int result1 = ContextCompat.checkSelfPermission(getActivity(),
-                RECORD_AUDIO);
-        return result == PackageManager.PERMISSION_GRANTED &&
-                result1 == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public void MediaRecorderReady() {
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mRecorder.setOutputFile(outputFile);
-    }
-
-
-    public void setMaxRecord() {
-        mRecorder.setMaxDuration(MAX_DURATION); //supposing u want to give maximum length of 60 seconds
-        mSeekBar.setMax(MAX_DURATION); //supposing u want to give maximum length of 60 seconds
-        mSeekBar.setProgress(0);
-    }
-
-
-    public String CreateRandomAudioFileName(int string) {
-        random = new Random();
-        StringBuilder stringBuilder = new StringBuilder(string);
-        int i = 0;
-        while (i < string) {
-            stringBuilder.append(outputFile.
-                    charAt(random.nextInt(outputFile.length())));
-            i++;
-        }
-        return stringBuilder.toString();
-    }
-
-
-    public void setRecord() {
-        iv_audio_record.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                start(v);
-            }
-        });
-    }
-
-    private void start(View view) {
-        if (checkPermission()) {
-
-            outputFile =
-                    Environment.getExternalStorageDirectory().getAbsolutePath() + "/" +
-                            CreateRandomAudioFileName(5) + "AudioRecording.3gp";
-
-            MediaRecorderReady();
-            setMaxRecord();
-
-            recordTime = 0;
-            // Show TextView that displays record time
-            tv_audio_time.setVisibility(TextView.VISIBLE);
-
-            try {
-                mRecorder.prepare();
-            } catch (IllegalStateException e) {
-                Log.e(TAG, "prepare() failed");
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mRecorder.start();
-            iv_audio_record.setEnabled(false);
-            iv_audio_stop_record.setEnabled(true);
-            Toast.makeText(getActivity(), "Start Recording",
-                    Toast.LENGTH_SHORT).show();
-        } else {
-//            requestPermission();
-        }
-    }
-
-
-    private void setStopRecord() {
-        iv_audio_stop_record.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stopRecord(v);
-            }
-        });
-    }
-
-    private void stopRecord(View view) {
-        try {
-            mRecorder.stop();
-            mRecorder.release();
-            mRecorder = null;
-
-            isRecording=false;
-            // Hide TextView that shows record time
-            tv_audio_time.setVisibility(TextView.GONE);
-
-            iv_audio_stop_record.setEnabled(false);
-            iv_audio_play.setEnabled(true);
-            Toast.makeText(getActivity(), "Stop Recording",
-                    Toast.LENGTH_SHORT).show();
-        } catch (IllegalStateException e) {
-            //  it is called before start()
-            e.printStackTrace();
-        } catch (RuntimeException e) {
-            // no valid audio/video data has been received
-            e.printStackTrace();
-        }
-
-
-    }
-
-    private void setPlay() {
-        iv_audio_play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                play(v);
-            }
-        });
-
-    }
-
-    private void play(View v) {
-
-        playTime = 0;
-        // Reset max and progress of the SeekBar
-        mSeekBar.setMax(recordTime);
-        mSeekBar.setProgress(0);
-
-        try {
-            mPlayer = new MediaPlayer();
-            mPlayer.setDataSource(outputFile);
-            mPlayer.prepare();
-            mPlayer.start();
-            iv_audio_play.setEnabled(false);
-            iv_audio_stop.setEnabled(true);
-            Toast.makeText(getActivity(), "Playing the recording",
-                    Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    Runnable UpdateRecordTime = new Runnable(){
-        public void run(){
-            if(isRecording){
-                tv_audio_time.setText(String.valueOf(recordTime));
-                recordTime += 1;
-                // Delay 1s before next call
-                handler.postDelayed(this, 1000);
-            }
-        }
-    };
-
     Runnable UpdatePlayTime = new Runnable() {
         public void run() {
             if (mPlayer.isPlaying()) {
@@ -245,67 +61,219 @@ public class AudioFragment extends Fragment implements MediaPlayer.OnCompletionL
             }
         }
     };
+    private int MAX_DURATION = 15000;
+    private int MAX_SECONDS = 16;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
+    private StorageReference audioRef;
+    private UploadTask uploadTask;
+    Runnable UpdateRecordTime = new Runnable() {
+        public void run() {
+            if (isRecording) {
+                tv_audio_time.setText(String.valueOf(recordTime));
+                mSeekBar.setProgress(recordTime);
+                recordTime += 1;
+                if (recordTime == MAX_SECONDS) {
+                    tv_audio_time.setText("Recording Done");
+                    stopRecording();
+                } else if (!isRecording) {
+                    recordTime = 0;
+                }
+                // Delay 1s before next call
+                handler.postDelayed(this, 1000);
+
+            }
+        }
+    };
 
 
-    private void setStop() {
-        iv_audio_stop.setOnClickListener(new View.OnClickListener() {
+    public static AudioFragment newInstance(String audio) {
+        AudioFragment f = new AudioFragment();
+        Bundle args = new Bundle();
+        args.putString("audio", audio);
+        f.setArguments(args);
+        return f;
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
+        audioRef = storageReference.child("audio");
+        handler = new Handler();
+        isRecording = false;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        mRoot = inflater.inflate(R.layout.fragment_audio, parent, false);
+        setViews();
+        setMaxSeekBar();
+        setRecord();
+        setStopRecord();
+        setPlay();
+        return mRoot;
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        // request a window without the title
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void setViews() {
+        iv_audio_record = (ImageView) mRoot.findViewById(R.id.iv_audio_record);
+        iv_audio_stop_record = (ImageView) mRoot.findViewById(R.id.iv_audio_stop_record);
+        iv_audio_play = (ImageView) mRoot.findViewById(R.id.iv_audio_play);
+        tv_audio_time = (TextView) mRoot.findViewById(R.id.tv_audio_time);
+        mSeekBar = (SeekBar) mRoot.findViewById(R.id.seek_bar);
+    }
+
+    public void MediaRecorderReady() {
+        fileName = Environment.getExternalStorageDirectory() + "/audio" + System.currentTimeMillis() + ".3gp";
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+        mRecorder.setOutputFile(fileName);
+    }
+
+    private void createFirebaseRef() {
+        String firebaseReference = fileName.concat(".3gp");
+        audioRef = audioRef.child(firebaseReference);
+        StorageReference newAudioRef = storageReference.child("audio/".concat(firebaseReference));
+        newAudioRef.getName().equals(newAudioRef.getName());
+        newAudioRef.getPath().equals(newAudioRef.getPath());
+    }
+
+    private void uploadAudio() {
+        Uri file = Uri.fromFile(new File(fileName));
+        StorageReference audioRef = storageReference.child("audio/" + file.getLastPathSegment());
+        uploadTask = audioRef.putFile(file);
+
+        uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onClick(View v) {
-                stop(v);
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
             }
         });
     }
 
-    private void stop(View v) {
-        try {
-            if (mPlayer != null) {
-                mPlayer.stop();
-                mPlayer.release();
-                mPlayer = null;
-                iv_audio_play.setEnabled(true);
-                iv_audio_stop.setEnabled(false);
-                Toast.makeText(getActivity(), "Playback Stopped",
-                        Toast.LENGTH_SHORT).show();
+    public void setMaxDuration() {
+        mRecorder.setMaxDuration(MAX_DURATION);
+    }
+
+    public void setMaxSeekBar() {
+        mSeekBar.setMax(15);
+    }
+
+    public void setRecord() {
+        iv_audio_record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startRecording(v);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        });
+    }
+
+    public void startRecording(View view) {
+        if (!isRecording) {
+            //Create MediaRecorder and initialize audio source, output format, and audio encoder
+            MediaRecorderReady();
+            setMaxDuration();
+            // Starting record time
+            recordTime = 0;
+            // Show TextView that displays record time
+            tv_audio_time.setVisibility(TextView.VISIBLE);
+            try {
+                mRecorder.prepare();
+            } catch (IOException e) {
+                Log.e("LOG_TAG", "prepare failed");
+            }
+            // Start record job
+            mRecorder.start();
+            Toast.makeText(getActivity(), "Start Recording",
+                    Toast.LENGTH_SHORT).show();
+            // Change isRecording flag to true
+            isRecording = true;
+            handler.post(UpdateRecordTime);
+            // Post the record progress
         }
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mRecorder != null) {
+    private void setStopRecord() {
+        iv_audio_stop_record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopRecording();
+            }
+        });
+    }
+
+    public void stopRecording() {
+        if (isRecording) {
+            // Stop recording and release resource
+            mRecorder.stop();
             mRecorder.release();
+            createFirebaseRef();
+            uploadAudio();
             mRecorder = null;
+            // Change isRecording flag to false
+            isRecording = false;
+            // Hide TextView that shows record time
+            Toast.makeText(getActivity(), "Stop Recording",
+                    Toast.LENGTH_SHORT).show();
+//            playRecording(); // Play the audio
         }
+    }
 
-        if (mPlayer != null) {
-            mPlayer.release();
-            mPlayer = null;
+    private void setPlay() {
+        iv_audio_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playRecording(v);
+            }
+        });
+    }
+
+    public void playRecording(View view) {
+        // Create MediaPlayer object
+        mPlayer = new MediaPlayer();
+        // set start time
+        playTime = 0;
+        // Reset max and progress of the SeekBar
+        mSeekBar.setMax(recordTime);
+        mSeekBar.setProgress(0);
+        try {
+            // Initialize the player and start playing the audio
+            mPlayer.setDataSource(fileName);
+            mPlayer.prepare();
+            mPlayer.start();
+            Toast.makeText(getActivity(), "Play Recording",
+                    Toast.LENGTH_SHORT).show();
+            // Post the play progress
+            handler.post(UpdatePlayTime);
+        } catch (IOException e) {
+            Log.e("LOG_TAG", "prepare failed");
         }
     }
 
-    @Override
-    public void onCompletion(MediaPlayer mp) {
 
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
 }
-
 
 

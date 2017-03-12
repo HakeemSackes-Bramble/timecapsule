@@ -20,7 +20,6 @@
         android:text="heycatwonton"
         android:textColor="@color/colorBlack"
         android:textSize="17sp"
-        android:textStyle="bold"
         app:layout_heightPercent="8%" />
 
     <ImageView
@@ -48,9 +47,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginLeft="30dp"
         android:text="10"
         android:layout_marginTop="5dp"
-        app:layout_widthPercent="33.33%"
+        app:layout_widthPercent="25%"
         android:layout_below="@+id/tv_profile_username"
         android:layout_toEndOf="@+id/iv_profile_photo" />
 
@@ -59,8 +59,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginLeft="30dp"
         android:text="Created"
-        app:layout_widthPercent="33.33%"
+        app:layout_widthPercent="25%"
         android:layout_alignBaseline="@+id/tv_profile_friends"
         android:layout_alignBottom="@+id/tv_profile_friends"
         android:layout_toEndOf="@+id/iv_profile_photo" />
@@ -71,7 +72,8 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="4"
-        app:layout_widthPercent="33.33%"
+        android:layout_marginRight="30dp"
+        app:layout_widthPercent="25%"
         android:layout_alignBaseline="@+id/tv_profile_created_num"
         android:layout_alignBottom="@+id/tv_profile_created_num"
         android:layout_toEndOf="@+id/tv_profile_created_num" />
@@ -82,7 +84,8 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Friends"
-        app:layout_widthPercent="33.33%"
+        android:layout_marginRight="30dp"
+        app:layout_widthPercent="25%"
         android:layout_below="@+id/tv_profile_created_num"
         android:layout_toEndOf="@+id/tv_profile_created" />
 
@@ -96,9 +99,10 @@
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
         android:text="Edit Profile"
+        android:layout_alignLeft="@id/tv_profile_created"
+        android:layout_alignRight="@id/tv_profile_friends"
         android:layout_above="@+id/tv_profile_name"
-        android:layout_alignEnd="@+id/tv_profile_friends_num"
-        android:layout_marginEnd="53dp" />
+         />
 
     <!--<ImageView-->
         <!--android:id="@+id/iv_profile_tc_created"-->
