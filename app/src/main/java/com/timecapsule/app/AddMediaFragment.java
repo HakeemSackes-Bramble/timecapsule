@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.addmediafragment.AudioFragment2;
@@ -192,9 +191,6 @@ public class AddMediaFragment extends Fragment {
     }
 
 
-<<<<<<< HEAD
-=======
-
     private void uploadImage() {
         Uri file = Uri.fromFile(image);
         StorageReference imageRef = storageReference.child("images/" + file.getLastPathSegment());
@@ -214,6 +210,4 @@ public class AddMediaFragment extends Fragment {
 
     }
 
-
->>>>>>> fbe4a2061dd24627668eaf2f5d85b0047369aee4
 }
