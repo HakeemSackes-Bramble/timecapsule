@@ -8,29 +8,15 @@
     android:layout_gravity="center"
     tools:context="com.timecapsule.app.profilefragment.ProfileFragment">
 
-    <ImageView
-        android:id="@+id/iv_add_friend"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignBottom="@+id/tv_profile_username"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/colorAccent2"
-        android:clickable="true"
-        android:onClick="onClick"
-        android:paddingLeft="10dp"
-        android:src="@drawable/ic_person_add_black_18dp" />
 
     <TextView
         android:id="@+id/tv_profile_username"
         android:layout_width="match_parent"
         android:layout_gravity="center"
         android:layout_marginBottom="5dp"
-        android:layout_toRightOf="@id/iv_add_friend"
         android:background="@color/colorAccent2"
         android:fontFamily="sans-serif"
         android:gravity="center"
-        android:paddingRight="35dp"
         android:text="heycatwonton"
         android:textColor="@color/colorBlack"
         android:textSize="17sp"
@@ -58,169 +44,165 @@
         android:textColor="@color/colorBlack" />
 
     <TextView
-        android:id="@+id/tv_profile_followers"
+        android:id="@+id/tv_profile_created"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/tv_profile_following"
-        android:layout_alignBottom="@+id/tv_profile_following"
-        android:layout_toEndOf="@+id/iv_profile_photo"
         android:gravity="center"
-        android:text="149"
-        app:layout_widthPercent="33.33%" />
+        android:text="10"
+        app:layout_widthPercent="33.33%"
+        android:layout_marginTop="14dp"
+        android:layout_below="@+id/tv_profile_username"
+        android:layout_toEndOf="@+id/iv_profile_photo" />
 
     <TextView
-        android:id="@+id/tv_profile_followers_num"
+        android:id="@+id/tv_profile_created_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bt_edit_profile"
-        android:layout_toEndOf="@+id/iv_profile_photo"
         android:gravity="center"
-        android:text="Followers"
-        app:layout_widthPercent="33.33%" />
+        android:text="Created"
+        app:layout_widthPercent="33.33%"
+        android:layout_below="@+id/tv_profile_friends"
+        android:layout_toEndOf="@+id/iv_profile_photo" />
 
     <TextView
-        android:id="@+id/tv_profile_following"
+        android:id="@+id/tv_profile_friends"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/tv_profile_followers_num"
-        android:layout_marginRight="20dp"
-        android:layout_toEndOf="@+id/tv_profile_followers"
         android:gravity="center"
-        android:text="149"
-        app:layout_widthPercent="33.33%" />
+        android:text="4"
+        app:layout_widthPercent="33.33%"
+        android:layout_alignBaseline="@+id/tv_profile_created"
+        android:layout_alignBottom="@+id/tv_profile_created"
+        android:layout_toEndOf="@+id/tv_profile_created" />
 
     <TextView
-        android:id="@+id/tv_profile_following_num"
+        android:id="@+id/tv_profile_friends_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/tv_profile_followers_num"
-        android:layout_alignBottom="@+id/tv_profile_followers_num"
-        android:layout_marginRight="20dp"
-        android:layout_toEndOf="@+id/tv_profile_followers"
         android:gravity="center"
-        android:text="Following"
-        app:layout_widthPercent="33.33%" />
+        android:text="Friends"
+        app:layout_widthPercent="33.33%"
+        android:layout_alignBaseline="@+id/tv_profile_created_num"
+        android:layout_alignBottom="@+id/tv_profile_created_num"
+        android:layout_alignEnd="@+id/tv_profile_friends" />
 
 
     <Button
         android:id="@+id/bt_edit_profile"
         android:layout_width="wrap_content"
-        android:layout_above="@+id/tv_profile_name"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="5dp"
-        android:layout_toEndOf="@+id/iv_profile_tc_created"
+        android:layout_height="20dp"
         android:background="@color/colorAccent2"
         android:onClick="onClick"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
         android:text="Edit Profile"
-        app:layout_heightPercent="5%" />
+        android:layout_above="@+id/tv_profile_name"
+        android:layout_alignEnd="@+id/tv_profile_friends_num"
+        android:layout_marginEnd="53dp" />
 
-    <ImageView
-        android:id="@+id/iv_profile_tc_created"
-        android:layout_below="@id/tv_profile_name"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/time_capsule_logo12_sm"
-        app:layout_heightPercent="5%"
-        app:layout_widthPercent="33.33%" />
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_profile_tc_created"-->
+        <!--android:layout_below="@id/tv_profile_name"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:src="@drawable/time_capsule_logo12_sm"-->
+        <!--app:layout_heightPercent="5%"-->
+        <!--app:layout_widthPercent="33.33%" />-->
 
-    <TextView
-        android:id="@+id/tv_profile_tc_created"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/iv_profile_tc_created"
-        android:layout_alignRight="@id/iv_profile_tc_created"
-        android:layout_below="@+id/iv_profile_tc_created"
-        android:gravity="center"
-        android:text="created" />
+    <!--<TextView-->
+        <!--android:id="@+id/tv_profile_tc_created"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignLeft="@id/iv_profile_tc_created"-->
+        <!--android:layout_alignRight="@id/iv_profile_tc_created"-->
+        <!--android:layout_below="@+id/iv_profile_tc_created"-->
+        <!--android:gravity="center"-->
+        <!--android:text="created" />-->
 
-    <TextView
-        android:id="@+id/tv_profile_tc_created_num"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv_profile_tc_created"
-        android:layout_alignRight="@id/tv_profile_tc_created"
-        android:layout_below="@+id/tv_profile_tc_created"
-        android:gravity="center"
-        android:text="10" />
+    <!--<TextView-->
+        <!--android:id="@+id/tv_profile_tc_created_num"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignLeft="@id/tv_profile_tc_created"-->
+        <!--android:layout_alignRight="@id/tv_profile_tc_created"-->
+        <!--android:layout_below="@+id/tv_profile_tc_created"-->
+        <!--android:gravity="center"-->
+        <!--android:text="10" />-->
 
-    <ImageView
-        android:id="@+id/iv_profile_tc_opened"
-        android:layout_below="@id/tv_profile_name"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@id/iv_profile_tc_created"
-        android:src="@drawable/time_capsule_logo12_sm"
-        app:layout_heightPercent="5%"
-        app:layout_widthPercent="33.33%" />
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_profile_tc_opened"-->
+        <!--android:layout_below="@id/tv_profile_name"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:layout_toRightOf="@id/iv_profile_tc_created"-->
+        <!--android:src="@drawable/time_capsule_logo12_sm"-->
+        <!--app:layout_heightPercent="5%"-->
+        <!--app:layout_widthPercent="33.33%" />-->
 
-    <TextView
-        android:id="@+id/tv_profile_tc_opened"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/iv_profile_tc_opened"
-        android:layout_alignRight="@id/iv_profile_tc_opened"
-        android:layout_below="@id/iv_profile_tc_opened"
-        android:gravity="center"
-        android:text="opened" />
+    <!--<TextView-->
+        <!--android:id="@+id/tv_profile_tc_opened"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignLeft="@id/iv_profile_tc_opened"-->
+        <!--android:layout_alignRight="@id/iv_profile_tc_opened"-->
+        <!--android:layout_below="@id/iv_profile_tc_opened"-->
+        <!--android:gravity="center"-->
+        <!--android:text="opened" />-->
 
-    <TextView
-        android:id="@+id/tv_profile_tc_opened_num"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv_profile_tc_opened"
-        android:layout_alignRight="@id/tv_profile_tc_opened"
-        android:layout_below="@id/tv_profile_tc_created"
-        android:gravity="center"
-        android:text="2" />
+    <!--<TextView-->
+        <!--android:id="@+id/tv_profile_tc_opened_num"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignLeft="@id/tv_profile_tc_opened"-->
+        <!--android:layout_alignRight="@id/tv_profile_tc_opened"-->
+        <!--android:layout_below="@id/tv_profile_tc_created"-->
+        <!--android:gravity="center"-->
+        <!--android:text="2" />-->
 
-    <ImageView
-        android:id="@+id/iv_profile_tc_unopened"
-        android:layout_below="@id/tv_profile_name"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@id/iv_profile_tc_opened"
-        android:src="@drawable/time_capsule_logo12_sm"
-        app:layout_heightPercent="5%"
-        app:layout_widthPercent="33.33%" />
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_profile_tc_unopened"-->
+        <!--android:layout_below="@id/tv_profile_name"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:layout_toRightOf="@id/iv_profile_tc_opened"-->
+        <!--android:src="@drawable/time_capsule_logo12_sm"-->
+        <!--app:layout_heightPercent="5%"-->
+        <!--app:layout_widthPercent="33.33%" />-->
 
-    <TextView
-        android:id="@+id/tv_profile_tc_unopened"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/iv_profile_tc_unopened"
-        android:layout_alignRight="@id/iv_profile_tc_unopened"
-        android:layout_below="@id/iv_profile_tc_unopened"
-        android:gravity="center"
-        android:text="unopened" />
+    <!--<TextView-->
+        <!--android:id="@+id/tv_profile_tc_unopened"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignLeft="@id/iv_profile_tc_unopened"-->
+        <!--android:layout_alignRight="@id/iv_profile_tc_unopened"-->
+        <!--android:layout_below="@id/iv_profile_tc_unopened"-->
+        <!--android:gravity="center"-->
+        <!--android:text="unopened" />-->
 
-    <TextView
-        android:id="@+id/tv_profile_tc_unopened_num"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv_profile_tc_unopened"
-        android:layout_alignRight="@id/tv_profile_tc_unopened"
-        android:layout_below="@id/tv_profile_tc_created"
-        android:gravity="center"
-        android:text="3" />
+    <!--<TextView-->
+        <!--android:id="@+id/tv_profile_tc_unopened_num"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignLeft="@id/tv_profile_tc_unopened"-->
+        <!--android:layout_alignRight="@id/tv_profile_tc_unopened"-->
+        <!--android:layout_below="@id/tv_profile_tc_created"-->
+        <!--android:gravity="center"-->
+        <!--android:text="3" />-->
 
 
     <ImageView
         android:id="@+id/test_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_profile_tc_created_num"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:gravity="center" />
 
     <android.support.v7.widget.RecyclerView
+        android:layout_below="@id/tv_profile_name"
         android:id="@+id/rv_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/test_photo"
-        android:layout_marginBottom="16dp"
         android:layout_marginLeft="@dimen/activity_vertical_margin"
         android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:layout_marginTop="1dp" />
+        android:layout_marginTop="5dp" />
 
 </android.support.percent.PercentRelativeLayout>
 

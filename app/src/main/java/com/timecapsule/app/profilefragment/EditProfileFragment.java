@@ -56,10 +56,10 @@ public class EditProfileFragment extends Fragment {
     private String USERNAME_KEY = "usernameKey";
     private String PROFILE_PHOTO_KEY = "profilePhotoKey";
     private View mRoot;
-    private TextView tv_cancel;
-    private TextView tv_done;
     private TextView tv_edit_profile;
     private TextView tv_change_profile_photo;
+    private ImageView iv_cancel;
+    private ImageView iv_done;
     private ImageView iv_profile;
     private ImageView iv_name;
     private ImageView iv_username;
@@ -95,8 +95,8 @@ public class EditProfileFragment extends Fragment {
     }
 
     public void setViews() {
-        tv_cancel = (TextView) mRoot.findViewById(R.id.tv_edit_profile_cancel);
-        tv_done = (TextView) mRoot.findViewById(R.id.tv_edit_profile_done);
+        iv_cancel = (ImageView) mRoot.findViewById(R.id.iv_edit_profile_cancel);
+        iv_done = (ImageView) mRoot.findViewById(R.id.iv_edit_profile_done);
         tv_edit_profile = (TextView) mRoot.findViewById(R.id.tv_edit_profile_top);
         iv_profile = (ImageView) mRoot.findViewById(R.id.iv_edit_profile_photo);
         tv_change_profile_photo = (TextView) mRoot.findViewById(R.id.tv_edit_profile_change_photo);
@@ -223,7 +223,7 @@ public class EditProfileFragment extends Fragment {
 
 
     public void clickCancel() {
-        tv_cancel.setOnClickListener(new View.OnClickListener() {
+        iv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCancel();
@@ -239,7 +239,7 @@ public class EditProfileFragment extends Fragment {
     }
 
     public void clickDone() {
-        tv_done.setOnClickListener(new View.OnClickListener() {
+        iv_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setUserData();
