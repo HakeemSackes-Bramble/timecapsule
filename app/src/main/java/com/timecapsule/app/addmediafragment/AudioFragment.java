@@ -20,6 +20,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -49,6 +51,7 @@ public class AudioFragment extends DialogFragment {
     private ImageView iv_audio_stop_record;
     private ImageView iv_audio_play;
     private TextView tv_audio_time;
+    private ImageView iv_cassette;
     Runnable UpdatePlayTime = new Runnable() {
         public void run() {
             if (mPlayer.isPlaying()) {
@@ -132,6 +135,12 @@ public class AudioFragment extends DialogFragment {
     }
 
     private void setViews() {
+        iv_cassette = (ImageView) mRoot.findViewById(R.id.iv_audio_cassette);
+        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(iv_cassette);
+        Glide.with(this)
+                .load(R.drawable.audio_giphy4)
+                .crossFade()
+                .into(imageViewTarget);
         iv_audio_record = (ImageView) mRoot.findViewById(R.id.iv_audio_record);
         iv_audio_stop_record = (ImageView) mRoot.findViewById(R.id.iv_audio_stop_record);
         iv_audio_play = (ImageView) mRoot.findViewById(R.id.iv_audio_play);
