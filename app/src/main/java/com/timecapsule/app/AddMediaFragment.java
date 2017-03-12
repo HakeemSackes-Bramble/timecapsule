@@ -1,6 +1,7 @@
 package com.timecapsule.app;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.addmediafragment.AudioFragment2;
@@ -47,6 +49,8 @@ public class AddMediaFragment extends Fragment {
     private StorageReference imagesRef;
     private UploadTask uploadTask;
     private File image;
+    private ProgressDialog mProgress;
+
 
 
     @Override
@@ -55,6 +59,7 @@ public class AddMediaFragment extends Fragment {
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
         imagesRef = storageReference.child("images");
+        mProgress = new ProgressDialog(getActivity());
     }
 
     @Nullable
@@ -127,15 +132,18 @@ public class AddMediaFragment extends Fragment {
         switch (requestCode) {
             case TAKE_PICTURE:
                 if (resultCode == RESULT_OK) {
+                    mProgress.setMessage("uploading photo...");
+                    mProgress.show();
+
                     if (data != null) {
                         Bundle extras = data.getExtras();
                         Bitmap imageBitmap = (Bitmap) extras.get("data");
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                         byte[] dataBAOS = baos.toByteArray();
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                        String imageFileName = "JPEG_" + timeStamp + "_";
-                        String firebaseReference = imageFileName.concat(".jpg");
+                        String imageFileName = "PNG_" + timeStamp + "_";
+                        String firebaseReference = imageFileName.concat(".png");
                         imagesRef = imagesRef.child(firebaseReference);
                         StorageReference newImageRef = storageReference.child("images/".concat(firebaseReference));
                         newImageRef.getName().equals(newImageRef.getName());
@@ -151,6 +159,7 @@ public class AddMediaFragment extends Fragment {
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                mProgress.dismiss();
                             }
                         });
                     }
@@ -183,7 +192,6 @@ public class AddMediaFragment extends Fragment {
     }
 
 
-
     private void uploadImage() {
         Uri file = Uri.fromFile(image);
         StorageReference imageRef = storageReference.child("images/" + file.getLastPathSegment());
@@ -202,6 +210,5 @@ public class AddMediaFragment extends Fragment {
         });
 
     }
-
 
 }

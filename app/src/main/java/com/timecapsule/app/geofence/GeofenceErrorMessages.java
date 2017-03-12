@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import com.google.android.gms.location.GeofenceStatusCodes;
-
 import com.timecapsule.app.R;
 /**
  * Created by tarynking on 3/7/17.
