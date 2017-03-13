@@ -32,6 +32,8 @@ public class LocationObject implements GoogleApiClient.OnConnectionFailedListene
 
     private static final String TAG = LocationObject.class.getSimpleName();
     PlacePicker.IntentBuilder builder;
+
+
     private GoogleApiClient mGoogleApiClient;
     private static final int REQUEST_LOCATION = 201;
     private FusedLocationProviderApi mCurrentLocation;
@@ -117,4 +119,9 @@ public class LocationObject implements GoogleApiClient.OnConnectionFailedListene
     public void onConnectionSuspended(int i) {
 
     }
+
+    public GoogleApiClient getmGoogleApiClient() {
+        return mGoogleApiClient;
+    }
+
 }
