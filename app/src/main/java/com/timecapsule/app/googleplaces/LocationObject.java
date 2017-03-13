@@ -31,9 +31,7 @@ public class LocationObject implements GoogleApiClient.OnConnectionFailedListene
 
 
     private static final String TAG = LocationObject.class.getSimpleName();
-    PlacePicker.IntentBuilder builder;
-
-
+    private PlacePicker.IntentBuilder builder;
     private GoogleApiClient mGoogleApiClient;
     private static final int REQUEST_LOCATION = 201;
     private FusedLocationProviderApi mCurrentLocation;
@@ -106,12 +104,8 @@ public class LocationObject implements GoogleApiClient.OnConnectionFailedListene
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mCurrentLocation = LocationServices.FusedLocationApi;
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        setmLatitude(mCurrentLocation.getLastLocation(mGoogleApiClient).getLatitude());
-        setmLongitude(mCurrentLocation.getLastLocation(mGoogleApiClient).getLongitude());
-        isLocationSet = true;
+
+
         Log.d(TAG, "onConnected: " + mLatitude + " " + mLongitude);
     }
 
@@ -122,6 +116,19 @@ public class LocationObject implements GoogleApiClient.OnConnectionFailedListene
 
     public GoogleApiClient getmGoogleApiClient() {
         return mGoogleApiClient;
+    }
+
+    private void setAverageLocation(){
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        for (int i = 0; i < 50; i++) {
+           //mCurrentLocation.requestLocationUpdates()
+            mLatitude = mCurrentLocation.getLastLocation(mGoogleApiClient).getLatitude()/50;
+            mLongitude = mCurrentLocation.getLastLocation(mGoogleApiClient).getLongitude()/50;
+            Log.d(TAG, "setAverageLocation: ");
+        }
+
     }
 
 }

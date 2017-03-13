@@ -1,6 +1,7 @@
 package com.timecapsule.app.feedactivity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,7 +16,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.widget.AppInviteDialog;
@@ -26,6 +26,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -33,10 +36,10 @@ import com.timecapsule.app.NotificationsFragment;
 import com.timecapsule.app.R;
 import com.timecapsule.app.SearchFragment;
 import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
+import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragmentCamera;
 import com.timecapsule.app.addmediafragment.AddMediaFragment;
 import com.timecapsule.app.addmediafragment.AudioFragment;
 import com.timecapsule.app.profilefragment.ProfileFragment;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -66,9 +69,12 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private File image;
     private AudioFragment audioFragment;
     private AddCapsuleLocationFragment addCapsuleLocationFragment;
+    private AddCapsuleLocationFragmentCamera addCapsuleLocationFragmentCamera;
+    private ProgressDialog mProgress;
 
 
     @Override
+
     protected void onStart() {
         super.onStart();
         googleApiClient.connect();
@@ -89,6 +95,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
         imagesRef = storageReference.child("images");
+        mProgress = new ProgressDialog(this);
+
         FacebookSdk.sdkInitialize(FacebookSdk.getApplicationContext());
         requestLocationPermission();
         requestCameraPemission();
@@ -129,17 +137,39 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void goToLocation(){
+
+    private void goToLocation() {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         addCapsuleLocationFragment = AddCapsuleLocationFragment.newInstance("Add Capsule Location");
         addCapsuleLocationFragment.show(ft, "Location");
+    }
+
+    private void goToAddLocationCamera() {
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        addCapsuleLocationFragmentCamera = AddCapsuleLocationFragmentCamera.newInstance("Add Capsule Location");
+        addCapsuleLocationFragmentCamera.show(ft, "Location");
+    }
+
+    private void goToAddLocationAudio() {
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        addCapsuleLocationFragmentCamera = AddCapsuleLocationFragmentCamera.newInstance("Add Capsule Location");
+        addCapsuleLocationFragmentCamera.show(ft, "Location");
+    }
+
+    private void goToAddLocationVideo() {
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        addCapsuleLocationFragmentCamera = AddCapsuleLocationFragmentCamera.newInstance("Add Capsule Location");
+        addCapsuleLocationFragmentCamera.show(ft, "Location");
+
     }
 
     private void clickCamera() {
         fab_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 goToLocation();
+                goToAddLocationCamera();
             }
         });
     }
@@ -154,7 +184,10 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         fab_audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 goToLocation();
+
+                goToAddLocationAudio();
             }
         });
 
@@ -171,6 +204,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 goToLocation();
+                goToAddLocationVideo();
             }
         });
     }
@@ -186,6 +220,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         switch (requestCode) {
             case TAKE_PICTURE:
                 if (resultCode == RESULT_OK) {
+                    mProgress.setMessage("uploading photo...");
+                    mProgress.show();
                     if (data != null) {
                         Bundle extras = data.getExtras();
                         Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -210,6 +246,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                addUrlToDatabase(downloadUrl);
+                                mProgress.dismiss();
+
                             }
                         });
                     }
@@ -317,6 +356,12 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_LOCATION);
         }
+    }
+
+    private void addUrlToDatabase(Uri uri) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("capsules");
+        myRef.setValue(uri.toString());
     }
 
 

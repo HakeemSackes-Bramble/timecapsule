@@ -7,7 +7,11 @@
     android:weightSum="1">
 
     <ImageView
+<<<<<<< HEAD
         android:id="@+id/imageButton"
+=======
+        android:id="@+id/iv_close_dialog"
+>>>>>>> 23aad3b2718676389f166a86a285ba7a6972fd15
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_gravity="end|bottom"
@@ -23,7 +27,11 @@
         android:layout_weight="0.57" />
 
     <TextView
+<<<<<<< HEAD
         android:id="@+id/button2"
+=======
+        android:id="@+id/tv_add_location"
+>>>>>>> 23aad3b2718676389f166a86a285ba7a6972fd15
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:gravity="center|top"

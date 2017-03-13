@@ -55,9 +55,12 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 
 
     @Override
-    public void onStart() {
-        super.onStart();
-
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        locationObject = new LocationObject(getApplicationContext());
+        if (!locationObject.getmGoogleApiClient().isConnecting() || !locationObject.getmGoogleApiClient().isConnected()) {
+            locationObject.getmGoogleApiClient().connect();
+        }
 
     }
 
@@ -71,10 +74,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         mGeofenceList = new ArrayList<>();
         populateGeofenceList();
         googleApiClient = locationObject.getmGoogleApiClient();
-
-
-
-
 //        googleApiClient = new GoogleApiClient
 //                .Builder(getApplicationContext())
 //                .addConnectionCallbacks(this)
@@ -91,31 +90,11 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 //            Log.d(TAG, "Wasn't connected");
 //            googleApiClient.connect();
 //        }
-
     }
 
-    void addGeofences() {
-        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        LocationServices.GeofencingApi.addGeofences(googleApiClient, getGeofencingRequest(), getGeofencePendingIntent()).setResultCallback(this);
-    }
-    private void populateGeofenceList() {
-        for (LatLng entry : new LatLng[]{new LatLng(40.742571, -73.935421)}) {
-            mGeofenceList.add(new Geofence.Builder()
-                    .setRequestId("" + entry.latitude + entry.longitude)
-                    .setCircularRegion(
-                            entry.latitude,
-                            entry.longitude,
-                            50
-                    )
-                    .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                            Geofence.GEOFENCE_TRANSITION_EXIT)
-                    .build());
-        }
-        Log.d(TAG, "populateGeofenceList: " + mGeofenceList.toString());
-
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -127,15 +106,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        locationObject = new LocationObject(getApplicationContext());
-        if (!locationObject.getmGoogleApiClient().isConnecting() || !locationObject.getmGoogleApiClient().isConnected()) {
-            locationObject.getmGoogleApiClient().connect();
-        }
-
-    }
 
     @Nullable
     @Override
@@ -166,7 +136,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         }
         LatLng currentLocation2 = new LatLng(locationObject.getmLatitude(), locationObject.getmLongitude()); //40.7128° N, -74.0059° W
         Log.d(TAG, "onConnected: " + locationObject.getmLatitude() + " " + locationObject.getmLongitude());
-        if (locationObject.isLocationSet() == false) {
+        if (!locationObject.isLocationSet()) {
             mapFragment.getMapAsync(this);
         } else {
             mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation2));
@@ -179,17 +149,19 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    }
 
+    @Override
+    public void onResult(@NonNull Status status) {
+        Log.d(TAG, "onResult: YEEEAAAAA");
     }
 
     private GeofencingRequest getGeofencingRequest() {
@@ -198,13 +170,35 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         builder.addGeofences(mGeofenceList);
         return builder.build();
     }
+
     private PendingIntent getGeofencePendingIntent() {
         Intent intent = new Intent(getApplicationContext(), GeofenceTransitionsIntentService.class);
         return PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    @Override
-    public void onResult(@NonNull Status status) {
-        Log.d(TAG, "onResult: YEEEAAAAA");
+    void addGeofences() {
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        LocationServices.GeofencingApi.addGeofences(googleApiClient, getGeofencingRequest(), getGeofencePendingIntent()).setResultCallback(this);
     }
+
+    private void populateGeofenceList() {
+        for (LatLng entry : new LatLng[]{new LatLng(40.742571, -73.935421)}) {
+            mGeofenceList.add(new Geofence.Builder()
+                    .setRequestId("" + entry.latitude + entry.longitude)
+                    .setCircularRegion(
+                            entry.latitude,
+                            entry.longitude,
+                            50
+                    )
+                    .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                            Geofence.GEOFENCE_TRANSITION_EXIT)
+                    .build());
+        }
+        Log.d(TAG, "populateGeofenceList: " + mGeofenceList.toString());
+
+    }
+
 }
