@@ -32,6 +32,7 @@ import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.NotificationsFragment;
 import com.timecapsule.app.R;
 import com.timecapsule.app.SearchFragment;
+import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
 import com.timecapsule.app.addmediafragment.AddMediaFragment;
 import com.timecapsule.app.addmediafragment.AudioFragment;
 import com.timecapsule.app.profilefragment.ProfileFragment;
@@ -64,6 +65,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private UploadTask uploadTask;
     private File image;
     private AudioFragment audioFragment;
+    private AddCapsuleLocationFragment addCapsuleLocationFragment;
 
 
     @Override
@@ -127,11 +129,17 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void goToLocation(){
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        addCapsuleLocationFragment = AddCapsuleLocationFragment.newInstance("Add Capsule Location");
+        addCapsuleLocationFragment.show(ft, "Location");
+    }
+
     private void clickCamera() {
         fab_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToNativeCamera();
+                goToLocation();
             }
         });
     }
@@ -146,7 +154,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         fab_audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToAudio();
+                goToLocation();
             }
         });
 
@@ -162,7 +170,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         fab_videocam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToNativeVideo();
+                goToLocation();
             }
         });
     }

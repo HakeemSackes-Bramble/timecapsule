@@ -21,6 +21,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.R;
+import com.timecapsule.app.geofence.TimePlacePicker;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by catwong on 3/4/17.
@@ -82,7 +84,8 @@ public class AddMediaFragment extends Fragment {
         iv_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToNativeCamera();
+                openPlacePicker("camera");
+                //goToNativeCamera();
             }
         });
     }
@@ -97,7 +100,8 @@ public class AddMediaFragment extends Fragment {
         iv_audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToAudio();
+                openPlacePicker("audio");
+//                goToAudio();
             }
         });
     }
@@ -113,7 +117,8 @@ public class AddMediaFragment extends Fragment {
         iv_videocam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToNativeVideo();
+                openPlacePicker("video");
+//                goToNativeVideo();
             }
         });
 
@@ -163,6 +168,7 @@ public class AddMediaFragment extends Fragment {
                         });
                     }
                 }
+
         }
     }
 
@@ -207,6 +213,13 @@ public class AddMediaFragment extends Fragment {
                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
             }
         });
+    }
+
+    private void openPlacePicker(String mediaType) {
+        // Create an explicit content Intent that starts the timePlacePickerActivity.
+        Intent placepickerIntent = new Intent(getApplicationContext(), TimePlacePicker.class);
+        placepickerIntent.putExtra("key", mediaType);
+        startActivity(placepickerIntent);
 
     }
 
