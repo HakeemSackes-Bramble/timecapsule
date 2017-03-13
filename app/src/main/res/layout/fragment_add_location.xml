@@ -7,7 +7,7 @@
     android:weightSum="1">
 
     <ImageView
-        android:id="@+id/imageButton"
+        android:id="@+id/iv_close_dialog"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_gravity="end|bottom"
@@ -23,7 +23,7 @@
         android:layout_weight="0.57" />
 
     <TextView
-        android:id="@+id/button2"
+        android:id="@+id/tv_add_location"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:gravity="center|top"
