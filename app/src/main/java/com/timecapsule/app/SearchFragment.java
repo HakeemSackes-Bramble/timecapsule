@@ -2,7 +2,9 @@ package com.timecapsule.app;
 
 import android.Manifest;
 import android.app.Fragment;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,14 +17,22 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.timecapsule.app.geofence.Constants;
+import com.timecapsule.app.geofence.GeofenceTransitionsIntentService;
+import com.timecapsule.app.googleplaces.LocationObject;
+
+import java.util.ArrayList;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -30,15 +40,26 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by catwong on 3/4/17.
  */
 
-public class SearchFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+public class SearchFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
 
+    protected ArrayList<Geofence> mGeofenceList;
     private static final String TAG = SearchFragment.class.getSimpleName();
     private View mRoot;
     private GoogleMap mMap;
     private FusedLocationProviderApi location;
     private GoogleApiClient googleApiClient;
-    private FusedLocationProviderApi fusedLocationProviderApi;
+    private LocationObject locationObject;
+    private MapFragment mapFragment;
+    private String MY_LOCATION_ID = "MY_LOCATION";
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,54 +68,86 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        googleApiClient = new GoogleApiClient
-                .Builder(getApplicationContext())
-                .addConnectionCallbacks(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addApi(LocationServices.API)
-                .build();
-        googleApiClient.connect();
-        fusedLocationProviderApi = LocationServices.FusedLocationApi;
-        if(googleApiClient.isConnected()){
-            Log.d(TAG, "Was connected");
-            fusedLocationProviderApi.getLastLocation(googleApiClient);
-        } else {
-            Log.d(TAG, "Wasn't connected");
-            googleApiClient.connect();
+        mGeofenceList = new ArrayList<>();
+        populateGeofenceList();
+        googleApiClient = locationObject.getmGoogleApiClient();
+
+
+
+
+//        googleApiClient = new GoogleApiClient
+//                .Builder(getApplicationContext())
+//                .addConnectionCallbacks(this)
+//                .addApi(Places.GEO_DATA_API)
+//                .addApi(Places.PLACE_DETECTION_API)
+//                .addApi(LocationServices.API)
+//                .build();
+//        googleApiClient.connect();
+        //fusedLocationProviderApi = LocationServices.FusedLocationApi;
+//        if(googleApiClient.isConnected()){
+//            Log.d(TAG, "Was connected");
+//         //   fusedLocationProviderApi.getLastLocation(googleApiClient);
+//        } else {
+//            Log.d(TAG, "Wasn't connected");
+//            googleApiClient.connect();
+//        }
+
+    }
+
+    void addGeofences() {
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
+        LocationServices.GeofencingApi.addGeofences(googleApiClient, getGeofencingRequest(), getGeofencePendingIntent()).setResultCallback(this);
     }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
+    private void populateGeofenceList() {
+        for (LatLng entry : new LatLng[]{new LatLng(40.742571, -73.935421)}) {
+            mGeofenceList.add(new Geofence.Builder()
+                    .setRequestId("" + entry.latitude + entry.longitude)
+                    .setCircularRegion(
+                            entry.latitude,
+                            entry.longitude,
+                            50
+                    )
+                    .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                            Geofence.GEOFENCE_TRANSITION_EXIT)
+                    .build());
+        }
+        Log.d(TAG, "populateGeofenceList: " + mGeofenceList.toString());
 
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        googleApiClient.disconnect();
+//        googleApiClient.disconnect();
+        if (locationObject.getmGoogleApiClient().isConnecting() || locationObject.getmGoogleApiClient().isConnected()) {
+            locationObject.getmGoogleApiClient().disconnect();
+        }
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        locationObject = new LocationObject(getApplicationContext());
+        if (!locationObject.getmGoogleApiClient().isConnecting() || !locationObject.getmGoogleApiClient().isConnected()) {
+            locationObject.getmGoogleApiClient().connect();
+        }
+
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         mRoot = inflater.inflate(R.layout.fragment_search, parent, false);
-        MapFragment mapFragment = (MapFragment) getChildFragmentManager()
+        mapFragment = (MapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         return mRoot;
 
-    }
 
+    }
 
     /**
      * Manipulates the map once available.
@@ -109,39 +162,49 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
             return;
         }
-        mMap.setMyLocationEnabled(true);
-        Log.d(this.getClass().getSimpleName(), "onMapReady: ");
+        LatLng currentLocation2 = new LatLng(locationObject.getmLatitude(), locationObject.getmLongitude()); //40.7128° N, -74.0059° W
+        Log.d(TAG, "onConnected: " + locationObject.getmLatitude() + " " + locationObject.getmLongitude());
+        if (locationObject.isLocationSet() == false) {
+            mapFragment.getMapAsync(this);
+        } else {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation2));
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+            mMap.setMyLocationEnabled(true);
+            addGeofences();
+
+        }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
 
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d("no location", "onConnectionFailed: do something");
+
+    }
+
+    private GeofencingRequest getGeofencingRequest() {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+        builder.addGeofences(mGeofenceList);
+        return builder.build();
+    }
+    private PendingIntent getGeofencePendingIntent() {
+        Intent intent = new Intent(getApplicationContext(), GeofenceTransitionsIntentService.class);
+        return PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Log.d(this.getClass().getSimpleName(), "onConnected: ");
-        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            Log.d("not allowed", "onConnected: shyt");
-            return;
-        }
-
-        fusedLocationProviderApi = LocationServices.FusedLocationApi;
-        location = fusedLocationProviderApi;
-        LatLng currentLocation = new LatLng(location.getLastLocation(googleApiClient).getLatitude(), location.getLastLocation(googleApiClient).getLongitude()); //40.7128° N, -74.0059° W
-        Log.d("", "onConnected: " + location.getLastLocation(googleApiClient).getLatitude() + " " + location.getLastLocation(googleApiClient).getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.d(this.getClass().getSimpleName(), "onConnectionSuspended: " + String.valueOf(i));
-
+    public void onResult(@NonNull Status status) {
+        Log.d(TAG, "onResult: YEEEAAAAA");
     }
 }
