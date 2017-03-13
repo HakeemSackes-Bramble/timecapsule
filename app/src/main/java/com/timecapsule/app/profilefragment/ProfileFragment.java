@@ -96,6 +96,7 @@ public class ProfileFragment extends Fragment {
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container_main, new EditProfileFragment())
+                .addToBackStack("edit profile")
                 .commit();
     }
 

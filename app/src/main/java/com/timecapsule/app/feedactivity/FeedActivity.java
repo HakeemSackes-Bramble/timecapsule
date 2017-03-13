@@ -5,6 +5,8 @@ import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -30,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.NotificationsFragment;
 import com.timecapsule.app.R;
 import com.timecapsule.app.SearchFragment;
@@ -37,6 +40,11 @@ import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
 import com.timecapsule.app.addmediafragment.AudioFragment;
 import com.timecapsule.app.addmediafragment.cat_test.AddCapsuleLocationFragmentCamera;
 import com.timecapsule.app.profilefragment.ProfileFragment;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -104,6 +112,12 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                     .beginTransaction()
                     .add(R.id.container_main, new FeedFragment())
                     .commit();
+
+            getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+                @Override
+                public void onBackStackChanged() {
+                }
+            });
         }
 
         googleApiClient = new GoogleApiClient
@@ -205,7 +219,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 //        startActivityForResult(record, CAPTURE_VIDEO);
 //    }
 
-//    @Override
+    //    @Override
 //    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
 //        switch (requestCode) {
@@ -332,10 +346,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-                setBottomNavButtons();
+
             }
         });
-
     }
 
 
@@ -354,13 +367,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 .replace(R.id.container_main, new NotificationsFragment())
                 .addToBackStack("notifications")
                 .commit();
-
-        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                setBottomNavButtons();
-            }
-        });
     }
 
 
@@ -371,12 +377,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 .addToBackStack("profile")
                 .commit();
 
-        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                setBottomNavButtons();
-            }
-        });
     }
 
     private void requestCameraPemission() {
@@ -402,7 +402,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                     REQUEST_LOCATION);
         }
     }
-    private void addUrlToDatabase(Uri uri){
+
+    private void addUrlToDatabase(Uri uri) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("capsules");
         myRef.setValue(uri.toString());
