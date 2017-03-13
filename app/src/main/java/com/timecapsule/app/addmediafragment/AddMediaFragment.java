@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -51,6 +50,10 @@ public class AddMediaFragment extends Fragment {
     private UploadTask uploadTask;
     private File image;
     private ProgressDialog mProgress;
+    private String mediaType;
+    private double locationLat;
+    private double locationLong;
+    private String address;
 
 
 
@@ -61,6 +64,7 @@ public class AddMediaFragment extends Fragment {
         storageReference = firebaseStorage.getReference();
         imagesRef = storageReference.child("images");
         mProgress = new ProgressDialog(getActivity());
+
     }
 
     @Nullable
@@ -90,12 +94,6 @@ public class AddMediaFragment extends Fragment {
         });
     }
 
-    private void goToNativeCamera() {
-        Intent capture = new Intent(
-                android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(capture, TAKE_PICTURE);
-    }
-
     public void clickAudio() {
         iv_audio.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,11 +120,6 @@ public class AddMediaFragment extends Fragment {
             }
         });
 
-    }
-
-    public void goToNativeVideo() {
-        Intent record = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        startActivityForResult(record, CAPTURE_VIDEO);
     }
 
 
@@ -220,7 +213,6 @@ public class AddMediaFragment extends Fragment {
         Intent placepickerIntent = new Intent(getApplicationContext(), TimePlacePicker.class);
         placepickerIntent.putExtra("key", mediaType);
         startActivity(placepickerIntent);
-
     }
 
 }
