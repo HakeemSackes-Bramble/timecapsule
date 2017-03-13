@@ -1,8 +1,8 @@
 package com.timecapsule.app.geofence;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
@@ -15,7 +15,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
 import com.timecapsule.app.addmediafragment.GoToMedia;
 
-public class TimePlacePicker extends AppCompatActivity {
+import static android.app.Activity.RESULT_OK;
+import static com.facebook.FacebookSdk.getApplicationContext;
+
+public class TimePlacePicker extends Fragment {
 
     int PLACE_PICKER_REQUEST = 1;
     String mediaType;
@@ -24,14 +27,14 @@ public class TimePlacePicker extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mediaType = getIntent().getExtras().getString("key");
+        mediaType = getActivity().getIntent().getExtras().getString("key");
 
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
         Intent intent;
         try {
-            intent = builder.build(TimePlacePicker.this);
+            intent = builder.build(getActivity());
             startActivityForResult(intent, PLACE_PICKER_REQUEST);
         } catch (GooglePlayServicesRepairableException e) {
             e.printStackTrace();
@@ -43,13 +46,13 @@ public class TimePlacePicker extends AppCompatActivity {
     }
 
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         Log.d("TIMEPLACE", "onActivityResult: ");
-        Toast.makeText(this, "place selected" + resultCode, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "place selected" + resultCode, Toast.LENGTH_SHORT).show();
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(this, data);
+                Place place = PlacePicker.getPlace(getActivity(), data);
                 LatLng locationLatLng = place.getLatLng();
                 String address = (String) place.getAddress();
 
