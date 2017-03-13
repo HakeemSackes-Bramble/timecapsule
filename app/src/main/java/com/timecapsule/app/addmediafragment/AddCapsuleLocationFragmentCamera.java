@@ -2,6 +2,7 @@ package com.timecapsule.app.addmediafragment;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -14,6 +15,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.timecapsule.app.R;
+import com.timecapsule.app.geofence.TimePlacePicker;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by catwong on 3/12/17.
@@ -49,6 +53,7 @@ public class AddCapsuleLocationFragmentCamera extends DialogFragment {
         setViews();
         setGif();
         setCloseDialog();
+        goToAddLocation();
         return mRoot;
     }
 
@@ -83,11 +88,28 @@ public class AddCapsuleLocationFragmentCamera extends DialogFragment {
         });
     }
 
-    private void captureAudio(){
-
-
+    private void goToAddLocation(){
+        tv_add_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openPlacePicker("camera");
+            }
+        });
 
     }
+
+    private void goToPlacePicker(){
+        Intent intent = new Intent(getActivity(), TimePlacePicker.class);
+        AddCapsuleLocationFragmentCamera.this.startActivity(intent);
+    }
+
+    private void openPlacePicker(String mediaType) {
+        // Create an explicit content Intent that starts the timePlacePickerActivity.
+        Intent placepickerIntent = new Intent(getApplicationContext(), TimePlacePicker.class);
+        placepickerIntent.putExtra("key", mediaType);
+        startActivity(placepickerIntent);
+    }
+
 
 
 }

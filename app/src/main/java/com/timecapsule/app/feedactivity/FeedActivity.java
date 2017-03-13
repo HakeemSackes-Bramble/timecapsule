@@ -32,13 +32,12 @@ import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.NotificationsFragment;
 import com.timecapsule.app.R;
 import com.timecapsule.app.SearchFragment;
+import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
 import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragmentCamera;
-import com.timecapsule.app.addmediafragment.AddMediaFragment;
 import com.timecapsule.app.addmediafragment.AudioFragment;
 import com.timecapsule.app.profilefragment.ProfileFragment;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -59,14 +58,14 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton fab_photo;
     private FloatingActionButton fab_audio;
     private FloatingActionButton fab_videocam;
+    private AudioFragment audioFragment;
+    private AddCapsuleLocationFragmentCamera addCapsuleLocationFragmentCamera;
+    private String mCurrentPhotoPath;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
     private StorageReference imagesRef;
-    private UploadTask uploadTask;
-    private File image;
-    private AudioFragment audioFragment;
-    private AddCapsuleLocationFragmentCamera addCapsuleLocationFragmentCamera;
-
+    private GoogleApiClient googleApiClient;
+    private AddCapsuleLocationFragment addCapsuleLocationFragment;
 
     @Override
     protected void onStart() {
@@ -79,8 +78,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         super.onStop();
         googleApiClient.disconnect();
     }
-
-    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +102,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                     .add(R.id.container_main, new FeedFragment())
                     .commit();
         }
+
         googleApiClient = new GoogleApiClient
                 .Builder(getApplicationContext())
                 .addApi(Places.GEO_DATA_API)
@@ -112,6 +110,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 .addApi(LocationServices.API)
                 .build();
     }
+
 
     private void setViews() {
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -129,19 +128,25 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void goToAddLocationCamera(){
+    private void goToAddLocation() {
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        addCapsuleLocationFragment = AddCapsuleLocationFragment.newInstance("Add Capsule Location");
+        addCapsuleLocationFragment.show(ft, "Location");
+    }
+
+    private void goToAddLocationCamera() {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         addCapsuleLocationFragmentCamera = AddCapsuleLocationFragmentCamera.newInstance("Add Capsule Location");
         addCapsuleLocationFragmentCamera.show(ft, "Location");
     }
 
-    private void goToAddLocationAudio(){
+    private void goToAddLocationAudio() {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         addCapsuleLocationFragmentCamera = AddCapsuleLocationFragmentCamera.newInstance("Add Capsule Location");
         addCapsuleLocationFragmentCamera.show(ft, "Location");
     }
 
-    private void goToAddLocationVideo(){
+    private void goToAddLocationVideo() {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         addCapsuleLocationFragmentCamera = AddCapsuleLocationFragmentCamera.newInstance("Add Capsule Location");
         addCapsuleLocationFragmentCamera.show(ft, "Location");
@@ -151,7 +156,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         fab_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToAddLocationCamera();
+                goToAddLocation();
             }
         });
     }
@@ -166,7 +171,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         fab_audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToAddLocationAudio();
+                goToAddLocation();
+
             }
         });
 
@@ -182,7 +188,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         fab_videocam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToAddLocationVideo();
+                goToAddLocation();
+
             }
         });
     }
@@ -256,9 +263,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                     case R.id.action_search:
                         setSearchFragment();
                         break;
-//                    case R.id.action_add:
-//                        setAddMediaFragment();
-//                        break;
                     case R.id.action_notifications:
                         setNotificationsFragment();
                         break;
@@ -285,12 +289,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 .commit();
     }
 
-    private void setAddMediaFragment() {
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container_main, new AddMediaFragment())
-                .commit();
-    }
 
     private void setNotificationsFragment() {
         getFragmentManager()

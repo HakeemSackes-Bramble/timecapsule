@@ -23,17 +23,19 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by catwong on 3/12/17.
  */
 
-public class AddCapsuleLocationFragmentAudio extends DialogFragment {
+public class AddCapsuleLocationFragment extends DialogFragment {
 
     private View mRoot;
     private ImageView iv_gif_location;
     private ImageView iv_close_dialog;
     private TextView tv_add_location;
-    String mediaType;
+    private String mediaType;
+    private String locationLat;
+    private double locationLong;
+    private String address;
 
-
-    public static AddCapsuleLocationFragmentAudio newInstance(String capsule) {
-        AddCapsuleLocationFragmentAudio fragment = new AddCapsuleLocationFragmentAudio();
+    public static AddCapsuleLocationFragment newInstance(String capsule) {
+        AddCapsuleLocationFragment fragment = new AddCapsuleLocationFragment();
         Bundle args = new Bundle();
         args.putString("capsule", capsule);
         fragment.setArguments(args);
@@ -43,11 +45,15 @@ public class AddCapsuleLocationFragmentAudio extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        mediaType = args.getString("keyMediaType");
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, Bundle savedInstanceState) {
+        mediaType = getArguments().getString("keyMediaType");
         mRoot = inflater.inflate(R.layout.fragment_add_location, parent, false);
         setViews();
         setGif();
@@ -91,16 +97,12 @@ public class AddCapsuleLocationFragmentAudio extends DialogFragment {
         tv_add_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openPlacePicker("audio");
+                openPlacePicker(mediaType);
             }
         });
 
     }
 
-    private void goToPlacePicker(){
-        Intent intent = new Intent(getActivity(), TimePlacePicker.class);
-        AddCapsuleLocationFragmentAudio.this.startActivity(intent);
-    }
 
     private void openPlacePicker(String mediaType) {
         // Create an explicit content Intent that starts the timePlacePickerActivity.

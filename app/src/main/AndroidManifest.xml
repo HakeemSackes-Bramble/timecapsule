@@ -40,7 +40,9 @@
         </activity>
         <activity android:name="com.timecapsule.app.feedactivity.FeedActivity" />
         <activity android:name="com.timecapsule.app.GoogleMapsActivity" />
-        <activity android:name="com.timecapsule.app.profilefragment.ProfileActivity"></activity>
+        <activity android:name=".geofence.TimePlacePicker"/>
+        <activity android:name=".addmediafragment.GoToMedia"/>
+        <activity android:name="com.timecapsule.app.profilefragment.ProfileActivity"/>
         <activity
             android:name=".cameraactivity.CameraActivity"
             android:configChanges="keyboardHidden|screenSize"
