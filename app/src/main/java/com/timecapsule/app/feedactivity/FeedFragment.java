@@ -1,17 +1,15 @@
 package com.timecapsule.app.feedactivity;
 
 import android.app.Fragment;
-import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.timecapsule.app.feedactivity.controller.FeedAdapter;
-
 import com.timecapsule.app.R;
+import com.timecapsule.app.feedactivity.controller.FeedAdapter;
 
 
 public class FeedFragment extends Fragment {
@@ -39,6 +37,26 @@ public class FeedFragment extends Fragment {
         recyclerView = (RecyclerView) mRoot.findViewById(R.id.rv_feed);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(new FeedAdapter());
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }
+

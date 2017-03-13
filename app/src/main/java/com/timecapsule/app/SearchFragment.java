@@ -43,8 +43,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class SearchFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
 
-    protected ArrayList<Geofence> mGeofenceList;
     private static final String TAG = SearchFragment.class.getSimpleName();
+    protected ArrayList<Geofence> mGeofenceList;
     private View mRoot;
     private GoogleMap mMap;
     private FusedLocationProviderApi location;
@@ -73,8 +73,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         googleApiClient = locationObject.getmGoogleApiClient();
 
 
-
-
 //        googleApiClient = new GoogleApiClient
 //                .Builder(getApplicationContext())
 //                .addConnectionCallbacks(this)
@@ -94,12 +92,34 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
     void addGeofences() {
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         LocationServices.GeofencingApi.addGeofences(googleApiClient, getGeofencingRequest(), getGeofencePendingIntent()).setResultCallback(this);
     }
+
     private void populateGeofenceList() {
         for (LatLng entry : new LatLng[]{new LatLng(40.742571, -73.935421)}) {
             mGeofenceList.add(new Geofence.Builder()
@@ -145,8 +165,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         return mRoot;
-
-
     }
 
     /**
@@ -198,6 +216,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         builder.addGeofences(mGeofenceList);
         return builder.build();
     }
+
     private PendingIntent getGeofencePendingIntent() {
         Intent intent = new Intent(getApplicationContext(), GeofenceTransitionsIntentService.class);
         return PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);

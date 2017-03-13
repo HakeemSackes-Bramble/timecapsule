@@ -1,4 +1,4 @@
-package com.timecapsule.app.addmediafragment;
+package com.timecapsule.app.addmediafragment.cat_test;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -23,15 +23,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by catwong on 3/12/17.
  */
 
-public class AddCapsuleLocationFragmentCamera extends DialogFragment {
+public class AddCapsuleLocationFragmentVideo extends DialogFragment {
 
     private View mRoot;
     private ImageView iv_gif_location;
     private ImageView iv_close_dialog;
     private TextView tv_add_location;
-
-    public AddCapsuleLocationFragmentCamera() {
-    }
 
     public static AddCapsuleLocationFragmentCamera newInstance(String capsule) {
         AddCapsuleLocationFragmentCamera fragment = new AddCapsuleLocationFragmentCamera();
@@ -92,7 +89,7 @@ public class AddCapsuleLocationFragmentCamera extends DialogFragment {
         tv_add_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openPlacePicker("camera");
+                openPlacePicker("video");
             }
         });
 
@@ -100,7 +97,7 @@ public class AddCapsuleLocationFragmentCamera extends DialogFragment {
 
     private void goToPlacePicker(){
         Intent intent = new Intent(getActivity(), TimePlacePicker.class);
-        AddCapsuleLocationFragmentCamera.this.startActivity(intent);
+        AddCapsuleLocationFragmentVideo.this.startActivity(intent);
     }
 
     private void openPlacePicker(String mediaType) {
@@ -109,7 +106,6 @@ public class AddCapsuleLocationFragmentCamera extends DialogFragment {
         placepickerIntent.putExtra("key", mediaType);
         startActivity(placepickerIntent);
     }
-
 
 
 }

@@ -26,4 +26,24 @@ public class NotificationsFragment extends Fragment {
         mRoot = inflater.inflate(R.layout.fragment_notifications, parent, false);
         return mRoot;
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 }

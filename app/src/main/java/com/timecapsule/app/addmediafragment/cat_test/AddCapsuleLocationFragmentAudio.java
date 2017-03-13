@@ -1,4 +1,4 @@
-package com.timecapsule.app.addmediafragment;
+package com.timecapsule.app.addmediafragment.cat_test;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
