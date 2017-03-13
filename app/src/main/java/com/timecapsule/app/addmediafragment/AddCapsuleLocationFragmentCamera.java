@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
@@ -18,16 +19,18 @@ import com.timecapsule.app.R;
  * Created by catwong on 3/12/17.
  */
 
-public class AddCapsuleLocationFragment extends DialogFragment{
+public class AddCapsuleLocationFragmentCamera extends DialogFragment {
 
     private View mRoot;
     private ImageView iv_gif_location;
+    private ImageView iv_close_dialog;
+    private TextView tv_add_location;
 
-    public AddCapsuleLocationFragment() {
+    public AddCapsuleLocationFragmentCamera() {
     }
 
-    public static AddCapsuleLocationFragment newInstance(String capsule) {
-        AddCapsuleLocationFragment fragment = new AddCapsuleLocationFragment();
+    public static AddCapsuleLocationFragmentCamera newInstance(String capsule) {
+        AddCapsuleLocationFragmentCamera fragment = new AddCapsuleLocationFragmentCamera();
         Bundle args = new Bundle();
         args.putString("capsule", capsule);
         fragment.setArguments(args);
@@ -44,6 +47,8 @@ public class AddCapsuleLocationFragment extends DialogFragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, Bundle savedInstanceState) {
         mRoot = inflater.inflate(R.layout.fragment_add_location, parent, false);
         setViews();
+        setGif();
+        setCloseDialog();
         return mRoot;
     }
 
@@ -55,12 +60,34 @@ public class AddCapsuleLocationFragment extends DialogFragment{
         return dialog;
     }
 
-    private void setViews(){
+    private void setViews() {
         iv_gif_location = (ImageView) mRoot.findViewById(R.id.iv_gif_location);
+        iv_close_dialog = (ImageView) mRoot.findViewById(R.id.iv_close_dialog);
+        tv_add_location = (TextView) mRoot.findViewById(R.id.tv_add_location);
+    }
+
+    private void setGif() {
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(iv_gif_location);
         Glide.with(this)
                 .load(R.drawable.giphy2)
                 .crossFade()
                 .into(imageViewTarget);
     }
+
+    private void setCloseDialog() {
+        iv_close_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDialog().dismiss();
+            }
+        });
+    }
+
+    private void captureAudio(){
+
+
+
+    }
+
+
 }
