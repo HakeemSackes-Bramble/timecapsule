@@ -1,6 +1,7 @@
 package com.timecapsule.app.feedactivity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -26,6 +27,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -66,6 +70,12 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private StorageReference imagesRef;
     private GoogleApiClient googleApiClient;
     private AddCapsuleLocationFragment addCapsuleLocationFragment;
+    private UploadTask uploadTask;
+    private File image;
+    private AudioFragment audioFragment;
+    private AddCapsuleLocationFragmentCamera addCapsuleLocationFragmentCamera;
+    private ProgressDialog mProgress;
+
 
     @Override
     protected void onStart() {
@@ -86,6 +96,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
         imagesRef = storageReference.child("images");
+        mProgress = new ProgressDialog(this);
+
         FacebookSdk.sdkInitialize(FacebookSdk.getApplicationContext());
         requestLocationPermission();
         requestCameraPemission();
@@ -205,6 +217,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         switch (requestCode) {
             case TAKE_PICTURE:
                 if (resultCode == RESULT_OK) {
+                    mProgress.setMessage("uploading photo...");
+                    mProgress.show();
                     if (data != null) {
                         Bundle extras = data.getExtras();
                         Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -229,6 +243,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                addUrlToDatabase(downloadUrl);
+                                mProgress.dismiss();
+
                             }
                         });
                     }
@@ -327,6 +344,11 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_LOCATION);
         }
+    }
+    private void addUrlToDatabase(Uri uri){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("capsules");
+        myRef.setValue(uri.toString());
     }
 
 
