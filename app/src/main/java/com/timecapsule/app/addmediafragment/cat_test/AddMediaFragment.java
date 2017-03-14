@@ -22,14 +22,11 @@ import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.R;
 import com.timecapsule.app.addmediafragment.AudioFragment;
 import com.timecapsule.app.addmediafragment.PlacePickerFragmentActivity;
-
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import static android.app.Activity.RESULT_OK;
 import static com.facebook.FacebookSdk.getApplicationContext;
 

@@ -16,7 +16,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.timecapsule.app.R;
 import com.timecapsule.app.addmediafragment.PlacePickerFragmentActivity;
-
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
