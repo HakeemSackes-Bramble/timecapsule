@@ -112,14 +112,27 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                     .beginTransaction()
                     .add(R.id.container_main, new FeedFragment())
                     .commit();
-        }
 
-        googleApiClient = new GoogleApiClient
-                .Builder(getApplicationContext())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addApi(LocationServices.API)
-                .build();
+            getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+                @Override
+                public void onBackStackChanged() {
+
+
+
+                }
+
+            });
+
+
+
+
+            googleApiClient = new GoogleApiClient
+                    .Builder(getApplicationContext())
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
     }
 
 
@@ -213,7 +226,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 //        startActivityForResult(record, CAPTURE_VIDEO);
 //    }
 
-//    @Override
+    //    @Override
 //    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
 //        switch (requestCode) {
@@ -340,11 +353,12 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-                setBottomNavButtons();
             }
         });
-
     }
+
+
+
 
 
     private void setSearchFragment() {
@@ -362,13 +376,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 .replace(R.id.container_main, new NotificationsFragment())
                 .addToBackStack("notifications")
                 .commit();
-
-        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                setBottomNavButtons();
-            }
-        });
     }
 
 
@@ -378,13 +385,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 .replace(R.id.container_main, new ProfileFragment())
                 .addToBackStack("profile")
                 .commit();
-
-        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                setBottomNavButtons();
-            }
-        });
     }
 
     private void requestCameraPemission() {
@@ -410,7 +410,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                     REQUEST_LOCATION);
         }
     }
-    private void addUrlToDatabase(Uri uri){
+
+    private void addUrlToDatabase(Uri uri) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("capsules");
         myRef.setValue(uri.toString());
