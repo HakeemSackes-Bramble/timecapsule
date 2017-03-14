@@ -1,6 +1,7 @@
 package com.timecapsule.app.feedactivity;
 
 import android.Manifest;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -37,11 +38,12 @@ import com.timecapsule.app.NotificationsFragment;
 import com.timecapsule.app.R;
 import com.timecapsule.app.SearchFragment;
 import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
-import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragmentCamera;
 import com.timecapsule.app.addmediafragment.AudioFragment;
+import com.timecapsule.app.addmediafragment.cat_test.AddCapsuleLocationFragmentCamera;
 import com.timecapsule.app.profilefragment.ProfileFragment;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -62,8 +64,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton fab_photo;
     private FloatingActionButton fab_audio;
     private FloatingActionButton fab_videocam;
-    private AudioFragment audioFragment;
-    private AddCapsuleLocationFragmentCamera addCapsuleLocationFragmentCamera;
     private String mCurrentPhotoPath;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
@@ -73,6 +73,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private UploadTask uploadTask;
     private File image;
     private AudioFragment audioFragment;
+    private Fragment timePlacePickerFragment;
     private AddCapsuleLocationFragmentCamera addCapsuleLocationFragmentCamera;
     private ProgressDialog mProgress;
 
@@ -108,6 +109,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         clickAudio();
         clickVideocam();
 
+        timePlacePickerFragment = new Fragment();
+        timePlacePickerFragment.setArguments( getIntent().getExtras() );
+
         if (savedInstanceState == null) {
             getFragmentManager()
                     .beginTransaction()
@@ -140,9 +144,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void goToAddLocation() {
+    private void goToAddLocation(String mediaType) {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-        addCapsuleLocationFragment = AddCapsuleLocationFragment.newInstance("Add Capsule Location");
+        addCapsuleLocationFragment = AddCapsuleLocationFragment.newInstance(mediaType);
         addCapsuleLocationFragment.show(ft, "Location");
     }
 
@@ -168,7 +172,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         fab_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToAddLocation();
+                goToAddLocation("camera");
             }
         });
     }
@@ -183,7 +187,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         fab_audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToAddLocation();
+                goToAddLocation("audio");
 
             }
         });
@@ -200,7 +204,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         fab_videocam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToAddLocation();
+                goToAddLocation("video");
 
             }
         });

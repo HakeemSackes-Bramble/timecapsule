@@ -1,4 +1,4 @@
-package com.timecapsule.app.addmediafragment;
+package com.timecapsule.app.addmediafragment.cat_test;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.timecapsule.app.R;
-import com.timecapsule.app.geofence.TimePlacePicker;
+import com.timecapsule.app.geofence.TimePlacePickerFragment;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -23,17 +23,15 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by catwong on 3/12/17.
  */
 
-public class AddCapsuleLocationFragmentAudio extends DialogFragment {
+public class AddCapsuleLocationFragmentVideo extends DialogFragment {
 
     private View mRoot;
     private ImageView iv_gif_location;
     private ImageView iv_close_dialog;
     private TextView tv_add_location;
-    String mediaType;
 
-
-    public static AddCapsuleLocationFragmentAudio newInstance(String capsule) {
-        AddCapsuleLocationFragmentAudio fragment = new AddCapsuleLocationFragmentAudio();
+    public static AddCapsuleLocationFragmentCamera newInstance(String capsule) {
+        AddCapsuleLocationFragmentCamera fragment = new AddCapsuleLocationFragmentCamera();
         Bundle args = new Bundle();
         args.putString("capsule", capsule);
         fragment.setArguments(args);
@@ -91,22 +89,23 @@ public class AddCapsuleLocationFragmentAudio extends DialogFragment {
         tv_add_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openPlacePicker("audio");
+                openPlacePicker("video");
             }
         });
 
     }
 
     private void goToPlacePicker(){
-        Intent intent = new Intent(getActivity(), TimePlacePicker.class);
-        AddCapsuleLocationFragmentAudio.this.startActivity(intent);
+        Intent intent = new Intent(getActivity(), TimePlacePickerFragment.class);
+        AddCapsuleLocationFragmentVideo.this.startActivity(intent);
     }
 
     private void openPlacePicker(String mediaType) {
         // Create an explicit content Intent that starts the timePlacePickerActivity.
-        Intent placepickerIntent = new Intent(getApplicationContext(), TimePlacePicker.class);
+        Intent placepickerIntent = new Intent(getApplicationContext(), TimePlacePickerFragment.class);
         placepickerIntent.putExtra("key", mediaType);
         startActivity(placepickerIntent);
     }
+
 
 }
