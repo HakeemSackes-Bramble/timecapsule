@@ -37,11 +37,12 @@ import com.timecapsule.app.NotificationsFragment;
 import com.timecapsule.app.R;
 import com.timecapsule.app.SearchFragment;
 import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
-import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragmentCamera;
+import com.timecapsule.app.addmediafragment.cat_test.AddCapsuleLocationFragmentCamera;
 import com.timecapsule.app.addmediafragment.AudioFragment;
 import com.timecapsule.app.profilefragment.ProfileFragment;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -62,8 +63,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton fab_photo;
     private FloatingActionButton fab_audio;
     private FloatingActionButton fab_videocam;
-    private AudioFragment audioFragment;
-    private AddCapsuleLocationFragmentCamera addCapsuleLocationFragmentCamera;
     private String mCurrentPhotoPath;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
@@ -345,7 +344,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                     REQUEST_LOCATION);
         }
     }
-    private void addUrlToDatabase(Uri uri){
+
+    private void addUrlToDatabase(Uri uri) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("capsules");
         myRef.setValue(uri.toString());

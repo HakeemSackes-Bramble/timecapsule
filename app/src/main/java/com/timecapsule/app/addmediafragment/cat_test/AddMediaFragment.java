@@ -1,4 +1,4 @@
-package com.timecapsule.app.addmediafragment;
+package com.timecapsule.app.addmediafragment.cat_test;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -20,6 +20,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.R;
+import com.timecapsule.app.addmediafragment.AudioFragment;
 import com.timecapsule.app.geofence.TimePlacePicker;
 
 import java.io.ByteArrayOutputStream;
