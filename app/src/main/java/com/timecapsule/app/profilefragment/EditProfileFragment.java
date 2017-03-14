@@ -131,7 +131,7 @@ public class EditProfileFragment extends Fragment {
                 "Cancel"};
 
         TextView title = new TextView(getActivity());
-        title.setText("Add Photo!");
+        title.setText("Change Profile Photo");
         title.setBackgroundColor(Color.BLACK);
         title.setPadding(10, 15, 15, 10);
         title.setGravity(Gravity.CENTER);
@@ -358,6 +358,26 @@ public class EditProfileFragment extends Fragment {
             iv_profile.setImageDrawable(Drawable.createFromPath(sharedPreferences.getString(PROFILE_PHOTO_KEY, "")));
         }
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
 

@@ -23,6 +23,7 @@ import com.timecapsule.app.R;
 import com.timecapsule.app.addmediafragment.AudioFragment;
 import com.timecapsule.app.geofence.TimePlacePickerFragment;
 
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
