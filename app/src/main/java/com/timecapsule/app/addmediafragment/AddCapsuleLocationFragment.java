@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.timecapsule.app.R;
-import com.timecapsule.app.geofence.TimePlacePickerFragment;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -30,9 +29,6 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     private ImageView iv_close_dialog;
     private TextView tv_add_location;
     private String mediaType;
-    private String locationLat;
-    private double locationLong;
-    private String address;
 
     public AddCapsuleLocationFragment() {
 
@@ -59,6 +55,7 @@ public class AddCapsuleLocationFragment extends DialogFragment {
         mRoot = inflater.inflate(R.layout.fragment_add_location, parent, false);
         setViews();
         setGif();
+        setCloseDialog();
         return mRoot;
     }
 
@@ -100,10 +97,18 @@ public class AddCapsuleLocationFragment extends DialogFragment {
 //
 //    }
 
+    private void setCloseDialog() {
+        iv_close_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDialog().dismiss();
+            }
+        });
+    }
 
     public void openPlacePicker() {
         // Create an explicit content Intent that starts the timePlacePickerActivity.
-        Intent placepickerIntent = new Intent(getApplicationContext(), TimePlacePickerFragment.class);
+        Intent placepickerIntent = new Intent(getApplicationContext(), PlacePickerFragmentActivity.class);
         placepickerIntent.putExtra("key", mediaType);
         startActivity(placepickerIntent);
     }
