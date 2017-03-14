@@ -38,6 +38,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--<activity android:name="com.timecapsule.app.feedactivity.FeedActivity" />-->
+        <!--<activity android:name="com.timecapsule.app.GoogleMapsActivity" />-->
+        <activity android:name=".geofence.TimePlacePickerFragment"/>
+        <!--<activity android:name=".addmediafragment.GoToMedia"/>-->
+        <!--<activity android:name="com.timecapsule.app.profilefragment.ProfileActivity"/>-->
         <activity android:name="com.timecapsule.app.feedactivity.FeedActivity"
             android:screenOrientation="portrait" />
         <activity android:name="com.timecapsule.app.GoogleMapsActivity"
