@@ -1,5 +1,6 @@
 package com.timecapsule.app.addmediafragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -7,10 +8,12 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -28,13 +31,12 @@ public class GoToMedia extends AppCompatActivity {
 
     private static final int TAKE_PICTURE = 200;
     private static final int CAPTURE_VIDEO = 201;
-    private View mRoot;
     private AudioFragment audioFragment;
-    private String mCurrentPhotoPath;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
     private StorageReference imagesRef;
     private UploadTask uploadTask;
+    private ProgressDialog mProgress;
     private String mediaType;
     private double locationLat;
     private double locationLong;
@@ -88,6 +90,12 @@ public class GoToMedia extends AppCompatActivity {
         startActivityForResult(record, CAPTURE_VIDEO);
     }
 
+    private void addUrlToDatabase(Uri uri) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("capsules");
+        myRef.setValue(uri.toString());
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -95,6 +103,8 @@ public class GoToMedia extends AppCompatActivity {
         switch (requestCode) {
             case TAKE_PICTURE:
                 if (resultCode == RESULT_OK) {
+                    mProgress.setMessage("uploading photo...");
+                    mProgress.show();
                     if (data != null) {
                         Bundle extras = data.getExtras();
                         Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -119,6 +129,9 @@ public class GoToMedia extends AppCompatActivity {
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                addUrlToDatabase(downloadUrl);
+                                mProgress.dismiss();
+
                             }
                         });
                     }

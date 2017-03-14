@@ -43,8 +43,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class SearchFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
 
-    protected ArrayList<Geofence> mGeofenceList;
     private static final String TAG = SearchFragment.class.getSimpleName();
+    protected ArrayList<Geofence> mGeofenceList;
     private View mRoot;
     private GoogleMap mMap;
     private FusedLocationProviderApi location;
@@ -73,8 +73,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         googleApiClient = locationObject.getmGoogleApiClient();
 
 
-
-
 //        googleApiClient = new GoogleApiClient
 //                .Builder(getApplicationContext())
 //                .addConnectionCallbacks(this)
@@ -94,12 +92,48 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        mRoot = inflater.inflate(R.layout.fragment_search, parent, false);
+        mapFragment = new MapFragment();
+        getChildFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container_map, mapFragment)
+                .commit();
+        mapFragment.getMapAsync(this);
+        return mRoot;
+    }
+
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
     void addGeofences() {
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         LocationServices.GeofencingApi.addGeofences(googleApiClient, getGeofencingRequest(), getGeofencePendingIntent()).setResultCallback(this);
     }
+
     private void populateGeofenceList() {
         for (LatLng entry : new LatLng[]{new LatLng(40.742571, -73.935421)}) {
             mGeofenceList.add(new Geofence.Builder()
@@ -137,17 +171,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        mRoot = inflater.inflate(R.layout.fragment_search, parent, false);
-        mapFragment = (MapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        return mRoot;
 
-
-    }
 
     /**
      * Manipulates the map once available.
@@ -172,14 +196,13 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
             mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation2));
             mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
             mMap.setMyLocationEnabled(true);
-            addGeofences();
 
         }
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
+        addGeofences();
     }
 
     @Override
@@ -198,6 +221,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         builder.addGeofences(mGeofenceList);
         return builder.build();
     }
+
     private PendingIntent getGeofencePendingIntent() {
         Intent intent = new Intent(getApplicationContext(), GeofenceTransitionsIntentService.class);
         return PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);

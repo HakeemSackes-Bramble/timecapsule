@@ -1,37 +1,37 @@
-package com.timecapsule.app.geofence;
+package com.timecapsule.app.addmediafragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.Toast;
+import android.view.View;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
-import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
-import com.timecapsule.app.addmediafragment.GoToMedia;
 
-public class TimePlacePicker extends AppCompatActivity {
+public class PlacePickerFragmentActivity extends FragmentActivity {
 
+    private static final String TAG = "TimePlacePickerFrag";
     int PLACE_PICKER_REQUEST = 1;
+    //    private AddCapsuleLocationFragment addCapsuleLocationFragment;
     String mediaType;
-    private Button get_place;
-    private AddCapsuleLocationFragment addCapsuleLocationFragment;
-
+    private View mRoot;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        setContentView();
         mediaType = getIntent().getExtras().getString("key");
+
 
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
         Intent intent;
         try {
-            intent = builder.build(TimePlacePicker.this);
+            intent = builder.build(this);
             startActivityForResult(intent, PLACE_PICKER_REQUEST);
         } catch (GooglePlayServicesRepairableException e) {
             e.printStackTrace();
@@ -43,10 +43,9 @@ public class TimePlacePicker extends AppCompatActivity {
     }
 
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         Log.d("TIMEPLACE", "onActivityResult: ");
-        Toast.makeText(this, "place selected" + resultCode, Toast.LENGTH_SHORT).show();
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
@@ -64,11 +63,11 @@ public class TimePlacePicker extends AppCompatActivity {
                 gotoMediaIntent.putExtra("keyLocationLat", locationLat);
                 gotoMediaIntent.putExtra("keyLocationLong", locationLong);
                 gotoMediaIntent.putExtra("keyAddress", address);
-                addCapsuleLocationFragment = new AddCapsuleLocationFragment();
-                addCapsuleLocationFragment.setArguments(bundle);
+
                 startActivity(gotoMediaIntent);
 
             }
         }
     }
+
 }

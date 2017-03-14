@@ -21,14 +21,12 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.R;
 import com.timecapsule.app.addmediafragment.AudioFragment;
-import com.timecapsule.app.geofence.TimePlacePicker;
-
+import com.timecapsule.app.addmediafragment.PlacePickerFragmentActivity;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import static android.app.Activity.RESULT_OK;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -211,7 +209,7 @@ public class AddMediaFragment extends Fragment {
 
     private void openPlacePicker(String mediaType) {
         // Create an explicit content Intent that starts the timePlacePickerActivity.
-        Intent placepickerIntent = new Intent(getApplicationContext(), TimePlacePicker.class);
+        Intent placepickerIntent = new Intent(getApplicationContext(), PlacePickerFragmentActivity.class);
         placepickerIntent.putExtra("key", mediaType);
         startActivity(placepickerIntent);
     }

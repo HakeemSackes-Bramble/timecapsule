@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.timecapsule.app.R;
-import com.timecapsule.app.geofence.TimePlacePicker;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -30,14 +29,15 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     private ImageView iv_close_dialog;
     private TextView tv_add_location;
     private String mediaType;
-    private String locationLat;
-    private double locationLong;
-    private String address;
 
-    public static AddCapsuleLocationFragment newInstance(String capsule) {
+    public AddCapsuleLocationFragment() {
+
+    }
+
+    public static AddCapsuleLocationFragment newInstance(String mediaType) {
         AddCapsuleLocationFragment fragment = new AddCapsuleLocationFragment();
         Bundle args = new Bundle();
-        args.putString("capsule", capsule);
+        args.putString("keyMediaType", mediaType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,18 +47,15 @@ public class AddCapsuleLocationFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         mediaType = args.getString("keyMediaType");
-
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, Bundle savedInstanceState) {
-        mediaType = getArguments().getString("keyMediaType");
         mRoot = inflater.inflate(R.layout.fragment_add_location, parent, false);
         setViews();
         setGif();
         setCloseDialog();
-        goToAddLocation();
         return mRoot;
     }
 
@@ -74,6 +71,12 @@ public class AddCapsuleLocationFragment extends DialogFragment {
         iv_gif_location = (ImageView) mRoot.findViewById(R.id.iv_gif_location);
         iv_close_dialog = (ImageView) mRoot.findViewById(R.id.iv_close_dialog);
         tv_add_location = (TextView) mRoot.findViewById(R.id.tv_add_location);
+        tv_add_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openPlacePicker();
+            }
+        });
     }
 
     private void setGif() {
@@ -84,6 +87,16 @@ public class AddCapsuleLocationFragment extends DialogFragment {
                 .into(imageViewTarget);
     }
 
+//    private void goToAddLocation(){
+//        tv_add_location.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openPlacePicker(mediaType);
+//            }
+//        });
+//
+//    }
+
     private void setCloseDialog() {
         iv_close_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,20 +106,9 @@ public class AddCapsuleLocationFragment extends DialogFragment {
         });
     }
 
-    private void goToAddLocation(){
-        tv_add_location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openPlacePicker(mediaType);
-            }
-        });
-
-    }
-
-
-    private void openPlacePicker(String mediaType) {
+    public void openPlacePicker() {
         // Create an explicit content Intent that starts the timePlacePickerActivity.
-        Intent placepickerIntent = new Intent(getApplicationContext(), TimePlacePicker.class);
+        Intent placepickerIntent = new Intent(getApplicationContext(), PlacePickerFragmentActivity.class);
         placepickerIntent.putExtra("key", mediaType);
         startActivity(placepickerIntent);
     }

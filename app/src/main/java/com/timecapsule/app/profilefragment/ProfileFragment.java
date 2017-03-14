@@ -96,7 +96,28 @@ public class ProfileFragment extends Fragment {
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container_main, new EditProfileFragment())
+                .addToBackStack("edit profile")
                 .commit();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
 
