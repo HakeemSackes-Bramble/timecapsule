@@ -116,16 +116,23 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
             getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
                 @Override
                 public void onBackStackChanged() {
-                }
-            });
-        }
 
-        googleApiClient = new GoogleApiClient
-                .Builder(getApplicationContext())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addApi(LocationServices.API)
-                .build();
+
+
+                }
+
+            });
+
+
+
+
+            googleApiClient = new GoogleApiClient
+                    .Builder(getApplicationContext())
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
     }
 
 
@@ -346,10 +353,12 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-
             }
         });
     }
+
+
+
 
 
     private void setSearchFragment() {
@@ -376,7 +385,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 .replace(R.id.container_main, new ProfileFragment())
                 .addToBackStack("profile")
                 .commit();
-
     }
 
     private void requestCameraPemission() {

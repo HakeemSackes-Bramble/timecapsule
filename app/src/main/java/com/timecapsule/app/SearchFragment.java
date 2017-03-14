@@ -92,6 +92,20 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        mRoot = inflater.inflate(R.layout.fragment_search, parent, false);
+        mapFragment = new MapFragment();
+        getChildFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container_map, mapFragment)
+                .commit();
+        mapFragment.getMapAsync(this);
+        return mRoot;
+    }
+
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -157,15 +171,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        mRoot = inflater.inflate(R.layout.fragment_search, parent, false);
-        mapFragment = (MapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        return mRoot;
-    }
+
 
     /**
      * Manipulates the map once available.
@@ -190,14 +196,13 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
             mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation2));
             mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
             mMap.setMyLocationEnabled(true);
-            addGeofences();
 
         }
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
+        addGeofences();
     }
 
     @Override
