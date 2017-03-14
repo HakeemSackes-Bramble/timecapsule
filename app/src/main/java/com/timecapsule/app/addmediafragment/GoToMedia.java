@@ -48,6 +48,7 @@ public class GoToMedia extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
+        mProgress = new ProgressDialog(this);
         imagesRef = storageReference.child("images");
         mediaType = getIntent().getExtras().getString("keyMediaType");
         locationLat = getIntent().getExtras().getDouble("keyLocationLat");
