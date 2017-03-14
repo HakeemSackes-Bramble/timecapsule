@@ -111,6 +111,8 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         super.onViewCreated(view, savedInstanceState);
     }
 
+
+
     @Override
     public void onPause() {
         super.onPause();

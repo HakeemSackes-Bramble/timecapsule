@@ -33,6 +33,8 @@
         android:layout_gravity="top|center"
         android:background="@color/colorPink"
         android:text="ADD LOCATION"
+        android:textColor="@color/colorBlack"
+        android:textSize="20dp"
         android:layout_weight="0.04" />
 
 </LinearLayout>

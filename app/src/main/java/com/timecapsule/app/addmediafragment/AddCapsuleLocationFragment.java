@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.timecapsule.app.PlacePickerFragmentActivity;
 import com.timecapsule.app.R;
-import com.timecapsule.app.geofence.TimePlacePicker;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -34,10 +34,12 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     private double locationLong;
     private String address;
 
-    public static AddCapsuleLocationFragment newInstance(String capsule) {
+    public AddCapsuleLocationFragment(){}
+
+    public static AddCapsuleLocationFragment newInstance(String mediaType) {
         AddCapsuleLocationFragment fragment = new AddCapsuleLocationFragment();
         Bundle args = new Bundle();
-        args.putString("capsule", capsule);
+        args.putString("keyMediaType", mediaType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,13 +49,11 @@ public class AddCapsuleLocationFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         mediaType = args.getString("keyMediaType");
-
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, Bundle savedInstanceState) {
-        mediaType = getArguments().getString("keyMediaType");
         mRoot = inflater.inflate(R.layout.fragment_add_location, parent, false);
         setViews();
         setGif();
@@ -97,16 +97,16 @@ public class AddCapsuleLocationFragment extends DialogFragment {
         tv_add_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openPlacePicker(mediaType);
+                openPlacePicker();
             }
         });
 
     }
 
 
-    private void openPlacePicker(String mediaType) {
+    private void openPlacePicker() {
         // Create an explicit content Intent that starts the timePlacePickerActivity.
-        Intent placepickerIntent = new Intent(getApplicationContext(), TimePlacePicker.class);
+        Intent placepickerIntent = new Intent(getApplicationContext(), PlacePickerFragmentActivity.class);
         placepickerIntent.putExtra("key", mediaType);
         startActivity(placepickerIntent);
     }

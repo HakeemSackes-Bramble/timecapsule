@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TimePlacePickerFragment">
+        <attr name="camera" format="string" />
+        <attr name="video" format="string" />
+        <attr name="audio" format="string" />
+
+    </declare-styleable>
+</resources>
