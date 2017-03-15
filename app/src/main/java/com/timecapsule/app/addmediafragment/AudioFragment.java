@@ -204,6 +204,7 @@ public class AudioFragment extends DialogFragment {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
             }
         });
     }
