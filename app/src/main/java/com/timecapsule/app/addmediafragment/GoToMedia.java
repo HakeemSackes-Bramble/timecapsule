@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 
 /**
@@ -98,13 +99,14 @@ public class GoToMedia extends AppCompatActivity {
     }
 
     private void addUrlToDatabase(Uri uri) {
+        String capsuleId = UUID.randomUUID().toString().replaceAll("-", "");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users")
                 .child(FirebaseAuth.getInstance()
                 .getCurrentUser().getUid())
-                .child("capsules");
+                .child("capsules").child(capsuleId);
         myRef.setValue(uri.toString());
-        DatabaseReference capRef = database.getReference("capsules");
+        DatabaseReference capRef = database.getReference("capsules").child(capsuleId);
         String storageLink = uri.toString();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
