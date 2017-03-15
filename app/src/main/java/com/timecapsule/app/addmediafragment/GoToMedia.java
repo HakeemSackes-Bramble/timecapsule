@@ -1,21 +1,27 @@
 package com.timecapsule.app.addmediafragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.timecapsule.app.profilefragment.model.Capsule;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -28,17 +34,17 @@ public class GoToMedia extends AppCompatActivity {
 
     private static final int TAKE_PICTURE = 200;
     private static final int CAPTURE_VIDEO = 201;
-    private View mRoot;
     private AudioFragment audioFragment;
-    private String mCurrentPhotoPath;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
     private StorageReference imagesRef;
     private UploadTask uploadTask;
+    private ProgressDialog mProgress;
     private String mediaType;
     private double locationLat;
     private double locationLong;
     private String address;
+    private File destinationFile;
 
 
     @Override
@@ -46,6 +52,7 @@ public class GoToMedia extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
+        mProgress = new ProgressDialog(this);
         imagesRef = storageReference.child("images");
         mediaType = getIntent().getExtras().getString("keyMediaType");
         locationLat = getIntent().getExtras().getDouble("keyLocationLat");
@@ -88,6 +95,17 @@ public class GoToMedia extends AppCompatActivity {
         startActivityForResult(record, CAPTURE_VIDEO);
     }
 
+    private void addUrlToDatabase(Uri uri) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("capsules");
+        DatabaseReference capRef = database.getReference("capsules");
+        String storageLink = uri.toString();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
+        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
+
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -95,6 +113,8 @@ public class GoToMedia extends AppCompatActivity {
         switch (requestCode) {
             case TAKE_PICTURE:
                 if (resultCode == RESULT_OK) {
+                    mProgress.setMessage("uploading photo...");
+                    mProgress.show();
                     if (data != null) {
                         Bundle extras = data.getExtras();
                         Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -119,10 +139,21 @@ public class GoToMedia extends AppCompatActivity {
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                addUrlToDatabase(downloadUrl);
+                                mProgress.dismiss();
+
                             }
                         });
                     }
+                } break;
+            case CAPTURE_VIDEO:
+                if (resultCode == RESULT_OK) {
+                    mProgress.setMessage("uploading video...");
+                    mProgress.show();
+                    if (data != null) {
+                    }
                 }
+                break;
         }
     }
 }

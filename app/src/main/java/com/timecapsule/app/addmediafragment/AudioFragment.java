@@ -47,11 +47,11 @@ public class AudioFragment extends DialogFragment {
     private View mRoot;
     private String fileName;
     private Boolean isRecording;
+    private ImageView iv_close_dialog;
     private ImageView iv_audio_record;
     private ImageView iv_audio_stop_record;
     private ImageView iv_audio_play;
     private TextView tv_audio_time;
-    private ImageView iv_cassette;
     Runnable UpdatePlayTime = new Runnable() {
         public void run() {
             if (mPlayer.isPlaying()) {
@@ -64,6 +64,7 @@ public class AudioFragment extends DialogFragment {
             }
         }
     };
+    private ImageView iv_cassette;
     private int MAX_DURATION = 15000;
     private int MAX_SECONDS = 16;
     private FirebaseStorage firebaseStorage;
@@ -138,9 +139,16 @@ public class AudioFragment extends DialogFragment {
         iv_cassette = (ImageView) mRoot.findViewById(R.id.iv_audio_cassette);
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(iv_cassette);
         Glide.with(this)
-                .load(R.drawable.audio_giphy4)
+                .load(R.drawable.gif_audio)
                 .crossFade()
                 .into(imageViewTarget);
+        iv_close_dialog = (ImageView) mRoot.findViewById(R.id.iv_audio_close_dialog);
+        iv_close_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         iv_audio_record = (ImageView) mRoot.findViewById(R.id.iv_audio_record);
         iv_audio_stop_record = (ImageView) mRoot.findViewById(R.id.iv_audio_stop_record);
         iv_audio_play = (ImageView) mRoot.findViewById(R.id.iv_audio_play);
@@ -179,6 +187,7 @@ public class AudioFragment extends DialogFragment {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
             }
         });
     }
