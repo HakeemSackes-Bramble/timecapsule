@@ -40,6 +40,7 @@ public class GoToMedia extends AppCompatActivity {
     private UploadTask uploadTask;
     private ProgressDialog mProgress;
     private String mediaType;
+    private CapsuleUploadFragment capsuleUploadFragment;
     private double locationLat;
     private double locationLong;
     private String address;
@@ -138,13 +139,18 @@ public class GoToMedia extends AppCompatActivity {
                                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
                                 addUrlToDatabase(downloadUrl);
                                 mProgress.dismiss();
-                                gotoFeedActivity();
-
+                                goToCapsuleUploadFragment("capsule upload");
                             }
                         });
                     }
                 }
         }
+    }
+
+    private void goToCapsuleUploadFragment(String capsuleUpload){
+            android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+            capsuleUploadFragment = CapsuleUploadFragment.newInstance(capsuleUpload);
+            capsuleUploadFragment.show(ft, "Capsule Uploaded");
     }
 
     private void gotoFeedActivity(){

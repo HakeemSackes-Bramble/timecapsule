@@ -42,6 +42,7 @@ public class AudioFragment extends DialogFragment {
     int recordTime;
     int playTime;
     MediaRecorder mRecorder;
+    private CapsuleUploadFragment capsuleUploadFragment;
     private SeekBar mSeekBar;
     private MediaPlayer mPlayer;
     private View mRoot;
@@ -52,6 +53,7 @@ public class AudioFragment extends DialogFragment {
     private ImageView iv_audio_stop_record;
     private ImageView iv_audio_play;
     private TextView tv_audio_time;
+    private TextView tv_add_audio;
     Runnable UpdatePlayTime = new Runnable() {
         public void run() {
             if (mPlayer.isPlaying()) {
@@ -155,7 +157,20 @@ public class AudioFragment extends DialogFragment {
         iv_audio_stop_record = (ImageView) mRoot.findViewById(R.id.iv_audio_stop_record);
         iv_audio_play = (ImageView) mRoot.findViewById(R.id.iv_audio_play);
         tv_audio_time = (TextView) mRoot.findViewById(R.id.tv_audio_time);
+        tv_add_audio = (TextView) mRoot.findViewById(R.id.tv_add_audio);
+        tv_add_audio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCapsuleUploadFragment("capsule upload");
+            }
+        });
         mSeekBar = (SeekBar) mRoot.findViewById(R.id.seek_bar);
+    }
+
+    private void goToCapsuleUploadFragment(String capsuleUpload){
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        capsuleUploadFragment = CapsuleUploadFragment.newInstance(capsuleUpload);
+        capsuleUploadFragment.show(ft, "Capsule Uploaded");
     }
 
     public void MediaRecorderReady() {
