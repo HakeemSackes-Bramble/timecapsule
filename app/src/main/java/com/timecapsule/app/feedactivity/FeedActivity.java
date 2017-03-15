@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.widget.AppInviteDialog;
@@ -33,6 +34,7 @@ import com.timecapsule.app.SearchFragment;
 import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
 import com.timecapsule.app.addmediafragment.cat_test.AddCapsuleLocationFragmentCamera;
 import com.timecapsule.app.profilefragment.ProfileFragment;
+
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -60,6 +62,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 
 
     @Override
+
     protected void onStart() {
         super.onStart();
         googleApiClient.connect();
@@ -124,12 +127,12 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+
     private void goToAddLocation(String mediaType) {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         addCapsuleLocationFragment = AddCapsuleLocationFragment.newInstance(mediaType);
         addCapsuleLocationFragment.show(ft, "Location");
     }
-
 
     private void clickCamera() {
         fab_photo.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +150,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 mediaType = "audio";
                 goToAddLocation("audio");
-
             }
         });
 
@@ -157,6 +159,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         fab_videocam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 mediaType = "video";
                 goToAddLocation("video");
 

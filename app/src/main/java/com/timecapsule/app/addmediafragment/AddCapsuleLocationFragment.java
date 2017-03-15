@@ -11,16 +11,15 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.timecapsule.app.R;
-
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by catwong on 3/12/17.
  */
+
 
 public class AddCapsuleLocationFragment extends DialogFragment {
 
@@ -30,8 +29,8 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     private TextView tv_add_location;
     private String mediaType;
 
-    public AddCapsuleLocationFragment() {
 
+    public AddCapsuleLocationFragment() {
     }
 
     public static AddCapsuleLocationFragment newInstance(String mediaType) {
@@ -45,6 +44,7 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Bundle args = getArguments();
         mediaType = args.getString("keyMediaType");
     }
@@ -52,6 +52,8 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, Bundle savedInstanceState) {
+
+        mediaType = getArguments().getString("keyMediaType");
         mRoot = inflater.inflate(R.layout.fragment_add_location, parent, false);
         setViews();
         setGif();
@@ -81,6 +83,7 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     }
 
     private void setGif() {
+
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(iv_gif_location);
         Glide.with(this)
                 .load(R.drawable.giphy2)
@@ -113,5 +116,4 @@ public class AddCapsuleLocationFragment extends DialogFragment {
         placepickerIntent.putExtra("key", mediaType);
         startActivity(placepickerIntent);
     }
-
 }
