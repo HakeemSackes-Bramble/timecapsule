@@ -64,6 +64,8 @@ public class CapsuleUploadFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+
+
     private void setViews (){
         iv_time_capsule_upload = (ImageView) mRoot.findViewById(R.id.iv_time_capsule_upload);
         iv_time_capsule_upload.setOnClickListener(new View.OnClickListener() {
