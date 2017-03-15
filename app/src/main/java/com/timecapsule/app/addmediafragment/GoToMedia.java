@@ -17,6 +17,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.timecapsule.app.R;
+import com.timecapsule.app.feedactivity.FeedActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
@@ -93,7 +95,10 @@ public class GoToMedia extends AppCompatActivity {
 
     private void addUrlToDatabase(Uri uri) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("capsules");
+        DatabaseReference myRef = database.getReference("users")
+                .child(FirebaseAuth.getInstance()
+                .getCurrentUser().getUid())
+                .child("capsules");
         myRef.setValue(uri.toString());
     }
 
@@ -104,7 +109,8 @@ public class GoToMedia extends AppCompatActivity {
         switch (requestCode) {
             case TAKE_PICTURE:
                 if (resultCode == RESULT_OK) {
-                    mProgress.setMessage("uploading photo...");
+                    mProgress.setMessage("Uploading Photo");
+                    mProgress.setIcon(R.drawable.time_capsule_logo12);
                     mProgress.show();
                     if (data != null) {
                         Bundle extras = data.getExtras();
@@ -132,11 +138,17 @@ public class GoToMedia extends AppCompatActivity {
                                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
                                 addUrlToDatabase(downloadUrl);
                                 mProgress.dismiss();
+                                gotoFeedActivity();
 
                             }
                         });
                     }
                 }
         }
+    }
+
+    private void gotoFeedActivity(){
+        Intent intent = new Intent(this, FeedActivity.class);
+        this.startActivity(intent);
     }
 }
