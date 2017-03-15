@@ -4,21 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_audio"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPink"
     android:gravity="center_horizontal"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.timecapsule.app.addmediafragment.AudioFragment">
 
     <ImageView
+        android:id="@+id/iv_audio_close_dialog"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:paddingRight="10dp"
+        android:src="@drawable/ic_clear_black_24dp" />
+
+    <ImageView
         android:id="@+id/iv_audio_cassette"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@+id/iv_audio_close_dialog"
+        android:layout_centerHorizontal="true" />
+
+
+    <TextView
+        android:id="@+id/tv_audio_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/iv_audio_cassette"
         android:layout_centerHorizontal="true"
-        android:layout_centerInParent="true" />
+        android:textColor="#000000"
+        android:text="Press Record Button"/>
 
     <SeekBar
         android:id="@+id/seek_bar"
@@ -26,22 +43,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_audio_time"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="21dp"
+        android:layout_marginBottom="11dp"
+        android:thumbTint="#fff000"
         android:progressTint="@color/colorPrimaryDark" />
-
-    <TextView
-        android:id="@+id/tv_audio_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/iv_audio_cassette"
-        android:layout_centerHorizontal="true"
-        android:textColor="#000000" />
 
     <ImageView
         android:id="@+id/iv_audio_record"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_below="@id/seek_bar"
+        android:background="@color/colorPrimaryDark"
         android:gravity="center_horizontal"
         android:src="@drawable/ic_fiber_manual_record_black_48dp"
         app:layout_widthPercent="33.33%" />
@@ -52,6 +63,7 @@
         android:layout_height="48dp"
         android:layout_alignTop="@+id/iv_audio_record"
         android:layout_toStartOf="@+id/iv_audio_stop_record"
+        android:background="@color/colorPrimaryDark"
         android:gravity="center_horizontal"
         android:src="@drawable/ic_play_arrow_black_48dp"
         app:layout_widthPercent="33.33%" />
@@ -62,9 +74,21 @@
         android:layout_height="48dp"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/iv_audio_play"
+        android:background="@color/colorPrimaryDark"
         android:gravity="center_horizontal"
         android:src="@drawable/ic_stop_black_48dp"
         app:layout_widthPercent="33.33%" />
+
+    <TextView
+        android:id="@+id/tv_add_audio"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/iv_audio_stop_record"
+        android:layout_gravity="center"
+        android:background="@color/colorPink"
+        android:gravity="center"
+        android:text="ADD AUDIO"
+        android:textSize="20dp" />
 
 
 </android.support.percent.PercentRelativeLayout>
