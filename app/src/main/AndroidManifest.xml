@@ -41,7 +41,7 @@
 
         <!--<activity android:name="com.timecapsule.app.feedactivity.FeedActivity" />-->
         <!--<activity android:name="com.timecapsule.app.GoogleMapsActivity" />-->
-        <activity android:name=".addmediafragment.PlacePickerFragmentActivity"/>
+        <activity android:name=".locationpick.PlacePickerFragmentActivity"/>
         <!--<activity android:name=".addmediafragment.GoToMedia"/>-->
         <!--<activity android:name="com.timecapsule.app.profilefragment.ProfileActivity"/>-->
         <activity android:name="com.timecapsule.app.feedactivity.FeedActivity"

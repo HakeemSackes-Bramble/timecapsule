@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:gravity="center"
+    android:background="@color/colorPink"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <fragment xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/ad_fragment"
-        android:name="com.timecapsule.app.addmediafragment.PlacePickerFragmentActivity"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        app:camera="camera" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_nearbyLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin" />
 
-</RelativeLayout>
+
+</LinearLayout>
