@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -17,8 +18,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.timecapsule.app.profilefragment.model.Capsule;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -41,6 +44,7 @@ public class GoToMedia extends AppCompatActivity {
     private double locationLat;
     private double locationLong;
     private String address;
+    private File destinationFile;
 
 
     @Override
@@ -94,7 +98,12 @@ public class GoToMedia extends AppCompatActivity {
     private void addUrlToDatabase(Uri uri) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("capsules");
-        myRef.setValue(uri.toString());
+        DatabaseReference capRef = database.getReference("capsules");
+        String storageLink = uri.toString();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
+        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
+
     }
 
 
@@ -136,7 +145,15 @@ public class GoToMedia extends AppCompatActivity {
                             }
                         });
                     }
+                } break;
+            case CAPTURE_VIDEO:
+                if (resultCode == RESULT_OK) {
+                    mProgress.setMessage("uploading video...");
+                    mProgress.show();
+                    if (data != null) {
+                    }
                 }
+                break;
         }
     }
 }
