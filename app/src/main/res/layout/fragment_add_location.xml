@@ -26,6 +26,7 @@
         android:layout_weight="0.57" />
 
     <TextView
+
         android:id="@+id/tv_add_location"
         android:layout_width="match_parent"
         android:layout_height="40dp"

@@ -58,6 +58,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 
 
     @Override
+
     protected void onStart() {
         super.onStart();
         googleApiClient.connect();
@@ -122,12 +123,12 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+
     private void goToAddLocation(String mediaType) {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         addCapsuleLocationFragment = AddCapsuleLocationFragment.newInstance(mediaType);
         addCapsuleLocationFragment.show(ft, "Location");
     }
-
 
     private void clickCamera() {
         fab_photo.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +146,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 mediaType = "audio";
                 goToAddLocation("audio");
-
             }
         });
 
@@ -155,6 +155,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         fab_videocam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 mediaType = "video";
                 goToAddLocation("video");
 
