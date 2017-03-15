@@ -6,9 +6,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.STORAGE" />
-
     <uses-feature android:name="android.hardware.camera2.full" />
-
+    <uses-feature android:name="android.hardware.screen.portrait" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -31,16 +30,22 @@
             android:value="@string/facebook_app_id" />
 
 
-        <activity android:name="com.timecapsule.app.loginactivity.LoginActivity">
+        <activity android:name="com.timecapsule.app.loginactivity.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.timecapsule.app.feedactivity.FeedActivity" />
-        <activity android:name="com.timecapsule.app.GoogleMapsActivity" />
-        <activity android:name="com.timecapsule.app.profilefragment.ProfileActivity"></activity>
+        <activity android:name="com.timecapsule.app.feedactivity.FeedActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.timecapsule.app.GoogleMapsActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".addmediafragment.GoToMedia"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.timecapsule.app.profilefragment.ProfileActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".cameraactivity.CameraActivity"
             android:configChanges="keyboardHidden|screenSize"

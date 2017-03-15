@@ -17,12 +17,16 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -43,8 +47,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class SearchFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
 
-    protected ArrayList<Geofence> mGeofenceList;
     private static final String TAG = SearchFragment.class.getSimpleName();
+    protected ArrayList<Geofence> mGeofenceList;
     private View mRoot;
     private GoogleMap mMap;
     private FusedLocationProviderApi location;
@@ -52,6 +56,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     private LocationObject locationObject;
     private MapFragment mapFragment;
     private String MY_LOCATION_ID = "MY_LOCATION";
+    private PlaceLikelihoodBuffer likelyPlaces;
 
 
     @Override
@@ -90,17 +95,30 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 //            Log.d(TAG, "Wasn't connected");
 //            googleApiClient.connect();
 //        }
+        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
+                .getCurrentPlace(googleApiClient, null);
+        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+            @Override
+            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+                    Log.i(TAG, String.format("Place '%s' has likelihood: %g",
+                            placeLikelihood.getPlace(),
+                            placeLikelihood.getLikelihood()));
+                }
+                likelyPlaces.release();
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
-//        googleApiClient.disconnect();
         if (locationObject.getmGoogleApiClient().isConnecting() || locationObject.getmGoogleApiClient().isConnected()) {
             locationObject.getmGoogleApiClient().disconnect();
         }
@@ -115,8 +133,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         return mRoot;
-
-
     }
 
     /**
@@ -161,7 +177,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 
     @Override
     public void onResult(@NonNull Status status) {
-        Log.d(TAG, "onResult: YEEEAAAAA");
+
     }
 
     private GeofencingRequest getGeofencingRequest() {
@@ -184,6 +200,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     }
 
     private void populateGeofenceList() {
+
         for (LatLng entry : new LatLng[]{new LatLng(40.742571, -73.935421)}) {
             mGeofenceList.add(new Geofence.Builder()
                     .setRequestId("" + entry.latitude + entry.longitude)
@@ -200,5 +217,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         Log.d(TAG, "populateGeofenceList: " + mGeofenceList.toString());
 
     }
+
 
 }

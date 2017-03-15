@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +15,8 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
@@ -45,11 +48,9 @@ public class LocationObject implements GoogleApiClient.OnConnectionFailedListene
 
         return mLatitude;
     }
-
     public double getmLongitude() {
         return mLongitude;
     }
-
     public LocationObject(Context context) {
         this.context = context;
         builder = new PlacePicker.IntentBuilder();
@@ -104,8 +105,12 @@ public class LocationObject implements GoogleApiClient.OnConnectionFailedListene
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mCurrentLocation = LocationServices.FusedLocationApi;
-
-
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mLatitude = mCurrentLocation.getLastLocation(mGoogleApiClient).getLatitude();
+        mLongitude = mCurrentLocation.getLastLocation(mGoogleApiClient).getLongitude();
+        isLocationSet = true;
         Log.d(TAG, "onConnected: " + mLatitude + " " + mLongitude);
     }
 
@@ -118,14 +123,18 @@ public class LocationObject implements GoogleApiClient.OnConnectionFailedListene
         return mGoogleApiClient;
     }
 
-    private void setAverageLocation(){
+    private void setAverageLocation() {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         for (int i = 0; i < 50; i++) {
-           //mCurrentLocation.requestLocationUpdates()
-            mLatitude = mCurrentLocation.getLastLocation(mGoogleApiClient).getLatitude()/50;
-            mLongitude = mCurrentLocation.getLastLocation(mGoogleApiClient).getLongitude()/50;
+            mCurrentLocation.requestLocationUpdates(mGoogleApiClient, new LocationRequest(), new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                }
+            });
+            mLatitude = mCurrentLocation.getLastLocation(mGoogleApiClient).getLatitude() / 50;
+            mLongitude = mCurrentLocation.getLastLocation(mGoogleApiClient).getLongitude() / 50;
             Log.d(TAG, "setAverageLocation: ");
         }
 

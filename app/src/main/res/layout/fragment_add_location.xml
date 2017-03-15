@@ -3,18 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPink"
+    android:id="@+id/fragment_add_location"
     android:orientation="vertical"
     android:weightSum="1">
 
     <ImageView
-<<<<<<< HEAD
-        android:id="@+id/imageButton"
-=======
         android:id="@+id/iv_close_dialog"
->>>>>>> 23aad3b2718676389f166a86a285ba7a6972fd15
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_gravity="end|bottom"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="end"
         android:clickable="true"
         android:src="@drawable/ic_clear_black_24dp" />
 
@@ -27,13 +26,10 @@
         android:layout_weight="0.57" />
 
     <TextView
-<<<<<<< HEAD
-        android:id="@+id/button2"
-=======
+
         android:id="@+id/tv_add_location"
->>>>>>> 23aad3b2718676389f166a86a285ba7a6972fd15
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:gravity="center|top"
         android:layout_gravity="top|center"
         android:background="@color/colorPink"

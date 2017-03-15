@@ -1,13 +1,13 @@
 package com.timecapsule.app.feedactivity;
 
 import android.Manifest;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.widget.AppInviteDialog;
@@ -36,10 +37,10 @@ import com.timecapsule.app.NotificationsFragment;
 import com.timecapsule.app.R;
 import com.timecapsule.app.SearchFragment;
 import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
-import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragmentCamera;
-import com.timecapsule.app.addmediafragment.AddMediaFragment;
 import com.timecapsule.app.addmediafragment.AudioFragment;
+import com.timecapsule.app.addmediafragment.cat_test.AddCapsuleLocationFragmentCamera;
 import com.timecapsule.app.profilefragment.ProfileFragment;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -62,9 +63,11 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton fab_photo;
     private FloatingActionButton fab_audio;
     private FloatingActionButton fab_videocam;
+    private String mCurrentPhotoPath;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
     private StorageReference imagesRef;
+    private GoogleApiClient googleApiClient;
     private UploadTask uploadTask;
     private File image;
     private AudioFragment audioFragment;
@@ -85,8 +88,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         super.onStop();
         googleApiClient.disconnect();
     }
-
-    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +114,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                     .add(R.id.container_main, new FeedFragment())
                     .commit();
         }
+
         googleApiClient = new GoogleApiClient
                 .Builder(getApplicationContext())
                 .addApi(Places.GEO_DATA_API)
@@ -120,6 +122,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 .addApi(LocationServices.API)
                 .build();
     }
+
 
     private void setViews() {
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -136,7 +139,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 setAddFriend();
         }
     }
-
 
     private void goToLocation() {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -170,14 +172,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 
                 goToLocation();
                 goToAddLocationCamera();
+                goToAddLocation();
             }
         });
-    }
-
-    private void goToNativeCamera() {
-        Intent capture = new Intent(
-                android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(capture, TAKE_PICTURE);
     }
 
     private void clickAudio() {
@@ -188,15 +185,12 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 goToLocation();
 
                 goToAddLocationAudio();
+
+                goToAddLocation();
+
             }
         });
 
-    }
-
-    private void goToAudio() {
-        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-        audioFragment = AudioFragment.newInstance("Audio");
-        audioFragment.show(ft, "audio");
     }
 
     private void clickVideocam() {
@@ -205,14 +199,84 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 goToLocation();
                 goToAddLocationVideo();
+                goToAddLocation();
             }
         });
     }
 
-    public void goToNativeVideo() {
-        Intent record = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        startActivityForResult(record, CAPTURE_VIDEO);
+    private void goToAddLocation() {
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        addCapsuleLocationFragment = AddCapsuleLocationFragment.newInstance("Add Capsule Location");
+        addCapsuleLocationFragment.show(ft, "Location");
     }
+
+//    private void goToAddLocationCamera() {
+//        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+//        addCapsuleLocationFragmentCamera = AddCapsuleLocationFragmentCamera.newInstance("Add Capsule Location");
+//        addCapsuleLocationFragmentCamera.show(ft, "Location");
+//    }
+//
+//    private void goToAddLocationAudio() {
+//        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+//        addCapsuleLocationFragmentCamera = AddCapsuleLocationFragmentCamera.newInstance("Add Capsule Location");
+//        addCapsuleLocationFragmentCamera.show(ft, "Location");
+//    }
+//
+//    private void goToAddLocationVideo() {
+//        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+//        addCapsuleLocationFragmentCamera = AddCapsuleLocationFragmentCamera.newInstance("Add Capsule Location");
+//        addCapsuleLocationFragmentCamera.show(ft, "Location");
+//    }
+//    private void goToNativeCamera() {
+//        Intent capture = new Intent(
+//                android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//        startActivityForResult(capture, TAKE_PICTURE);
+//    }
+//    private void goToAudio() {
+//        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+//        audioFragment = AudioFragment.newInstance("Audio");
+//        audioFragment.show(ft, "audio");
+//    }
+//    public void goToNativeVideo() {
+//        Intent record = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+//        startActivityForResult(record, CAPTURE_VIDEO);
+//    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        switch (requestCode) {
+//            case TAKE_PICTURE:
+//                if (resultCode == RESULT_OK) {
+//                    if (data != null) {
+//                        Bundle extras = data.getExtras();
+//                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+//                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//                        byte[] dataBAOS = baos.toByteArray();
+//                        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//                        String imageFileName = "JPEG_" + timeStamp + "_";
+//                        String firebaseReference = imageFileName.concat(".jpg");
+//                        imagesRef = imagesRef.child(firebaseReference);
+//                        StorageReference newImageRef = storageReference.child("images/".concat(firebaseReference));
+//                        newImageRef.getName().equals(newImageRef.getName());
+//                        newImageRef.getPath().equals(newImageRef.getPath());
+//                        UploadTask uploadTask = imagesRef.putBytes(dataBAOS);
+//                        uploadTask.addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception exception) {
+//                                // Handle unsuccessful uploads
+//                            }
+//                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                            @Override
+//                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+//                                @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+//                            }
+//                        });
+//                    }
+//                }
+//        }
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -283,9 +347,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                     case R.id.action_search:
                         setSearchFragment();
                         break;
-//                    case R.id.action_add:
-//                        setAddMediaFragment();
-//                        break;
                     case R.id.action_notifications:
                         setNotificationsFragment();
                         break;
@@ -302,28 +363,41 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container_main, new FeedFragment())
+                .addToBackStack("feed")
                 .commit();
+
+        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                setBottomNavButtons();
+            }
+        });
+
     }
+
 
     private void setSearchFragment() {
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container_main, new SearchFragment())
+                .addToBackStack("search")
                 .commit();
     }
 
-    private void setAddMediaFragment() {
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container_main, new AddMediaFragment())
-                .commit();
-    }
 
     private void setNotificationsFragment() {
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container_main, new NotificationsFragment())
+                .addToBackStack("notifications")
                 .commit();
+
+        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                setBottomNavButtons();
+            }
+        });
     }
 
 
@@ -331,7 +405,15 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container_main, new ProfileFragment())
+                .addToBackStack("profile")
                 .commit();
+
+        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                setBottomNavButtons();
+            }
+        });
     }
 
     private void requestCameraPemission() {
