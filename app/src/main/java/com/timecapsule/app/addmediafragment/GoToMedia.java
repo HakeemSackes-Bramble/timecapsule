@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -18,6 +17,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.timecapsule.app.R;
+import com.timecapsule.app.feedactivity.FeedActivity;
 import com.timecapsule.app.profilefragment.model.Capsule;
 
 import java.io.ByteArrayOutputStream;
@@ -97,13 +98,16 @@ public class GoToMedia extends AppCompatActivity {
 
     private void addUrlToDatabase(Uri uri) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("capsules");
+        DatabaseReference myRef = database.getReference("users")
+                .child(FirebaseAuth.getInstance()
+                        .getCurrentUser().getUid())
+                .child("capsules");
+        myRef.setValue(uri.toString());
         DatabaseReference capRef = database.getReference("capsules");
         String storageLink = uri.toString();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
         capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
-
     }
 
 
@@ -113,7 +117,8 @@ public class GoToMedia extends AppCompatActivity {
         switch (requestCode) {
             case TAKE_PICTURE:
                 if (resultCode == RESULT_OK) {
-                    mProgress.setMessage("uploading photo...");
+                    mProgress.setMessage("Uploading Photo");
+                    mProgress.setIcon(R.drawable.time_capsule_logo12);
                     mProgress.show();
                     if (data != null) {
                         Bundle extras = data.getExtras();
@@ -141,11 +146,13 @@ public class GoToMedia extends AppCompatActivity {
                                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
                                 addUrlToDatabase(downloadUrl);
                                 mProgress.dismiss();
+                                gotoFeedActivity();
 
                             }
                         });
                     }
-                } break;
+                }
+                break;
             case CAPTURE_VIDEO:
                 if (resultCode == RESULT_OK) {
                     mProgress.setMessage("uploading video...");
@@ -155,5 +162,10 @@ public class GoToMedia extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    private void gotoFeedActivity() {
+        Intent intent = new Intent(this, FeedActivity.class);
+        this.startActivity(intent);
     }
 }

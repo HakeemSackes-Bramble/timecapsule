@@ -58,7 +58,6 @@ public class PlacePickerFragmentActivity extends FragmentActivity {
                 Intent gotoMediaIntent = new Intent(getApplicationContext(), GoToMedia.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("key", "value");
-//      set Fragmentclass Arguments
                 gotoMediaIntent.putExtra("keyMediaType", mediaType);
                 gotoMediaIntent.putExtra("keyLocationLat", locationLat);
                 gotoMediaIntent.putExtra("keyLocationLong", locationLong);

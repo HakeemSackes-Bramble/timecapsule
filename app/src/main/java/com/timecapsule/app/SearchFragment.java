@@ -32,11 +32,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.timecapsule.app.geofence.Constants;
 import com.timecapsule.app.geofence.GeofenceTransitionsIntentService;
 import com.timecapsule.app.googleplaces.LocationObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -57,12 +62,22 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     private MapFragment mapFragment;
     private String MY_LOCATION_ID = "MY_LOCATION";
     private PlaceLikelihoodBuffer likelyPlaces;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
+    private FirebaseDatabase fireBsaseDB;
+    private DatabaseReference databasereff;
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         locationObject = new LocationObject(getApplicationContext());
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
+        fireBsaseDB = FirebaseDatabase.getInstance();
+        databasereff = fireBsaseDB.getReference();
+
+
         if (!locationObject.getmGoogleApiClient().isConnecting() || !locationObject.getmGoogleApiClient().isConnected()) {
             locationObject.getmGoogleApiClient().connect();
         }
@@ -137,9 +152,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
             locationObject.getmGoogleApiClient().disconnect();
         }
     }
-
-
-
 
     /**
      * Manipulates the map once available.
@@ -221,8 +233,11 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
                     .build());
         }
         Log.d(TAG, "populateGeofenceList: " + mGeofenceList.toString());
-
     }
 
-
+    private void mapMarker(List<LatLng> places, GoogleMap map){
+        for (int i = 0; i < places.size(); i++) {
+            map.addMarker().setPosition(places.get(i));
+        }
+    }
 }
