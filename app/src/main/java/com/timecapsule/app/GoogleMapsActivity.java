@@ -8,7 +8,7 @@ public class GoogleMapsActivity {
 //    private GoogleMap mMap;
 //    private MapView mMapView;
 //    private GoogleApiClient googleApiClient;
-//    private Location location;
+//    private NearbyLocation location;
 //
 //
 //    @Override

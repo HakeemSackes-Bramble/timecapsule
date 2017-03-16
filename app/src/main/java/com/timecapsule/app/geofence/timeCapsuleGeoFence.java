@@ -55,7 +55,7 @@ public class timeCapsuleGeoFence implements Geofence {
     }
 
     /**
-     * Creates a Location Services Geofence object from a SimpleGeofence.
+     * Creates a NearbyLocation Services Geofence object from a SimpleGeofence.
      * @return A Geofence object.
      */
     public Geofence toGeofence() {

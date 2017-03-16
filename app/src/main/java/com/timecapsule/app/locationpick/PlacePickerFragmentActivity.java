@@ -1,16 +1,16 @@
-package com.timecapsule.app.addmediafragment;
+package com.timecapsule.app.locationpick;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.View;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
+import com.timecapsule.app.addmediafragment.GoToMedia;
 
 public class PlacePickerFragmentActivity extends FragmentActivity {
 
@@ -18,13 +18,11 @@ public class PlacePickerFragmentActivity extends FragmentActivity {
     int PLACE_PICKER_REQUEST = 1;
     //    private AddCapsuleLocationFragment addCapsuleLocationFragment;
     String mediaType;
-    private View mRoot;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        setContentView();
         mediaType = getIntent().getExtras().getString("key");
 
 

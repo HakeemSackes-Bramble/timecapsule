@@ -8,4 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Theme.Window.NoMinWidth" parent="">
+        <item name="android:windowMinWidthMinor">600dp</item>
+        <item name="android:windowMinWidthMajor">400dp</item>
+    </style>
+
+
 </resources>
