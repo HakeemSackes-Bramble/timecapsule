@@ -19,7 +19,7 @@ public class Constants {
     public static final int CONNECTION_FAIL_RESOLUTION_REQUEST = 9000 ;
 
     /**
-     * Used to set an expiration time for a geofence. After this amount of time Location Services
+     * Used to set an expiration time for a geofence. After this amount of time NearbyLocation Services
      * stops tracking the geofence.
      */
     public static final long GEOFENCE_EXPIRATION_IN_HOURS = 12;

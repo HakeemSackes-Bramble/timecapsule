@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 
 /**
@@ -42,10 +43,12 @@ public class GoToMedia extends AppCompatActivity {
     private UploadTask uploadTask;
     private ProgressDialog mProgress;
     private String mediaType;
+    private CapsuleUploadFragment capsuleUploadFragment;
     private double locationLat;
     private double locationLong;
     private String address;
     private File destinationFile;
+    private Intent intent;
 
 
     @Override
@@ -55,14 +58,29 @@ public class GoToMedia extends AppCompatActivity {
         storageReference = firebaseStorage.getReference();
         mProgress = new ProgressDialog(this);
         imagesRef = storageReference.child("images");
-        mediaType = getIntent().getExtras().getString("keyMediaType");
+        mediaType = getIntent().getExtras().getString("mediaType");
         locationLat = getIntent().getExtras().getDouble("keyLocationLat");
         locationLong = getIntent().getExtras().getDouble("keyLocationLong");
         address = getIntent().getExtras().getString("keyAddress");
+
         openMedia(mediaType);
 
-    }
 
+    }
+    public static class Builder {
+        private String mediaType;
+        public Builder(String type) {
+            this.mediaType = type;
+        }
+
+        public GoToMedia build() {
+            GoToMedia activity = new GoToMedia();
+            Bundle bundle = new Bundle();
+            bundle.putString( "mediaType", mediaType);
+            activity.onSaveInstanceState(bundle);
+            return activity;
+        }
+    }
     private void openMedia(String mediaType) {
         switch (mediaType) {
             case "camera":
@@ -97,13 +115,14 @@ public class GoToMedia extends AppCompatActivity {
     }
 
     private void addUrlToDatabase(Uri uri) {
+        String capsuleId = UUID.randomUUID().toString().replaceAll("-", "");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users")
                 .child(FirebaseAuth.getInstance()
-                        .getCurrentUser().getUid())
-                .child("capsules");
+                .getCurrentUser().getUid())
+                .child("capsules").child(capsuleId);
         myRef.setValue(uri.toString());
-        DatabaseReference capRef = database.getReference("capsules");
+        DatabaseReference capRef = database.getReference("capsules").child(capsuleId);
         String storageLink = uri.toString();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
@@ -146,7 +165,7 @@ public class GoToMedia extends AppCompatActivity {
                                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
                                 addUrlToDatabase(downloadUrl);
                                 mProgress.dismiss();
-                                gotoFeedActivity();
+                                goToCapsuleUploadFragment("capsule upload");
 
                             }
                         });
@@ -164,7 +183,13 @@ public class GoToMedia extends AppCompatActivity {
         }
     }
 
-    private void gotoFeedActivity() {
+    private void goToCapsuleUploadFragment(String capsuleUpload){
+            android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+            capsuleUploadFragment = CapsuleUploadFragment.newInstance(capsuleUpload);
+            capsuleUploadFragment.show(ft, "Capsule Uploaded");
+    }
+
+    private void gotoFeedActivity(){
         Intent intent = new Intent(this, FeedActivity.class);
         this.startActivity(intent);
     }

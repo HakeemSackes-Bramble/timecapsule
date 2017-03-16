@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="350dp"
+    android:background="#342e3d"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_time_capsule_upload"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"
+        android:src="@drawable/gif_time_capsule" />
+
+    <TextView
+        android:id="@+id/tv_capsule_uploaded"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:clickable="true"
+        android:layout_marginBottom="63dp"
+        android:textColor="@color/colorWhite"
+        android:text="TIME CAPSULE UPLOADED"
+        android:textSize="20sp" />
+
+
+</LinearLayout>

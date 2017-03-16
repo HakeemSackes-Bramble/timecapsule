@@ -5,15 +5,20 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.timecapsule.app.R;
+import com.timecapsule.app.locationpick.PlaceDetectionFragment;
+import com.timecapsule.app.locationpick.PlacePickerFragmentActivity;
+
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
@@ -28,11 +33,29 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     private ImageView iv_close_dialog;
     private TextView tv_add_location;
     private String mediaType;
+    private PlaceDetectionFragment placeDetectionFragment;
 
 
     public AddCapsuleLocationFragment() {
     }
 
+    public static class Builder {
+        private String mediaType;
+
+
+
+        public Builder(String type) {
+            this.mediaType = type;
+        }
+
+        public AddCapsuleLocationFragment build() {
+            AddCapsuleLocationFragment fragment = new AddCapsuleLocationFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString( "mediaType", mediaType);
+            fragment.setArguments(bundle);
+            return fragment;
+        }
+    }
     public static AddCapsuleLocationFragment newInstance(String mediaType) {
         AddCapsuleLocationFragment fragment = new AddCapsuleLocationFragment();
         Bundle args = new Bundle();
@@ -44,16 +67,14 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Bundle args = getArguments();
-        mediaType = args.getString("keyMediaType");
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, Bundle savedInstanceState) {
-
         mediaType = getArguments().getString("keyMediaType");
+        Log.d("tag", "onCreateView: "+ mediaType);
         mRoot = inflater.inflate(R.layout.fragment_add_location, parent, false);
         setViews();
         setGif();
@@ -77,13 +98,12 @@ public class AddCapsuleLocationFragment extends DialogFragment {
         tv_add_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openPlacePicker();
+                goToPlaceDetection();
             }
         });
     }
 
     private void setGif() {
-
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(iv_gif_location);
         Glide.with(this)
                 .load(R.drawable.giphy2)
@@ -91,15 +111,12 @@ public class AddCapsuleLocationFragment extends DialogFragment {
                 .into(imageViewTarget);
     }
 
-//    private void goToAddLocation(){
-//        tv_add_location.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                openPlacePicker(mediaType);
-//            }
-//        });
-//
-//    }
+    private void goToPlaceDetection() {
+        PlaceDetectionFragment.Builder builder = new PlaceDetectionFragment.Builder(mediaType);
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        placeDetectionFragment = builder.build();
+        placeDetectionFragment.show(ft, "Place Detection");
+    }
 
     private void setCloseDialog() {
         iv_close_dialog.setOnClickListener(new View.OnClickListener() {

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -23,16 +22,13 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.timecapsule.app.NotificationsFragment;
 import com.timecapsule.app.R;
 import com.timecapsule.app.SearchFragment;
 import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
-import com.timecapsule.app.addmediafragment.cat_test.AddCapsuleLocationFragmentCamera;
+import com.timecapsule.app.locationpick.PlaceDetectionFragment;
 import com.timecapsule.app.profilefragment.ProfileFragment;
 
 import static android.Manifest.permission.RECORD_AUDIO;
@@ -58,7 +54,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private AddCapsuleLocationFragment addCapsuleLocationFragment;
     private Fragment timePlacePickerFragment;
     private String mediaType;
-    private AddCapsuleLocationFragmentCamera addCapsuleLocationFragmentCamera;
+    private String place;
+    private PlaceDetectionFragment placeDetectionFragment;
 
 
     @Override
@@ -127,12 +124,13 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
     private void goToAddLocation(String mediaType) {
+        AddCapsuleLocationFragment.Builder builder = new AddCapsuleLocationFragment.Builder(mediaType);
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-        addCapsuleLocationFragment = AddCapsuleLocationFragment.newInstance(mediaType);
-        addCapsuleLocationFragment.show(ft, "Location");
+        addCapsuleLocationFragment = builder.build();
+        addCapsuleLocationFragment.show(ft, "NearbyLocation");
     }
+
 
     private void clickCamera() {
         fab_photo.setOnClickListener(new View.OnClickListener() {
@@ -159,7 +157,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         fab_videocam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 mediaType = "video";
                 goToAddLocation("video");
 
@@ -180,7 +177,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 .build();
         AppInviteDialog.show(this, content);
     }
-
 
     private void setBottomNavButtons() {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -269,13 +265,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                     REQUEST_LOCATION);
         }
     }
-
-    private void addUrlToDatabase(Uri uri) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("capsules");
-        myRef.setValue(uri.toString());
-    }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
