@@ -34,6 +34,7 @@ public class LocationLoader extends Loader<List<NearbyLocation>> implements Goog
     private static final String TAG = LocationLoader.class.getSimpleName();
     private GoogleApiClient mGoogleApiClient;
     private List<NearbyLocation> mNearbyLocations;
+    private List<PlaceLikelihood> mLikelyPlaces;
 
     /**
      * Stores away the application context associated with context.
@@ -131,13 +132,13 @@ public class LocationLoader extends Loader<List<NearbyLocation>> implements Goog
         Log.d(TAG, "onResult() called with: " + "likelyPlaces = [" + likelyPlaces.toString() + "]");
         List<NearbyLocation> nearbyPlaces = new ArrayList<>();
         for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+
             NearbyLocation nearbyPlace = new NearbyLocation();
-            Log.i(TAG, String.format("Place '%s' with " +
-                            "likelihood: %g",
+            Log.i(TAG, String.format("Place '%s' and '%s' with "+
+                            "latlng: %s",
                     placeLikelihood.getPlace().getName(),
                     placeLikelihood.getPlace().getAddress(),
-                    placeLikelihood.getPlace().getLatLng(),
-                    placeLikelihood.getLikelihood()));
+                    placeLikelihood.getPlace().getLatLng()));
             nearbyPlace.setName(placeLikelihood.getPlace().getName().toString());
             nearbyPlace.setAddress(placeLikelihood.getPlace().getAddress().toString());
             nearbyPlace.setLatlong(placeLikelihood.getPlace().getLatLng().toString());

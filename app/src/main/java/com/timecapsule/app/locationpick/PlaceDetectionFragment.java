@@ -3,6 +3,7 @@ package com.timecapsule.app.locationpick;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,12 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.timecapsule.app.R;
 import com.timecapsule.app.locationpick.controller.LocationAdapter;
 import com.timecapsule.app.locationpick.model.NearbyLocation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,7 +40,13 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     private RecyclerView recyclerView;
     private List<NearbyLocation> nearbyLocationList;
     private LocationAdapter mLocationAdapter;
+    private LinearLayoutManager layoutManager;
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+    }
 
     public static PlaceDetectionFragment newInstance(String place) {
         PlaceDetectionFragment fragment = new PlaceDetectionFragment();
@@ -50,9 +59,8 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLoaderManager().initLoader(PLACES_DETECTION_LOADER, null, this);
 //        mediaType = getActivity().getIntent().getExtras().getString("key");
-
-
     }
 
     @Override
@@ -70,7 +78,6 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, Bundle savedInstanceState) {
         mRoot = inflater.inflate(R.layout.fragment_place_picker, parent, false);
         return mRoot;
-
     }
 
     @Override
@@ -78,11 +85,9 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
         super.onViewCreated(view, savedInstanceState);
         recyclerView = (RecyclerView) mRoot.findViewById(R.id.rv_nearbyLocation);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        mLocationAdapter = new LocationAdapter();
-        mLocationAdapter.setData(nearbyLocationList);
+        mLocationAdapter = new LocationAdapter(getActivity(), new ArrayList<NearbyLocation>());
         recyclerView.setAdapter(mLocationAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        getLoaderManager().initLoader(PLACES_DETECTION_LOADER, null, this);
     }
 
     @Override
@@ -102,5 +107,16 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     public void onLoaderReset(Loader<List<NearbyLocation>> loader) {
         Log.d(TAG, "onLoaderReset() called");
         mLocationAdapter.removeNearByPlaces();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Window window = getDialog().getWindow();
+        if(window == null) return;
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.width = 475;
+        params.height = 545;
+        window.setAttributes(params);
     }
 }

@@ -22,8 +22,6 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
     private List<NearbyLocation> nearbyLocationList;
 
 
-    public LocationAdapter(){};
-
     public LocationAdapter(Context context, List<NearbyLocation> nearbyLocationList) {
         this.context = context;
         this.nearbyLocationList = nearbyLocationList;
@@ -44,6 +42,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
 
     @Override
     public int getItemCount() {
+        if(nearbyLocationList == null){
+            return 0;
+        }
         return nearbyLocationList.size();
     }
 
@@ -59,7 +60,5 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
     }
 
 
-    public void setData(List<NearbyLocation> data) {
-        this.nearbyLocationList = data;
-    }
+
 }

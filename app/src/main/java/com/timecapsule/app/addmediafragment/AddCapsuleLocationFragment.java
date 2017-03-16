@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.timecapsule.app.R;
+import com.timecapsule.app.locationpick.PlaceDetectionFragment;
 import com.timecapsule.app.locationpick.PlacePickerFragmentActivity;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -30,6 +32,7 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     private ImageView iv_close_dialog;
     private TextView tv_add_location;
     private String mediaType;
+    private PlaceDetectionFragment placeDetectionFragment;
 
 
     public AddCapsuleLocationFragment() {
@@ -79,7 +82,7 @@ public class AddCapsuleLocationFragment extends DialogFragment {
         tv_add_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openPlacePicker();
+                goToPlaceDection();
             }
         });
     }
@@ -93,15 +96,11 @@ public class AddCapsuleLocationFragment extends DialogFragment {
                 .into(imageViewTarget);
     }
 
-//    private void goToAddLocation(){
-//        tv_add_location.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                openPlacePicker(mediaType);
-//            }
-//        });
-//
-//    }
+    private void goToPlaceDection() {
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        placeDetectionFragment = PlaceDetectionFragment.newInstance(mediaType);
+        placeDetectionFragment.show(ft, "Place Detection");
+    }
 
     private void setCloseDialog() {
         iv_close_dialog.setOnClickListener(new View.OnClickListener() {

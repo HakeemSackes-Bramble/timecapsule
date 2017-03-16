@@ -3,6 +3,7 @@ package com.timecapsule.app.locationpick.view;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.timecapsule.app.R;
 import com.timecapsule.app.locationpick.model.NearbyLocation;
@@ -11,13 +12,20 @@ import com.timecapsule.app.locationpick.model.NearbyLocation;
  * Created by catwong on 3/15/17.
  */
 
-public class LocationViewHolder extends RecyclerView.ViewHolder {
+public class LocationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    TextView tv_name;
-    TextView tv_address;
+    private TextView tv_name;
+    private TextView tv_address;
+    private String mediaType;
+    private String locationLat;
+    private String locationLong;
+    private String address;
+
 
     public LocationViewHolder(View itemView) {
         super(itemView);
+        itemView.setClickable(true);
+        itemView.setOnClickListener(this);
         tv_name = (TextView) itemView.findViewById(R.id.tv_place_location_name);
         tv_address = (TextView) itemView.findViewById(R.id.tv_place_location_address);
     }
@@ -25,6 +33,27 @@ public class LocationViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(NearbyLocation location) {
         tv_name.setText(location.getName());
+        tv_name.setOnClickListener(this);
         tv_address.setText(location.getAddress());
+        tv_address.setOnClickListener(this);
     }
+
+
+    @Override
+    public void onClick(View v) {
+        getAdapterPosition();
+        Toast.makeText(v.getContext(), tv_name.getText(), Toast.LENGTH_SHORT).show();
+//        Intent intent = new Intent(v.getContext(), GoToMedia.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("key", "value");
+////      set Fragmentclass Arguments
+//        intent.putExtra("keyMediaType", mediaType);
+//        intent.putExtra("keyLocationLat", locationLat);
+//        intent.putExtra("keyLocationLong", locationLong);
+//        intent.putExtra("keyAddress", address);
+//        v.getContext().startActivity(intent);
+
+    }
+
+
 }

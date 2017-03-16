@@ -58,7 +58,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private PlaceDetectionFragment placeDetectionFragment;
 
 
-
     @Override
 
     protected void onStart() {
@@ -131,11 +130,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         addCapsuleLocationFragment.show(ft, "NearbyLocation");
     }
 
-    private void goToPlaceDection(String mediaType){
-        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-        placeDetectionFragment = PlaceDetectionFragment.newInstance(mediaType);
-        placeDetectionFragment.show(ft, "Place Detection");
-    }
 
     private void clickCamera() {
         fab_photo.setOnClickListener(new View.OnClickListener() {
@@ -152,8 +146,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 mediaType = "audio";
-                goToPlaceDection("audio");
-//                goToAddLocation("audio");
+                goToAddLocation("audio");
             }
         });
 
