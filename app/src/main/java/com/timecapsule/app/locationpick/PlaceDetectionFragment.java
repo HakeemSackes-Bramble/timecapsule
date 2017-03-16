@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.timecapsule.app.R;
@@ -40,18 +39,21 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     private RecyclerView recyclerView;
     private List<NearbyLocation> nearbyLocationList;
     private LocationAdapter mLocationAdapter;
-    private LinearLayoutManager layoutManager;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
 
-    public static PlaceDetectionFragment newInstance(String place) {
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    public static PlaceDetectionFragment newInstance(String mediaType) {
         PlaceDetectionFragment fragment = new PlaceDetectionFragment();
         Bundle args = new Bundle();
-        args.putString("place detection", place);
+        args.putString("keyMediaType", mediaType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,7 +62,13 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLoaderManager().initLoader(PLACES_DETECTION_LOADER, null, this);
-//        mediaType = getActivity().getIntent().getExtras().getString("key");
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Bundle args = getArguments();
+        mediaType = args.getString("keyMediaType");
     }
 
     @Override
@@ -76,6 +84,7 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, Bundle savedInstanceState) {
+        mediaType = getArguments().getString("keyMediaType");
         mRoot = inflater.inflate(R.layout.fragment_place_picker, parent, false);
         return mRoot;
     }
@@ -109,14 +118,14 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
         mLocationAdapter.removeNearByPlaces();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Window window = getDialog().getWindow();
-        if(window == null) return;
-        WindowManager.LayoutParams params = window.getAttributes();
-        params.width = 475;
-        params.height = 545;
-        window.setAttributes(params);
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        Window window = getDialog().getWindow();
+//        if(window == null) return;
+//        WindowManager.LayoutParams params = window.getAttributes();
+//        params.width = 1000;
+//        params.height = 800;
+//        window.setAttributes(params);
+//    }
 }

@@ -49,7 +49,6 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Bundle args = getArguments();
         mediaType = args.getString("keyMediaType");
     }
@@ -57,7 +56,6 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, Bundle savedInstanceState) {
-
         mediaType = getArguments().getString("keyMediaType");
         mRoot = inflater.inflate(R.layout.fragment_add_location, parent, false);
         setViews();
@@ -88,7 +86,6 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     }
 
     private void setGif() {
-
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(iv_gif_location);
         Glide.with(this)
                 .load(R.drawable.giphy2)

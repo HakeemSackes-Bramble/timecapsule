@@ -156,7 +156,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         fab_videocam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 mediaType = "video";
                 goToAddLocation("video");
 

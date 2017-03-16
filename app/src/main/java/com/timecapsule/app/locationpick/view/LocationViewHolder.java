@@ -1,11 +1,15 @@
 package com.timecapsule.app.locationpick.view;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.timecapsule.app.R;
+import com.timecapsule.app.addmediafragment.GoToMedia;
 import com.timecapsule.app.locationpick.model.NearbyLocation;
 
 /**
@@ -16,6 +20,7 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
 
     private TextView tv_name;
     private TextView tv_address;
+    public RadioButton radioButton;
     private String mediaType;
     private String locationLat;
     private String locationLong;
@@ -41,19 +46,22 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
 
     @Override
     public void onClick(View v) {
-        getAdapterPosition();
         Toast.makeText(v.getContext(), tv_name.getText(), Toast.LENGTH_SHORT).show();
-//        Intent intent = new Intent(v.getContext(), GoToMedia.class);
-//        Bundle bundle = new Bundle();
-//        bundle.putString("key", "value");
-////      set Fragmentclass Arguments
-//        intent.putExtra("keyMediaType", mediaType);
-//        intent.putExtra("keyLocationLat", locationLat);
-//        intent.putExtra("keyLocationLong", locationLong);
-//        intent.putExtra("keyAddress", address);
-//        v.getContext().startActivity(intent);
+        Intent intent = new Intent(v.getContext(), GoToMedia.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("key", "value");
+//      set Fragmentclass Arguments
+        intent.putExtra("keyMediaType", mediaType);
+        intent.putExtra("keyLocationLat", locationLat);
+        intent.putExtra("keyLocationLong", locationLong);
+        intent.putExtra("keyAddress", address);
+        v.getContext().startActivity(intent);
 
     }
 
 
+
 }
+
+
+
