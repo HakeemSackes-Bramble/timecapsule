@@ -8,12 +8,16 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -36,6 +40,7 @@ public class GoToMedia extends AppCompatActivity {
 
     private static final int TAKE_PICTURE = 200;
     private static final int CAPTURE_VIDEO = 201;
+    private static final String TAG ="Database Exception" ;
     private AudioFragment audioFragment;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
@@ -114,6 +119,17 @@ public class GoToMedia extends AppCompatActivity {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
         capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
+        database.getReference("capsules").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Capsule capsule = dataSnapshot.getValue(Capsule.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "Get Capsule:Canceled", databaseError.toException());
+            }
+        });
     }
 
 
