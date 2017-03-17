@@ -22,6 +22,9 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.timecapsule.app.NotificationsFragment;
@@ -301,6 +304,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
 
 
 }
