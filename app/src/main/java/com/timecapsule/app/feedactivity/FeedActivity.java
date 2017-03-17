@@ -125,9 +125,11 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void goToAddLocation(String mediaType) {
-        AddCapsuleLocationFragment.Builder builder = new AddCapsuleLocationFragment.Builder(mediaType);
+        Bundle bundle = new Bundle();
+        bundle.putString("mediaType", mediaType);
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-        addCapsuleLocationFragment = builder.build();
+        addCapsuleLocationFragment = AddCapsuleLocationFragment.newInstance(mediaType);
+        addCapsuleLocationFragment.setArguments(bundle);
         addCapsuleLocationFragment.show(ft, "NearbyLocation");
     }
 

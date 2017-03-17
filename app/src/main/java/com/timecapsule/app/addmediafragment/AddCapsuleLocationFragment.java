@@ -39,27 +39,10 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     public AddCapsuleLocationFragment() {
     }
 
-    public static class Builder {
-        private String mediaType;
-
-
-
-        public Builder(String type) {
-            this.mediaType = type;
-        }
-
-        public AddCapsuleLocationFragment build() {
-            AddCapsuleLocationFragment fragment = new AddCapsuleLocationFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString( "mediaType", mediaType);
-            fragment.setArguments(bundle);
-            return fragment;
-        }
-    }
     public static AddCapsuleLocationFragment newInstance(String mediaType) {
         AddCapsuleLocationFragment fragment = new AddCapsuleLocationFragment();
         Bundle args = new Bundle();
-        args.putString("keyMediaType", mediaType);
+        args.putString("mediaType", mediaType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,13 +51,14 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
+        mediaType = args.getString("mediaType");
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, Bundle savedInstanceState) {
-        mediaType = getArguments().getString("keyMediaType");
-        Log.d("tag", "onCreateView: "+ mediaType);
+        mediaType = getArguments().getString("mediaType");
+        Log.d("tag", "onCreateView: "+mediaType);
         mRoot = inflater.inflate(R.layout.fragment_add_location, parent, false);
         setViews();
         setGif();
@@ -98,7 +82,7 @@ public class AddCapsuleLocationFragment extends DialogFragment {
         tv_add_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goToPlaceDetection();
+                goToPlaceDection();
             }
         });
     }
@@ -111,10 +95,9 @@ public class AddCapsuleLocationFragment extends DialogFragment {
                 .into(imageViewTarget);
     }
 
-    private void goToPlaceDetection() {
-        PlaceDetectionFragment.Builder builder = new PlaceDetectionFragment.Builder(mediaType);
+    private void goToPlaceDection() {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-        placeDetectionFragment = builder.build();
+        placeDetectionFragment = PlaceDetectionFragment.newInstance(mediaType);
         placeDetectionFragment.show(ft, "Place Detection");
     }
 
@@ -130,7 +113,7 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     public void openPlacePicker() {
         // Create an explicit content Intent that starts the timePlacePickerActivity.
         Intent placepickerIntent = new Intent(getApplicationContext(), PlacePickerFragmentActivity.class);
-        placepickerIntent.putExtra("key", mediaType);
+        placepickerIntent.putExtra("mediaType", mediaType);
         startActivity(placepickerIntent);
     }
 }

@@ -23,7 +23,8 @@ public class PlacePickerFragmentActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mediaType = getIntent().getExtras().getString("key");
+        mediaType = getIntent().getExtras().getString("mediaType");
+        Log.d(TAG, "onCreate: "+ mediaType);
 
 
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();

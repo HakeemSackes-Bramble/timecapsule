@@ -54,6 +54,7 @@ public class GoToMedia extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_feed);
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
         mProgress = new ProgressDialog(this);
@@ -62,25 +63,11 @@ public class GoToMedia extends AppCompatActivity {
         locationLat = getIntent().getExtras().getDouble("keyLocationLat");
         locationLong = getIntent().getExtras().getDouble("keyLocationLong");
         address = getIntent().getExtras().getString("keyAddress");
-
         openMedia(mediaType);
 
 
     }
-    public static class Builder {
-        private String mediaType;
-        public Builder(String type) {
-            this.mediaType = type;
-        }
 
-        public GoToMedia build() {
-            GoToMedia activity = new GoToMedia();
-            Bundle bundle = new Bundle();
-            bundle.putString( "mediaType", mediaType);
-            activity.onSaveInstanceState(bundle);
-            return activity;
-        }
-    }
     private void openMedia(String mediaType) {
         switch (mediaType) {
             case "camera":

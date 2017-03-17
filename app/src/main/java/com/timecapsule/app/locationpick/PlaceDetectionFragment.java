@@ -51,36 +51,10 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
         super.onStart();
     }
 
-    public static class Builder {
-        private String mediaType;
-
-
-        public Builder(String type) {
-            this.mediaType = type;
-        }
-
-        public PlaceDetectionFragment build() {
-            Log.d(TAG, "build: "+ mediaType);
-            PlaceDetectionFragment fragment = new PlaceDetectionFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString( "mediaType", mediaType);
-            fragment.setArguments(bundle);
-            return fragment;
-        }
-
-        public String getMediaType() {
-            return mediaType;
-        }
-
-        public void setMediaType(String mediaType) {
-            this.mediaType = mediaType;
-        }
-    }
-
     public static PlaceDetectionFragment newInstance(String mediaType) {
         PlaceDetectionFragment fragment = new PlaceDetectionFragment();
         Bundle args = new Bundle();
-        args.putString("keyMediaType", mediaType);
+        args.putString("mediaType", mediaType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -96,7 +70,7 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Bundle args = getArguments();
-        mediaType = args.getString("keyMediaType");
+        mediaType = args.getString("mediaType");
     }
 
     @Override
@@ -112,7 +86,8 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, Bundle savedInstanceState) {
-        mediaType = getArguments().getString("keyMediaType");
+
+
         mRoot = inflater.inflate(R.layout.fragment_place_picker, parent, false);
         return mRoot;
     }
@@ -120,9 +95,11 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mediaType = getArguments().getString("mediaType");
+        Log.d(TAG, "onCreateView: " + mediaType);
         recyclerView = (RecyclerView) mRoot.findViewById(R.id.rv_nearbyLocation);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        mLocationAdapter = new LocationAdapter(getActivity(), new ArrayList<NearbyLocation>());
+        mLocationAdapter = new LocationAdapter(getActivity(), new ArrayList<NearbyLocation>(),mediaType);
         recyclerView.setAdapter(mLocationAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
