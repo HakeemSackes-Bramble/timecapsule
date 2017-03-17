@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,7 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     public static AddCapsuleLocationFragment newInstance(String mediaType) {
         AddCapsuleLocationFragment fragment = new AddCapsuleLocationFragment();
         Bundle args = new Bundle();
-        args.putString("keyMediaType", mediaType);
+        args.putString("mediaType", mediaType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,13 +51,14 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        mediaType = args.getString("keyMediaType");
+        mediaType = args.getString("mediaType");
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, Bundle savedInstanceState) {
-        mediaType = getArguments().getString("keyMediaType");
+        mediaType = getArguments().getString("mediaType");
+        Log.d("tag", "onCreateView: "+mediaType);
         mRoot = inflater.inflate(R.layout.fragment_add_location, parent, false);
         setViews();
         setGif();
@@ -111,7 +113,7 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     public void openPlacePicker() {
         // Create an explicit content Intent that starts the timePlacePickerActivity.
         Intent placepickerIntent = new Intent(getApplicationContext(), PlacePickerFragmentActivity.class);
-        placepickerIntent.putExtra("key", mediaType);
+        placepickerIntent.putExtra("mediaType", mediaType);
         startActivity(placepickerIntent);
     }
 }

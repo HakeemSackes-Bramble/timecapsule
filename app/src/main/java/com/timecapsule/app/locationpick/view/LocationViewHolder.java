@@ -3,6 +3,7 @@ package com.timecapsule.app.locationpick.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -27,10 +28,12 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
     private String address;
 
 
-    public LocationViewHolder(View itemView) {
+    public LocationViewHolder(View itemView, String mediaType) {
         super(itemView);
+        Log.d("tag", "LocationViewHolder: "+ mediaType);
         itemView.setClickable(true);
         itemView.setOnClickListener(this);
+        this.mediaType = mediaType;
         tv_name = (TextView) itemView.findViewById(R.id.tv_place_location_name);
         tv_address = (TextView) itemView.findViewById(R.id.tv_place_location_address);
     }
@@ -47,10 +50,14 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
     @Override
     public void onClick(View v) {
         Toast.makeText(v.getContext(), tv_name.getText(), Toast.LENGTH_SHORT).show();
+       /// GoToMedia.Builder builder = new GoToMedia.Builder(mediaType);
         Intent intent = new Intent(v.getContext(), GoToMedia.class);
         Bundle bundle = new Bundle();
-        bundle.putString("key", "value");
+        bundle.putString("mediaType", mediaType);
+        Log.d("tag", "onClick: "+mediaType);
+       // bundle.putString("key", "value");
 //      set Fragmentclass Arguments
+        intent.putExtras(bundle);
         intent.putExtra("keyMediaType", mediaType);
         intent.putExtra("keyLocationLat", locationLat);
         intent.putExtra("keyLocationLong", locationLong);

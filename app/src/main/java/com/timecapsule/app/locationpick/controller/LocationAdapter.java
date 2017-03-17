@@ -22,6 +22,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
 
     private Context context;
     private List<NearbyLocation> nearbyLocationList;
+    private String mediaType;
     private RadioButton radioButton;
     private int mCheckedId;
     private int mSelectedPosition;
@@ -30,9 +31,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
     private RadioButton lastCheckedRB;
 
 
-    public LocationAdapter(Context context, List<NearbyLocation> nearbyLocationList) {
+    public LocationAdapter(Context context, List<NearbyLocation> nearbyLocationList, String mediatype) {
         this.context = context;
         this.nearbyLocationList = nearbyLocationList;
+        this.mediaType = mediatype;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View childview = inflater.inflate(R.layout.holder_location, parent, false);
-        return new LocationViewHolder(childview);
+        return new LocationViewHolder(childview, mediaType);
     }
 
     @Override

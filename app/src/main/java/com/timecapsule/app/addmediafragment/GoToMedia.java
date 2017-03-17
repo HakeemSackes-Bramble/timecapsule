@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -21,6 +20,7 @@ import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.R;
 import com.timecapsule.app.feedactivity.FeedActivity;
 import com.timecapsule.app.profilefragment.model.Capsule;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -48,20 +48,23 @@ public class GoToMedia extends AppCompatActivity {
     private double locationLong;
     private String address;
     private File destinationFile;
+    private Intent intent;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_feed);
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
         mProgress = new ProgressDialog(this);
         imagesRef = storageReference.child("images");
-        mediaType = getIntent().getExtras().getString("keyMediaType");
+        mediaType = getIntent().getExtras().getString("mediaType");
         locationLat = getIntent().getExtras().getDouble("keyLocationLat");
         locationLong = getIntent().getExtras().getDouble("keyLocationLong");
         address = getIntent().getExtras().getString("keyAddress");
         openMedia(mediaType);
+
 
     }
 
@@ -150,10 +153,12 @@ public class GoToMedia extends AppCompatActivity {
                                 addUrlToDatabase(downloadUrl);
                                 mProgress.dismiss();
                                 goToCapsuleUploadFragment("capsule upload");
+
                             }
                         });
                     }
-                } break;
+                }
+                break;
             case CAPTURE_VIDEO:
                 if (resultCode == RESULT_OK) {
                     mProgress.setMessage("uploading video...");
