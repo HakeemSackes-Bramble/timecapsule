@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.widget.AppInviteDialog;
@@ -45,10 +44,10 @@ import com.timecapsule.app.locationpick.controller.MediaListener;
 import com.timecapsule.app.profilefragment.ProfileFragment;
 import com.timecapsule.app.profilefragment.model.Capsule;
 import com.timecapsule.app.users.UserListFragment;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -164,6 +163,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 //
 //
     private void addUrlToDatabase(Uri uri) {
+        Calendar c = Calendar.getInstance();
+        String date = c.getTime().toString();
         String capsuleId = UUID.randomUUID().toString().replaceAll("-", "");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users")
@@ -174,8 +175,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         DatabaseReference capRef = database.getReference("capsules").child(capsuleId);
         String storageLink = uri.toString();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
-        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
+        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date));
+        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date));
     }
 
     @Override
@@ -475,6 +476,12 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         audioFragment = AudioFragment.newInstance("Audio");
         audioFragment.show(ft, "audio");
+    }
+
+    @Override
+    public void setLatLongValues(double locationLatitude, double locationLongitude) {
+        this.locationLat = locationLatitude;
+        this.locationLong = locationLongitude;
     }
 
 }
