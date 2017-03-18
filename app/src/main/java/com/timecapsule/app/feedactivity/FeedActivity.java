@@ -50,7 +50,7 @@ import com.timecapsule.app.locationpick.controller.MediaListener;
 import com.timecapsule.app.profilefragment.ProfileFragment;
 import com.timecapsule.app.profilefragment.model.Capsule;
 import com.timecapsule.app.profilefragment.model.User;
-import com.timecapsule.app.users.UserListFragment;
+import com.timecapsule.app.users.UsersFragment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -72,7 +72,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private static final int REQUEST_CAMERA_PERMISSION = 203;
     private static final int TAKE_PICTURE = 200;
     private static final int CAPTURE_VIDEO = 201;
-    final List<User> users = new ArrayList<User>();
+    private static final String TAG = FeedActivity.class.getSimpleName();
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     private BottomNavigationView bottomNavigationView;
@@ -101,6 +101,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private File destinationFile;
     private User user;
     private ListView userListView;
+    List<User> users = new ArrayList<>();
 
 
     @Override
@@ -129,6 +130,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         imagesRef = storageReference.child("images");
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        firebaseStorage = FirebaseStorage.getInstance();
+        databaseReference = firebaseDatabase.getReferenceFromUrl("https://timecapsule-8b809.firebaseio.com/");
+        users = new ArrayList<>();
         requestLocationPermission();
         requestCameraPemission();
         requestAudioPermission();
@@ -138,9 +142,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         clickAudio();
         clickVideocam();
         FacebookSdk.getApplicationContext();
-
-//        timePlacePickerFragment = new Fragment();
-//        timePlacePickerFragment.setArguments(getIntent().getExtras());
 
         if (savedInstanceState == null) {
             getFragmentManager()
@@ -177,22 +178,28 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.iv_add_friend:
                 Toast.makeText(this, "CLICKED", Toast.LENGTH_SHORT).show();
-//                setAddFriend();
-                retrieveData();
-//                getUserList();
+                setUsersDatabase();
+                getUserList();
         }
     }
 
-
-    public void retrieveData() {
-        databaseReference.child("users").addValueEventListener(new ValueEventListener() {
+    private void setUsersDatabase() {
+        DatabaseReference allUsers = databaseReference.child("users");
+        allUsers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
                 for (DataSnapshot child : children) {
-                    user = child.getValue(User.class);
+                    Log.d(TAG, "USERS: " + dataSnapshot.getChildren());
+                    user = new User((String) child.child("name").getValue(), (String) child.child("username").getValue());
+                    Log.d(TAG, "USERS: " + user);
                     users.add(user);
                 }
+                UsersFragment usersFragment = (UsersFragment) getFragmentManager().findFragmentByTag(UsersFragment.TAG);
+                if (usersFragment != null) {
+                    usersFragment.setUsers(users);
+                }
+                Log.d(TAG, "USERS: " + users);
             }
 
             @Override
@@ -200,16 +207,18 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-
-
     }
 
 
     public void getUserList() {
+        UsersFragment usersFragment = new UsersFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(UsersFragment.EXTRA_USERS, (ArrayList<User>) users);
+        usersFragment.setArguments(args);
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container_main, new UserListFragment())
-                .addToBackStack("users")
+                .replace(R.id.container_main, usersFragment, UsersFragment.TAG)
+                .addToBackStack(null)
                 .commit();
     }
 

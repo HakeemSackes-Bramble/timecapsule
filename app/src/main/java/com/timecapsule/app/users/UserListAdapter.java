@@ -1,27 +1,20 @@
 package com.timecapsule.app.users;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.ViewGroup;
+import android.content.Context;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.widget.ArrayAdapter;
+
+import com.timecapsule.app.profilefragment.model.User;
 
 /**
  * Created by catwong on 3/18/17.
  */
 
-public class UserListAdapter extends RecyclerView.Adapter<UserListViewHolder> {
+public class UserListAdapter extends ArrayAdapter<User> {
 
 
-    @Override
-    public UserListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
-    }
-
-    @Override
-    public void onBindViewHolder(UserListViewHolder holder, int position) {
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return 0;
+    public UserListAdapter(@NonNull Context context, @LayoutRes int resource) {
+        super(context, resource);
     }
 }

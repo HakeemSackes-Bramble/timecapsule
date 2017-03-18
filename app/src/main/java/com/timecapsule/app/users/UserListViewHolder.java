@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.timecapsule.app.R;
 import com.timecapsule.app.profilefragment.model.User;
 
 /**
@@ -22,7 +21,7 @@ public class UserListViewHolder extends RecyclerView.ViewHolder {
 
     public UserListViewHolder(View itemView) {
         super(itemView);
-        username = (TextView) mRoot.findViewById(R.id.tv_userlist_username);
+//        username = (TextView) mRoot.findViewById(R.id.tv_userlist_username);
     }
 
     public void bind(User user){

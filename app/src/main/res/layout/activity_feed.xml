@@ -65,7 +65,7 @@
             android:layout_gravity="bottom|right"
             android:layout_margin="16dp"
             app:layout_anchorGravity="bottom|right|end"
-            fab:fab_addButtonColorNormal="#5992af"
+            fab:fab_addButtonColorNormal="#342e3d"
             app:fab_addButtonColorPressed="@color/colorPink"
             fab:fab_addButtonPlusIconColor="@color/colorWhite">
 
@@ -75,8 +75,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 app:fab_icon="@drawable/ic_photo_camera_black_48dp"
-                fab:fab_colorNormal="#fff000"
-                fab:fab_colorPressed="@color/colorPink"
+                fab:fab_colorNormal="@color/colorPink"
+                fab:fab_colorPressed="#342e3d"
                 fab:fab_size="normal" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
@@ -85,8 +85,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 app:fab_icon="@drawable/ic_mic_black_48dp"
-                fab:fab_colorNormal="#fff000"
-                fab:fab_colorPressed="@color/colorPink"
+                fab:fab_colorNormal="@color/colorPink"
+                fab:fab_colorPressed="#342e3d"
                 fab:fab_size="normal" />
 
 
@@ -96,8 +96,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 app:fab_icon="@drawable/ic_videocam_black_48dp"
-                fab:fab_colorNormal="#fff000"
-                fab:fab_colorPressed="@color/colorPink"
+                fab:fab_colorNormal="@color/colorPink"
+                fab:fab_colorPressed="#342e3d"
                 fab:fab_size="normal" />
 
 
