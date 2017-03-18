@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.timecapsule.app.R;
 import com.timecapsule.app.addmediafragment.AudioFragment;
 import com.timecapsule.app.addmediafragment.CapsuleUploadFragment;
@@ -32,6 +33,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -57,6 +59,9 @@ public class GoToMedia extends AppCompatActivity {
     private String address;
     private File destinationFile;
     private Intent intent;
+    private Capsule capsule;
+    private List <String> keyId;
+    private List<String> mUrl;
 
 
     @Override
@@ -125,6 +130,7 @@ public class GoToMedia extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Capsule capsule = dataSnapshot.getValue(Capsule.class);
+                capsule.getStorageUrl();
             }
 
             @Override
