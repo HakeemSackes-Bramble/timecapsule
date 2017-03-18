@@ -70,7 +70,6 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLoaderManager().initLoader(PLACES_DETECTION_LOADER, null, this);
-        mediaType = getArguments().getString("mediaType");
     }
 
     @Override
@@ -98,7 +97,6 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mediaType = getArguments().getString("mediaType");
         Log.d(TAG, "onCreateView: " + mediaType);
         recyclerView = (RecyclerView) mRoot.findViewById(R.id.rv_nearbyLocation);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));

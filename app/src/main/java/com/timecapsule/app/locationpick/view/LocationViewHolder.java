@@ -57,11 +57,9 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
     @Override
     public void onClick(View v) {
         Toast.makeText(v.getContext(), tv_name.getText(), Toast.LENGTH_SHORT).show();
-
         context = v.getContext();
         Intent intent = new Intent();
 //      set Fragmentclass Arguments
-        intent.putExtras(bundle);
         intent.putExtra("keyMediaType", mediaType);
         intent.putExtra("keyLocationLat", locationLat);
         intent.putExtra("keyLocationLong", locationLong);
