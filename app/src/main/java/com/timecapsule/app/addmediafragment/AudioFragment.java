@@ -67,7 +67,7 @@ public class AudioFragment extends DialogFragment {
         }
     };
     private ImageView iv_cassette;
-    private int MAX_DURATION = 15000;
+    private int MAX_DURATION = 16000;
     private int MAX_SECONDS = 16;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;

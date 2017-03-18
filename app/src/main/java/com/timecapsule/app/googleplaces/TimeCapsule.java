@@ -11,6 +11,7 @@ import java.util.List;
  */
 
 public class TimeCapsule implements Parcelable {
+
     private String title;
     private String description;
     private double latitude;
