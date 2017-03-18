@@ -63,6 +63,7 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
         intent.putExtra("keyLocationLong", locationLong);
         intent.putExtra("keyAddress", address);
         openMedia(mediaType,intent);
+        listener.setLatLongValues(locationLat,locationLong);
     }
 
     private void openMedia(String mediaType,Intent intent) {

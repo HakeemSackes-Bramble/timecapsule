@@ -56,6 +56,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -71,6 +72,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private static final int REQUEST_CAMERA_PERMISSION = 203;
     private static final int TAKE_PICTURE = 200;
     private static final int CAPTURE_VIDEO = 201;
+    final List<User> users = new ArrayList<User>();
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
     private BottomNavigationView bottomNavigationView;
     private ImageView iv_add_friend;
     private FloatingActionsMenu fab_add_media;
@@ -95,12 +99,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private double locationLong;
     private String address;
     private File destinationFile;
-    final List<User> users = new ArrayList<User>();
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
     private User user;
     private ListView userListView;
-
 
 
     @Override
@@ -157,7 +157,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 .build();
     }
 
-
     private void goToCapsuleUploadFragment(String capsuleUpload) {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         capsuleUploadFragment = CapsuleUploadFragment.newInstance(capsuleUpload);
@@ -185,7 +184,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public void retrieveData(){
+    public void retrieveData() {
         databaseReference.child("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -413,7 +412,16 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         audioFragment.show(ft, "audio");
     }
 
-    public void addUrlToDatabase(Uri uri) {
+    @Override
+    public void setLatLongValues(double locationLatitude, double locationLongitude) {
+        this.locationLat = locationLatitude;
+        this.locationLong = locationLongitude;
+    }
+
+
+    private void addUrlToDatabase(Uri uri) {
+        Calendar c = Calendar.getInstance();
+        String date = c.getTime().toString();
         String capsuleId = UUID.randomUUID().toString().replaceAll("-", "");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users")
@@ -424,8 +432,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         DatabaseReference capRef = database.getReference("capsules").child(capsuleId);
         String storageLink = uri.toString();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
-        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
+        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date));
+        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date));
     }
 
     @Override
@@ -480,6 +488,4 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
-
 }
