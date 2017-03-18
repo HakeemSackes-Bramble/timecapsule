@@ -378,7 +378,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         audioFragment.show(ft, "audio");
     }
 
-    private void addUrlToDatabase(Uri uri) {
+    public void addUrlToDatabase(Uri uri) {
         String capsuleId = UUID.randomUUID().toString().replaceAll("-", "");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users")

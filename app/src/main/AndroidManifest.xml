@@ -48,7 +48,7 @@
             android:screenOrientation="portrait" />
         <activity android:name="com.timecapsule.app.GoogleMapsActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".addmediafragment.GoToMedia"
+        <activity android:name=".addmediafragment.cat_test.GoToMedia"
             android:screenOrientation="portrait" />
         <activity android:name="com.timecapsule.app.profilefragment.ProfileActivity"
             android:screenOrientation="portrait" />
