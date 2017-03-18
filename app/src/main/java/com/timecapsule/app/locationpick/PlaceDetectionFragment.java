@@ -94,7 +94,7 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
         super.onViewCreated(view, savedInstanceState);
         recyclerView = (RecyclerView) mRoot.findViewById(R.id.rv_nearbyLocation);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        mLocationAdapter = new LocationAdapter(getActivity(), new ArrayList<NearbyLocation>());
+        mLocationAdapter = new LocationAdapter(getActivity(), new ArrayList<NearbyLocation>(),mediaType);
         recyclerView.setAdapter(mLocationAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }

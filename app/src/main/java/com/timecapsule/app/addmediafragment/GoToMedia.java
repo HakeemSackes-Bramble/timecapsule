@@ -7,8 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,6 +21,7 @@ import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.R;
 import com.timecapsule.app.feedactivity.FeedActivity;
 import com.timecapsule.app.profilefragment.model.Capsule;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -53,6 +54,7 @@ public class GoToMedia extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_feed);
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
         mProgress = new ProgressDialog(this);
@@ -62,7 +64,6 @@ public class GoToMedia extends AppCompatActivity {
         locationLong = getIntent().getExtras().getDouble("keyLocationLong");
         address = getIntent().getExtras().getString("keyAddress");
         openMedia(mediaType);
-
     }
 
     private void openMedia(String mediaType) {
@@ -117,6 +118,7 @@ public class GoToMedia extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d("GO TO MEDIA", "onActivityResult: ");
         switch (requestCode) {
             case TAKE_PICTURE:
                 if (resultCode == RESULT_OK) {
@@ -169,6 +171,12 @@ public class GoToMedia extends AppCompatActivity {
             android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
             capsuleUploadFragment = CapsuleUploadFragment.newInstance(capsuleUpload);
             capsuleUploadFragment.show(ft, "Capsule Uploaded");
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        gotoFeedActivity();
     }
 
     private void gotoFeedActivity(){

@@ -30,6 +30,7 @@ import com.timecapsule.app.SearchFragment;
 import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
 import com.timecapsule.app.locationpick.PlaceDetectionFragment;
 import com.timecapsule.app.profilefragment.ProfileFragment;
+import com.timecapsule.app.users.UserListFragment;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -119,8 +120,17 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_add_friend:
-                setAddFriend();
+//                setAddFriend();
+                getUserList();
         }
+    }
+
+    public void getUserList(){
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container_main, new UserListFragment())
+                .addToBackStack("users")
+                .commit();
     }
 
 

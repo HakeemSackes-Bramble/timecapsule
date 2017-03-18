@@ -27,10 +27,11 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
     private String address;
 
 
-    public LocationViewHolder(View itemView) {
+    public LocationViewHolder(View itemView, String mediaType) {
         super(itemView);
         itemView.setClickable(true);
         itemView.setOnClickListener(this);
+        this.mediaType = mediaType;
         tv_name = (TextView) itemView.findViewById(R.id.tv_place_location_name);
         tv_address = (TextView) itemView.findViewById(R.id.tv_place_location_address);
     }
