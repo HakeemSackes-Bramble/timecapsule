@@ -5,8 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.timecapsule.app.R;
 import com.timecapsule.app.locationpick.model.NearbyLocation;
@@ -23,19 +21,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
     private Context context;
     private List<NearbyLocation> nearbyLocationList;
     private String mediaType;
-    private RadioButton radioButton;
-    private int mCheckedId;
-    private int mSelectedPosition;
-    private RadioGroup radioGroup;
-    private int lastCheckedPosition = -1;
-    private RadioButton lastCheckedRB;
     private MediaListener listener;
 
 
-
-
     public LocationAdapter(Context context, List<NearbyLocation> nearbyLocationList, String mediaType, MediaListener listener) {
-
         this.context = context;
         this.mediaType = mediaType;
         this.listener = listener;
