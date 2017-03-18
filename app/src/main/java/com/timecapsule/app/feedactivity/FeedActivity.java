@@ -51,7 +51,6 @@ import com.timecapsule.app.profilefragment.ProfileFragment;
 import com.timecapsule.app.profilefragment.model.Capsule;
 import com.timecapsule.app.profilefragment.model.User;
 import com.timecapsule.app.users.UsersFragment;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -102,6 +101,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private User user;
     private ListView userListView;
     List<User> users = new ArrayList<>();
+    private Capsule capsule;
 
 
     @Override
