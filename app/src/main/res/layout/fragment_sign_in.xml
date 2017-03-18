@@ -14,7 +14,7 @@
         android:layout_marginRight="13dp"
         android:layout_marginTop="31dp"
         android:paddingLeft="24dp"
-        android:src="@drawable/ic_email_black_24dp" />
+        android:src="@drawable/ic_mail_outline_white_24dp" />
 
     <EditText
         android:id="@+id/et_login_email"
@@ -27,7 +27,8 @@
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:paddingLeft="24dp"
-        android:textColor="@color/colorBlack"
+        android:textColor="#e2e2e2"
+        android:textColorHint="#e2e2e2"
         android:textSize="16sp" />
 
     <ImageView
@@ -38,7 +39,7 @@
         android:layout_marginRight="13dp"
         android:layout_marginTop="51dp"
         android:paddingLeft="24dp"
-        android:src="@drawable/ic_lock_black_24dp" />
+        android:src="@drawable/ic_lock_outline_white_24dp" />
 
     <EditText
         android:id="@+id/et_login_password"
@@ -51,7 +52,8 @@
         android:hint="Password"
         android:inputType="textPassword"
         android:paddingLeft="24dp"
-        android:textColor="@color/colorBlack"
+        android:textColor="#e2e2e2"
+        android:textColorHint="#e2e2e2"
         android:textSize="16sp" />
 
     <ImageView
@@ -61,7 +63,7 @@
         android:layout_alignParentStart="true"
         android:clickable="true"
         android:onClick="onClick"
-        android:src="@drawable/time_capsule_signin_bottom5"
+        android:src="@drawable/time_capsule_signin_bottom6"
         app:layout_heightPercent="25%" />
 
 </android.support.percent.PercentRelativeLayout>
