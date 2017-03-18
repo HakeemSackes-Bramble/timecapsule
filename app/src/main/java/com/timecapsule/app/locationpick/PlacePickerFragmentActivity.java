@@ -10,7 +10,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
-import com.timecapsule.app.addmediafragment.GoToMedia;
+import com.timecapsule.app.addmediafragment.cat_test.GoToMedia;
 
 public class PlacePickerFragmentActivity extends FragmentActivity {
 
