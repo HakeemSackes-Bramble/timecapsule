@@ -1,7 +1,7 @@
 package com.timecapsule.app.locationpick.view;
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.timecapsule.app.R;
-import com.timecapsule.app.addmediafragment.GoToMedia;
+import com.timecapsule.app.locationpick.controller.MediaListener;
 import com.timecapsule.app.locationpick.model.NearbyLocation;
 
 /**
@@ -26,14 +26,17 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
     private String locationLat;
     private String locationLong;
     private String address;
+    private Context context;
+    private MediaListener listener;
 
 
-    public LocationViewHolder(View itemView, String mediaType) {
+    public LocationViewHolder(View itemView, String mediaType, MediaListener listener) {
         super(itemView);
         Log.d("tag", "LocationViewHolder: "+ mediaType);
         itemView.setClickable(true);
         itemView.setOnClickListener(this);
         this.mediaType = mediaType;
+        this.listener = listener;
         tv_name = (TextView) itemView.findViewById(R.id.tv_place_location_name);
         tv_address = (TextView) itemView.findViewById(R.id.tv_place_location_address);
     }
@@ -50,24 +53,32 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
     @Override
     public void onClick(View v) {
         Toast.makeText(v.getContext(), tv_name.getText(), Toast.LENGTH_SHORT).show();
-       /// GoToMedia.Builder builder = new GoToMedia.Builder(mediaType);
-        Intent intent = new Intent(v.getContext(), GoToMedia.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("mediaType", mediaType);
-        Log.d("tag", "onClick: "+mediaType);
-       // bundle.putString("key", "value");
+        context = v.getContext();
+        Intent intent = new Intent();
 //      set Fragmentclass Arguments
         intent.putExtras(bundle);
         intent.putExtra("keyMediaType", mediaType);
         intent.putExtra("keyLocationLat", locationLat);
         intent.putExtra("keyLocationLong", locationLong);
         intent.putExtra("keyAddress", address);
-        v.getContext().startActivity(intent);
-
+        openMedia(mediaType,intent);
     }
 
-
-
+    private void openMedia(String mediaType,Intent intent) {
+        switch (mediaType) {
+            case "camera":
+                intent.setAction(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                listener.goToCamera(intent);
+                break;
+            case "video":
+                intent.setAction(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
+                listener.goToVideo(intent);
+                break;
+            case "audio":
+                listener.goToAudio();
+                break;
+        }
+    }
 }
 
 

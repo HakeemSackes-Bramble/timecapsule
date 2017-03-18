@@ -18,6 +18,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.timecapsule.app.R;
 import com.timecapsule.app.locationpick.PlaceDetectionFragment;
 import com.timecapsule.app.locationpick.PlacePickerFragmentActivity;
+import com.timecapsule.app.locationpick.controller.MediaListener;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -33,32 +34,31 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     private ImageView iv_close_dialog;
     private TextView tv_add_location;
     private String mediaType;
+    private MediaListener listener;
     private PlaceDetectionFragment placeDetectionFragment;
 
 
     public AddCapsuleLocationFragment() {
+
     }
 
-    public static AddCapsuleLocationFragment newInstance(String mediaType) {
-        AddCapsuleLocationFragment fragment = new AddCapsuleLocationFragment();
-        Bundle args = new Bundle();
-        args.putString("mediaType", mediaType);
-        fragment.setArguments(args);
-        return fragment;
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
     }
+
+    public void setListener(MediaListener listener) {
+        this.listener = listener;
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        mediaType = args.getString("mediaType");
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, Bundle savedInstanceState) {
-        mediaType = getArguments().getString("mediaType");
-        Log.d("tag", "onCreateView: "+mediaType);
         mRoot = inflater.inflate(R.layout.fragment_add_location, parent, false);
         setViews();
         setGif();
@@ -97,7 +97,9 @@ public class AddCapsuleLocationFragment extends DialogFragment {
 
     private void goToPlaceDection() {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-        placeDetectionFragment = PlaceDetectionFragment.newInstance(mediaType);
+        placeDetectionFragment = new PlaceDetectionFragment();
+        placeDetectionFragment.setMediaType(mediaType);
+        placeDetectionFragment.setListener(listener);
         placeDetectionFragment.show(ft, "Place Detection");
     }
 
