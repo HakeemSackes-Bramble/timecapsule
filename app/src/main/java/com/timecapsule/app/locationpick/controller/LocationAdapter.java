@@ -20,7 +20,6 @@ import java.util.List;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
 
-    private String mediaType;
     private Context context;
     private List<NearbyLocation> nearbyLocationList;
     private String mediaType;

@@ -61,7 +61,6 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
         context = v.getContext();
         Intent intent = new Intent();
 //      set Fragmentclass Arguments
-        intent.putExtras(bundle);
         intent.putExtra("keyMediaType", mediaType);
         intent.putExtra("keyLocationLat", locationLat);
         intent.putExtra("keyLocationLong", locationLong);
