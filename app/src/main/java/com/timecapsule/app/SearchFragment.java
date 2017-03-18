@@ -23,7 +23,6 @@ import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -63,7 +62,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     private LocationObject locationObject;
     private MapFragment mapFragment;
     private String MY_LOCATION_ID = "MY_LOCATION";
-    private PlaceLikelihoodBuffer likelyPlaces;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
     private FirebaseDatabase fireBsaseDB;

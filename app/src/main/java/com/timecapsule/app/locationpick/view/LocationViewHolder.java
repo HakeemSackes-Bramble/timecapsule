@@ -49,8 +49,6 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
         tv_address.setOnClickListener(this);
         this.locationLat = Double.valueOf(location.getLatlong().split(",")[0].split("\\(")[1]);
         this.locationLong = Double.valueOf(location.getLatlong().split(",")[1].replace(")", ""));
-
-
     }
 
 

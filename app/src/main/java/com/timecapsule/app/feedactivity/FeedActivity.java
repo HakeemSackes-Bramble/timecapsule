@@ -17,6 +17,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.Toast;
+
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.widget.AppInviteDialog;
@@ -28,8 +31,11 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -43,13 +49,15 @@ import com.timecapsule.app.locationpick.PlaceDetectionFragment;
 import com.timecapsule.app.locationpick.controller.MediaListener;
 import com.timecapsule.app.profilefragment.ProfileFragment;
 import com.timecapsule.app.profilefragment.model.Capsule;
-import com.timecapsule.app.profilefragment.model.Capsule;
-import com.timecapsule.app.users.UserListFragment;
+import com.timecapsule.app.profilefragment.model.User;
+import com.timecapsule.app.users.UsersFragment;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import static android.Manifest.permission.RECORD_AUDIO;
@@ -63,6 +71,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private static final int REQUEST_CAMERA_PERMISSION = 203;
     private static final int TAKE_PICTURE = 200;
     private static final int CAPTURE_VIDEO = 201;
+    private static final String TAG = FeedActivity.class.getSimpleName();
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
     private BottomNavigationView bottomNavigationView;
     private ImageView iv_add_friend;
     private FloatingActionsMenu fab_add_media;
@@ -87,6 +98,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private double locationLong;
     private String address;
     private File destinationFile;
+    private User user;
+    private ListView userListView;
+    List<User> users = new ArrayList<>();
     private Capsule capsule;
 
 
@@ -114,10 +128,11 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         storageReference = firebaseStorage.getReference();
         mProgress = new ProgressDialog(this);
         imagesRef = storageReference.child("images");
-//        mediaType = getIntent().getExtras().getString("keyMediaType");
-//        locationLat = getIntent().getExtras().getDouble("keyLocationLat");
-//        locationLong = getIntent().getExtras().getDouble("keyLocationLong");
-//        address = getIntent().getExtras().getString("keyAddress");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+        firebaseStorage = FirebaseStorage.getInstance();
+        databaseReference = firebaseDatabase.getReferenceFromUrl("https://timecapsule-8b809.firebaseio.com/");
+        users = new ArrayList<>();
         requestLocationPermission();
         requestCameraPemission();
         requestAudioPermission();
@@ -126,11 +141,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         clickCamera();
         clickAudio();
         clickVideocam();
-//        openMedia(mediaType);
-        FacebookSdk.sdkInitialize(FacebookSdk.getApplicationContext());
-
-        timePlacePickerFragment = new Fragment();
-        timePlacePickerFragment.setArguments(getIntent().getExtras());
+        FacebookSdk.getApplicationContext();
 
         if (savedInstanceState == null) {
             getFragmentManager()
@@ -146,6 +157,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 .addApi(LocationServices.API)
                 .build();
     }
+
     private void goToCapsuleUploadFragment(String capsuleUpload) {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         capsuleUploadFragment = CapsuleUploadFragment.newInstance(capsuleUpload);
@@ -165,16 +177,48 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_add_friend:
-//                setAddFriend();
+                Toast.makeText(this, "CLICKED", Toast.LENGTH_SHORT).show();
+                setUsersDatabase();
                 getUserList();
         }
     }
 
+    private void setUsersDatabase() {
+        DatabaseReference allUsers = databaseReference.child("users");
+        allUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                for (DataSnapshot child : children) {
+                    Log.d(TAG, "USERS: " + dataSnapshot.getChildren());
+                    user = new User((String) child.child("name").getValue(), (String) child.child("username").getValue());
+                    Log.d(TAG, "USERS: " + user);
+                    users.add(user);
+                }
+                UsersFragment usersFragment = (UsersFragment) getFragmentManager().findFragmentByTag(UsersFragment.TAG);
+                if (usersFragment != null) {
+                    usersFragment.setUsers(users);
+                }
+                Log.d(TAG, "USERS: " + users);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
     public void getUserList() {
+        UsersFragment usersFragment = new UsersFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(UsersFragment.EXTRA_USERS, (ArrayList<User>) users);
+        usersFragment.setArguments(args);
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container_main, new UserListFragment())
-                .addToBackStack("users")
+                .replace(R.id.container_main, usersFragment, UsersFragment.TAG)
+                .addToBackStack(null)
                 .commit();
     }
 
