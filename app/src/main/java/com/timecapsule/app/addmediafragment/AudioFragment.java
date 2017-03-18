@@ -292,7 +292,7 @@ public class AudioFragment extends DialogFragment {
         // set start time
         playTime = 0;
         // Reset max and progress of the SeekBar
-        mSeekBar.setMax(recordTime);
+        mSeekBar.setMax(15);
         mSeekBar.setProgress(0);
         try {
             // Initialize the player and start playing the audio
