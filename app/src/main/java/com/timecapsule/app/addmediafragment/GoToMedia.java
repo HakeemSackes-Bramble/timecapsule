@@ -59,7 +59,6 @@ public class GoToMedia extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_feed);
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
         mProgress = new ProgressDialog(this);
@@ -69,8 +68,6 @@ public class GoToMedia extends AppCompatActivity {
         locationLong = getIntent().getExtras().getDouble("locationLong");
         address = getIntent().getExtras().getString("keyAddress");
         openMedia(mediaType);
-
-
     }
 
     private void openMedia(String mediaType) {
@@ -136,6 +133,7 @@ public class GoToMedia extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d("GO TO MEDIA", "onActivityResult: ");
         switch (requestCode) {
             case TAKE_PICTURE:
                 if (resultCode == RESULT_OK) {
@@ -190,6 +188,12 @@ public class GoToMedia extends AppCompatActivity {
             android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
             capsuleUploadFragment = CapsuleUploadFragment.newInstance(capsuleUpload);
             capsuleUploadFragment.show(ft, "Capsule Uploaded");
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        gotoFeedActivity();
     }
 
     private void gotoFeedActivity(){

@@ -34,7 +34,7 @@ public class SignInFragment extends Fragment {
     private ImageView iv_signin_bottom;
     private EditText et_signin_email;
     private EditText et_signin_password;
-    private FirebaseAuth mAuth;
+    public static FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
 
