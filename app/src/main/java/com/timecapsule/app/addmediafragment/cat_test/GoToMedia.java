@@ -1,4 +1,4 @@
-package com.timecapsule.app.addmediafragment;
+package com.timecapsule.app.addmediafragment.cat_test;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -22,6 +22,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.R;
+import com.timecapsule.app.addmediafragment.AudioFragment;
+import com.timecapsule.app.addmediafragment.CapsuleUploadFragment;
 import com.timecapsule.app.feedactivity.FeedActivity;
 import com.timecapsule.app.profilefragment.model.Capsule;
 

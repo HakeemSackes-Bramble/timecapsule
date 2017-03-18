@@ -147,90 +147,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    //    private void openMedia(String mediaType) {
-//        switch (mediaType) {
-//            case "camera":
-//                goToNativeCamera();
-//                break;
-//            case "video":
-//                goToNativeVideo();
-//                break;
-//            case "audio":
-//                goToAudio();
-//                break;
-//        }
-//    }
-//
-//
-//
-    private void addUrlToDatabase(Uri uri) {
-        String capsuleId = UUID.randomUUID().toString().replaceAll("-", "");
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users")
-                .child(FirebaseAuth.getInstance()
-                        .getCurrentUser().getUid())
-                .child("capsules").child(capsuleId);
-        myRef.setValue(uri.toString());
-        DatabaseReference capRef = database.getReference("capsules").child(capsuleId);
-        String storageLink = uri.toString();
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
-        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d("GO TO MEDIA", "onActivityResult: ");
-        switch (requestCode) {
-            case TAKE_PICTURE:
-                if (resultCode == RESULT_OK) {
-                    mProgress.setMessage("Uploading Photo");
-                    mProgress.setIcon(R.drawable.time_capsule_logo12);
-                    mProgress.show();
-                    if (data != null) {
-                        Bundle extras = data.getExtras();
-                        Bitmap imageBitmap = (Bitmap) extras.get("data");
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                        byte[] dataBAOS = baos.toByteArray();
-                        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                        String imageFileName = "JPEG_" + timeStamp + "_";
-                        String firebaseReference = imageFileName.concat(".jpg");
-                        imagesRef = imagesRef.child(firebaseReference);
-                        StorageReference newImageRef = storageReference.child("images/".concat(firebaseReference));
-                        newImageRef.getName().equals(newImageRef.getName());
-                        newImageRef.getPath().equals(newImageRef.getPath());
-                        UploadTask uploadTask = imagesRef.putBytes(dataBAOS);
-                        uploadTask.addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Handle unsuccessful uploads
-                            }
-                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                                @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                addUrlToDatabase(downloadUrl);
-                                mProgress.dismiss();
-                                goToCapsuleUploadFragment("capsule upload");
-                            }
-                        });
-                    }
-                }
-                break;
-            case CAPTURE_VIDEO:
-                if (resultCode == RESULT_OK) {
-                    mProgress.setMessage("uploading video...");
-                    mProgress.show();
-                    if (data != null) {
-                    }
-                }
-                break;
-        }
-    }
-
     private void goToCapsuleUploadFragment(String capsuleUpload) {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         capsuleUploadFragment = CapsuleUploadFragment.newInstance(capsuleUpload);
@@ -444,21 +360,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-//    private void goToNativeCamera() {
-//
-//    }
-//
-//
-//    private void goToAudio() {
-//
-//    }
-//
-//
-//    public void goToNativeVideo() {
-//        Intent record = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-//        startActivityForResult(record, CAPTURE_VIDEO);
-//    }
-
     @Override
     public void goToCamera(Intent intent) {
         Log.d("GO TO CAMERA LISTENER", "goToCamera: ");
@@ -476,5 +377,74 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         audioFragment = AudioFragment.newInstance("Audio");
         audioFragment.show(ft, "audio");
     }
+
+    public void addUrlToDatabase(Uri uri) {
+        String capsuleId = UUID.randomUUID().toString().replaceAll("-", "");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users")
+                .child(FirebaseAuth.getInstance()
+                        .getCurrentUser().getUid())
+                .child("capsules").child(capsuleId);
+        myRef.setValue(uri.toString());
+        DatabaseReference capRef = database.getReference("capsules").child(capsuleId);
+        String storageLink = uri.toString();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
+        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("GO TO MEDIA", "onActivityResult: ");
+        switch (requestCode) {
+            case TAKE_PICTURE:
+                if (resultCode == RESULT_OK) {
+                    mProgress.setMessage("Uploading Photo");
+                    mProgress.setIcon(R.drawable.time_capsule_logo12);
+                    mProgress.show();
+                    if (data != null) {
+                        Bundle extras = data.getExtras();
+                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        byte[] dataBAOS = baos.toByteArray();
+                        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                        String imageFileName = "JPEG_" + timeStamp + "_";
+                        String firebaseReference = imageFileName.concat(".jpg");
+                        imagesRef = imagesRef.child(firebaseReference);
+                        StorageReference newImageRef = storageReference.child("images/".concat(firebaseReference));
+                        newImageRef.getName().equals(newImageRef.getName());
+                        newImageRef.getPath().equals(newImageRef.getPath());
+                        UploadTask uploadTask = imagesRef.putBytes(dataBAOS);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                                @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                addUrlToDatabase(downloadUrl);
+                                mProgress.dismiss();
+                                goToCapsuleUploadFragment("capsule upload");
+                            }
+                        });
+                    }
+                }
+                break;
+            case CAPTURE_VIDEO:
+                if (resultCode == RESULT_OK) {
+                    mProgress.setMessage("uploading video...");
+                    mProgress.show();
+                    if (data != null) {
+                    }
+                }
+                break;
+        }
+    }
+
 
 }

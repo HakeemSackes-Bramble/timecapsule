@@ -58,18 +58,6 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true">
 
-        <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab_add_media"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|right"-->
-        <!--android:layout_margin="16dp"-->
-        <!--android:onClick="onClick"-->
-        <!--android:src="@drawable/ic_add_white_24dp"-->
-        <!--app:fabSize="normal"-->
-        <!--app:layout_anchorGravity="bottom|right|end" />-->
-
-
         <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:id="@+id/fab_add_tc"
             android:layout_width="wrap_content"
@@ -78,7 +66,7 @@
             android:layout_margin="16dp"
             app:layout_anchorGravity="bottom|right|end"
             fab:fab_addButtonColorNormal="#5992af"
-            app:fab_addButtonColorPressed="#c86589"
+            app:fab_addButtonColorPressed="@color/colorPink"
             fab:fab_addButtonPlusIconColor="@color/colorWhite">
 
             <com.getbase.floatingactionbutton.FloatingActionButton
@@ -88,7 +76,7 @@
                 android:gravity="center"
                 app:fab_icon="@drawable/ic_photo_camera_black_48dp"
                 fab:fab_colorNormal="#fff000"
-                fab:fab_colorPressed="#c86589"
+                fab:fab_colorPressed="@color/colorPink"
                 fab:fab_size="normal" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
@@ -96,9 +84,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                app:fab_icon="@drawable/ic_audiotrack_black_24dp"
+                app:fab_icon="@drawable/ic_mic_black_48dp"
                 fab:fab_colorNormal="#fff000"
-                fab:fab_colorPressed="#c86589"
+                fab:fab_colorPressed="@color/colorPink"
                 fab:fab_size="normal" />
 
 
@@ -109,7 +97,7 @@
                 android:gravity="center"
                 app:fab_icon="@drawable/ic_videocam_black_48dp"
                 fab:fab_colorNormal="#fff000"
-                fab:fab_colorPressed="#c86589"
+                fab:fab_colorPressed="@color/colorPink"
                 fab:fab_size="normal" />
 
 
