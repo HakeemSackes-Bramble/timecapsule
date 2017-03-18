@@ -1,13 +1,11 @@
 package com.timecapsule.app.users;
 
-import android.app.ListFragment;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -22,17 +20,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by catwong on 3/16/17.
+ * Created by catwong on 3/18/17.
  */
 
-public class UserListFragment extends ListFragment {
+public class UsersFragment extends Fragment {
+
 
     private static final String TAG = UserListFragment.class.getSimpleName();
     private DatabaseReference usersReference;
     private View mRoot;
     private FirebaseDatabase usersDatabase;
     private User user;
-    private ListView userListView;
     private TextView username;
 
 
@@ -51,16 +49,11 @@ public class UserListFragment extends ListFragment {
                     users.add(user);
                 }
             }
-
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-
-        ArrayAdapter<User> userAdapter = new ArrayAdapter<User>(getActivity(), R.layout.fragment_user_list, users);
-        setListAdapter(userAdapter);
 
     }
 
@@ -73,22 +66,13 @@ public class UserListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         mRoot = inflater.inflate(R.layout.fragment_user_list, parent, false);
-        userListView = (ListView) mRoot.findViewById(android.R.id.list);
         return mRoot;
-    }
-
-
-
-    @Override
-    public ListView getListView() {
-        return super.getListView();
     }
 
     @Override
     public void onStart() {
         super.onStart();
     }
-
 
 
     @Override
@@ -100,6 +84,4 @@ public class UserListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
     }
-
-
 }

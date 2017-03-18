@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.AppInviteContent;
@@ -29,8 +31,11 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -44,12 +49,15 @@ import com.timecapsule.app.locationpick.PlaceDetectionFragment;
 import com.timecapsule.app.locationpick.controller.MediaListener;
 import com.timecapsule.app.profilefragment.ProfileFragment;
 import com.timecapsule.app.profilefragment.model.Capsule;
+import com.timecapsule.app.profilefragment.model.User;
 import com.timecapsule.app.users.UserListFragment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import static android.Manifest.permission.RECORD_AUDIO;
@@ -87,6 +95,12 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private double locationLong;
     private String address;
     private File destinationFile;
+    final List<User> users = new ArrayList<User>();
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+    private User user;
+    private ListView userListView;
+
 
 
     @Override
@@ -113,10 +127,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         storageReference = firebaseStorage.getReference();
         mProgress = new ProgressDialog(this);
         imagesRef = storageReference.child("images");
-//        mediaType = getIntent().getExtras().getString("keyMediaType");
-//        locationLat = getIntent().getExtras().getDouble("keyLocationLat");
-//        locationLong = getIntent().getExtras().getDouble("keyLocationLong");
-//        address = getIntent().getExtras().getString("keyAddress");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
         requestLocationPermission();
         requestCameraPemission();
         requestAudioPermission();
@@ -125,11 +137,10 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         clickCamera();
         clickAudio();
         clickVideocam();
-//        openMedia(mediaType);
-        FacebookSdk.sdkInitialize(FacebookSdk.getApplicationContext());
+        FacebookSdk.getApplicationContext();
 
-        timePlacePickerFragment = new Fragment();
-        timePlacePickerFragment.setArguments(getIntent().getExtras());
+//        timePlacePickerFragment = new Fragment();
+//        timePlacePickerFragment.setArguments(getIntent().getExtras());
 
         if (savedInstanceState == null) {
             getFragmentManager()
@@ -166,10 +177,34 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_add_friend:
+                Toast.makeText(this, "CLICKED", Toast.LENGTH_SHORT).show();
 //                setAddFriend();
-                getUserList();
+                retrieveData();
+//                getUserList();
         }
     }
+
+
+    public void retrieveData(){
+        databaseReference.child("users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                for (DataSnapshot child : children) {
+                    user = child.getValue(User.class);
+                    users.add(user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
 
     public void getUserList() {
         getFragmentManager()
