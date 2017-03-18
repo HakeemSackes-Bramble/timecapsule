@@ -31,10 +31,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
     private RadioButton lastCheckedRB;
 
 
-    public LocationAdapter(Context context, List<NearbyLocation> nearbyLocationList, String mediatype) {
+    public LocationAdapter(Context context, List<NearbyLocation> nearbyLocationList, String mediaType) {
         this.context = context;
         this.nearbyLocationList = nearbyLocationList;
-        this.mediaType = mediatype;
+        this.mediaType = mediaType;
     }
 
     @Override

@@ -23,14 +23,14 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
     private TextView tv_address;
     public RadioButton radioButton;
     private String mediaType;
-    private String locationLat;
-    private String locationLong;
+    private double locationLat;
+    private double locationLong;
     private String address;
 
 
     public LocationViewHolder(View itemView, String mediaType) {
         super(itemView);
-        Log.d("tag", "LocationViewHolder: "+ mediaType);
+        Log.d("tag", "LocationViewHolder: " + mediaType);
         itemView.setClickable(true);
         itemView.setOnClickListener(this);
         this.mediaType = mediaType;
@@ -44,18 +44,24 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
         tv_name.setOnClickListener(this);
         tv_address.setText(location.getAddress());
         tv_address.setOnClickListener(this);
+        this.locationLat = Double.valueOf(location.getLatlong().split(",")[0].split("\\(")[1]);
+        this.locationLong = Double.valueOf(location.getLatlong().split(",")[1].replace(")", ""));
+
+
     }
 
 
     @Override
     public void onClick(View v) {
         Toast.makeText(v.getContext(), tv_name.getText(), Toast.LENGTH_SHORT).show();
-       /// GoToMedia.Builder builder = new GoToMedia.Builder(mediaType);
+        /// GoToMedia.Builder builder = new GoToMedia.Builder(mediaType);
         Intent intent = new Intent(v.getContext(), GoToMedia.class);
         Bundle bundle = new Bundle();
         bundle.putString("mediaType", mediaType);
-        Log.d("tag", "onClick: "+mediaType);
-       // bundle.putString("key", "value");
+        bundle.putDouble("locationLat", locationLat);
+        bundle.putDouble("locationLong", locationLong);
+        Log.d("tag", "onClick: " + mediaType);
+        // bundle.putString("key", "value");
 //      set Fragmentclass Arguments
         intent.putExtras(bundle);
         intent.putExtra("keyMediaType", mediaType);
@@ -65,7 +71,6 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
         v.getContext().startActivity(intent);
 
     }
-
 
 
 }
