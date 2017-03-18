@@ -33,6 +33,7 @@ import com.timecapsule.app.SearchFragment;
 import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
 import com.timecapsule.app.locationpick.PlaceDetectionFragment;
 import com.timecapsule.app.profilefragment.ProfileFragment;
+import com.timecapsule.app.profilefragment.model.Capsule;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -59,6 +60,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private String mediaType;
     private String place;
     private PlaceDetectionFragment placeDetectionFragment;
+    private Capsule capsule;
 
 
     @Override
