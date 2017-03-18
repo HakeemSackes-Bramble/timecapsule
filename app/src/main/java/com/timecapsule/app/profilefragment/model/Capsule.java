@@ -43,14 +43,16 @@ public class Capsule {
 
     public String storageUrl;
     public String userId;
+    public String date;
 
     public Capsule(){}
 
-    public Capsule(String userId, String storageUrl, double positionLat, double positionLong){
+    public Capsule(String userId, String storageUrl, double positionLat, double positionLong, String date){
         this.userId = userId;
         this.storageUrl = storageUrl;
         this.positionLat = positionLat;
         this.positionLong = positionLong;
+        this.date = date;
     }
 
 

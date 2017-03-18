@@ -80,7 +80,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         fireBsaseDB = FirebaseDatabase.getInstance();
         databasereff = fireBsaseDB.getReferenceFromUrl("https://timecapsule-8b809.firebaseio.com/");
         queriedCapsules = new ArrayList<>();
-
+        capsuleDBReference();
         if (!locationObject.getmGoogleApiClient().isConnecting() || !locationObject.getmGoogleApiClient().isConnected()) {
             locationObject.getmGoogleApiClient().connect();
         }
@@ -238,13 +238,24 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 
     private void capsuleDBReference() {
 
-        DatabaseReference currentUser = databasereff.child("capsules"); //FirebaseAuth.getInstance().getCurrentUser().getUid());
+        final DatabaseReference allCapsules = databasereff.child("capsules"); //FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        currentUser.addValueEventListener(new ValueEventListener() {
+        allCapsules.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-
+                Iterable<DataSnapshot> timeCapsules = dataSnapshot.getChildren();
+                for (DataSnapshot snapShot : timeCapsules) {
+                    Log.d(TAG, "onDataChange: " + snapShot.getValue());
+                    if (snapShot.getValue().toString().split(",").length == 5){
+                        queriedCapsules.add(new Capsule(
+                                (String) snapShot.child("userId").getValue(),
+                                (String) snapShot.child("storageUrl").getValue(),
+                                (double) snapShot.child("positionLat").getValue(),
+                                (double) snapShot.child("positionLong").getValue(),
+                                (String) snapShot.child("date").getValue()));
+                    }
+                }
+                Log.d(TAG, "onDataChange: " + queriedCapsules);
             }
 
             @Override

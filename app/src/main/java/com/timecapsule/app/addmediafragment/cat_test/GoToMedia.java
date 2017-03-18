@@ -30,6 +30,7 @@ import com.timecapsule.app.profilefragment.model.Capsule;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -42,7 +43,7 @@ public class GoToMedia extends AppCompatActivity {
 
     private static final int TAKE_PICTURE = 200;
     private static final int CAPTURE_VIDEO = 201;
-    private static final String TAG ="Database Exception" ;
+    private static final String TAG = "Database Exception";
     private AudioFragment audioFragment;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
@@ -106,18 +107,20 @@ public class GoToMedia extends AppCompatActivity {
     }
 
     private void addUrlToDatabase(Uri uri) {
+        Calendar c = Calendar.getInstance();
+        String date = c.getTime().toString();
         String capsuleId = UUID.randomUUID().toString().replaceAll("-", "");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users")
                 .child(FirebaseAuth.getInstance()
-                .getCurrentUser().getUid())
+                        .getCurrentUser().getUid())
                 .child("capsules").child(capsuleId);
         myRef.setValue(uri.toString());
         DatabaseReference capRef = database.getReference("capsules").child(capsuleId);
         String storageLink = uri.toString();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
-        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
+        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date));
+        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date));
         database.getReference("capsules").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -186,10 +189,10 @@ public class GoToMedia extends AppCompatActivity {
         }
     }
 
-    private void goToCapsuleUploadFragment(String capsuleUpload){
-            android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-            capsuleUploadFragment = CapsuleUploadFragment.newInstance(capsuleUpload);
-            capsuleUploadFragment.show(ft, "Capsule Uploaded");
+    private void goToCapsuleUploadFragment(String capsuleUpload) {
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        capsuleUploadFragment = CapsuleUploadFragment.newInstance(capsuleUpload);
+        capsuleUploadFragment.show(ft, "Capsule Uploaded");
     }
 
     @Override
@@ -198,7 +201,7 @@ public class GoToMedia extends AppCompatActivity {
         gotoFeedActivity();
     }
 
-    private void gotoFeedActivity(){
+    private void gotoFeedActivity() {
         Intent intent = new Intent(this, FeedActivity.class);
         this.startActivity(intent);
     }
