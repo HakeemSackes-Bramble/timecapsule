@@ -57,6 +57,7 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
     }
 
     @Override
@@ -64,18 +65,12 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
         super.onStart();
     }
 
-//    public static PlaceDetectionFragment newInstance(String mediaType) {
-//        PlaceDetectionFragment fragment = new PlaceDetectionFragment();
-//        Bundle args = new Bundle();
-//        args.putString("keyMediaType", mediaType);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLoaderManager().initLoader(PLACES_DETECTION_LOADER, null, this);
+        mediaType = getArguments().getString("mediaType");
     }
 
     @Override
@@ -103,6 +98,8 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mediaType = getArguments().getString("mediaType");
+        Log.d(TAG, "onCreateView: " + mediaType);
         recyclerView = (RecyclerView) mRoot.findViewById(R.id.rv_nearbyLocation);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         mLocationAdapter = new LocationAdapter(getActivity(), new ArrayList<NearbyLocation>(),mediaType, listener);

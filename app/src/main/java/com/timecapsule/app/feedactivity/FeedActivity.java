@@ -265,6 +265,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void goToAddLocation(String mediaType) {
+        Bundle bundle = new Bundle();
+        bundle.putString("mediaType", mediaType);
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         addCapsuleLocationFragment = new AddCapsuleLocationFragment();
         addCapsuleLocationFragment.setListener(this);
@@ -474,4 +476,5 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         audioFragment = AudioFragment.newInstance("Audio");
         audioFragment.show(ft, "audio");
     }
+
 }

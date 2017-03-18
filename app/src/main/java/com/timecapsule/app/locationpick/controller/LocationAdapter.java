@@ -23,6 +23,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
     private String mediaType;
     private Context context;
     private List<NearbyLocation> nearbyLocationList;
+    private String mediaType;
     private RadioButton radioButton;
     private int mCheckedId;
     private int mSelectedPosition;
@@ -34,10 +35,12 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
 
 
     public LocationAdapter(Context context, List<NearbyLocation> nearbyLocationList, String mediaType, MediaListener listener) {
+
         this.context = context;
         this.mediaType = mediaType;
         this.listener = listener;
         this.nearbyLocationList = nearbyLocationList;
+        this.mediaType = mediatype;
     }
 
     @Override

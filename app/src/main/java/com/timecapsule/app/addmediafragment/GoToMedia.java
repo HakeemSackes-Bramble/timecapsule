@@ -13,8 +13,11 @@ import android.util.Log;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -37,6 +40,7 @@ public class GoToMedia extends AppCompatActivity {
 
     private static final int TAKE_PICTURE = 200;
     private static final int CAPTURE_VIDEO = 201;
+    private static final String TAG ="Database Exception" ;
     private AudioFragment audioFragment;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
@@ -49,17 +53,17 @@ public class GoToMedia extends AppCompatActivity {
     private double locationLong;
     private String address;
     private File destinationFile;
+    private Intent intent;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feed);
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
         mProgress = new ProgressDialog(this);
         imagesRef = storageReference.child("images");
-        mediaType = getIntent().getExtras().getString("keyMediaType");
+        mediaType = getIntent().getExtras().getString("mediaType");
         locationLat = getIntent().getExtras().getDouble("keyLocationLat");
         locationLong = getIntent().getExtras().getDouble("keyLocationLong");
         address = getIntent().getExtras().getString("keyAddress");
@@ -112,6 +116,17 @@ public class GoToMedia extends AppCompatActivity {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
         capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
+        database.getReference("capsules").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Capsule capsule = dataSnapshot.getValue(Capsule.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "Get Capsule:Canceled", databaseError.toException());
+            }
+        });
     }
 
 
@@ -152,10 +167,12 @@ public class GoToMedia extends AppCompatActivity {
                                 addUrlToDatabase(downloadUrl);
                                 mProgress.dismiss();
                                 goToCapsuleUploadFragment("capsule upload");
+
                             }
                         });
                     }
-                } break;
+                }
+                break;
             case CAPTURE_VIDEO:
                 if (resultCode == RESULT_OK) {
                     mProgress.setMessage("uploading video...");

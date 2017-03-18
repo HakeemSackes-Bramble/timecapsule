@@ -23,7 +23,8 @@ public class PlacePickerFragmentActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mediaType = getIntent().getExtras().getString("key");
+        mediaType = getIntent().getExtras().getString("mediaType");
+        Log.d(TAG, "onCreate: "+ mediaType);
 
 
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
@@ -56,7 +57,6 @@ public class PlacePickerFragmentActivity extends FragmentActivity {
                 Intent gotoMediaIntent = new Intent(getApplicationContext(), GoToMedia.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("key", "value");
-//      set Fragmentclass Arguments
                 gotoMediaIntent.putExtra("keyMediaType", mediaType);
                 gotoMediaIntent.putExtra("keyLocationLat", locationLat);
                 gotoMediaIntent.putExtra("keyLocationLong", locationLong);

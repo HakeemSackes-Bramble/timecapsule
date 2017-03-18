@@ -29,11 +29,21 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.timecapsule.app.geofence.Constants;
 import com.timecapsule.app.geofence.GeofenceTransitionsIntentService;
 import com.timecapsule.app.googleplaces.LocationObject;
+import com.timecapsule.app.profilefragment.model.Capsule;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -54,12 +64,23 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     private MapFragment mapFragment;
     private String MY_LOCATION_ID = "MY_LOCATION";
     private PlaceLikelihoodBuffer likelyPlaces;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
+    private FirebaseDatabase fireBsaseDB;
+    private DatabaseReference databasereff;
+    private List<Capsule> queriedCapsules;
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         locationObject = new LocationObject(getApplicationContext());
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
+        fireBsaseDB = FirebaseDatabase.getInstance();
+        databasereff = fireBsaseDB.getReference();
+        queriedCapsules = new ArrayList<>();
+
         if (!locationObject.getmGoogleApiClient().isConnecting() || !locationObject.getmGoogleApiClient().isConnected()) {
             locationObject.getmGoogleApiClient().connect();
         }
@@ -76,6 +97,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         mGeofenceList = new ArrayList<>();
         populateGeofenceList();
         googleApiClient = locationObject.getmGoogleApiClient();
+
 //        googleApiClient = new GoogleApiClient
 //                .Builder(getApplicationContext())
 //                .addConnectionCallbacks(this)
@@ -92,6 +114,8 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 //            Log.d(TAG, "Wasn't connected");
 //            googleApiClient.connect();
 //        }
+
+
     }
 
     @Nullable
@@ -122,9 +146,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         }
     }
 
-
-
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -148,6 +169,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
             mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation2));
             mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
             mMap.setMyLocationEnabled(true);
+            addMapMarker(queriedCapsules, mMap);
 
         }
     }
@@ -205,8 +227,27 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
                     .build());
         }
         Log.d(TAG, "populateGeofenceList: " + mGeofenceList.toString());
-
     }
 
+    private void addMapMarker(List<Capsule> capsules, GoogleMap map) {
+        for (Capsule capsule : capsules) {
+            map.addMarker(new MarkerOptions().
+                    position(new LatLng(capsule.getPositionLat(), capsule.getPositionLong())));
+        }
+    }
 
+    private void capsuleDBReference() {
+        databasereff.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+               // queriedCapsules = dataSnapshot.getValue(Capsule.class);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+    }
 }

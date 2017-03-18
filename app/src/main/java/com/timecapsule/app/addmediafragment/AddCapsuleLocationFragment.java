@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,6 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     public void setListener(MediaListener listener) {
         this.listener = listener;
     }
-
 
 
     @Override
@@ -115,7 +115,7 @@ public class AddCapsuleLocationFragment extends DialogFragment {
     public void openPlacePicker() {
         // Create an explicit content Intent that starts the timePlacePickerActivity.
         Intent placepickerIntent = new Intent(getApplicationContext(), PlacePickerFragmentActivity.class);
-        placepickerIntent.putExtra("key", mediaType);
+        placepickerIntent.putExtra("mediaType", mediaType);
         startActivity(placepickerIntent);
     }
 }

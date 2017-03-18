@@ -3,6 +3,7 @@ package com.timecapsule.app.locationpick.view;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
 
     public LocationViewHolder(View itemView, String mediaType, MediaListener listener) {
         super(itemView);
+        Log.d("tag", "LocationViewHolder: "+ mediaType);
         itemView.setClickable(true);
         itemView.setOnClickListener(this);
         this.mediaType = mediaType;
@@ -54,6 +56,7 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
         context = v.getContext();
         Intent intent = new Intent();
 //      set Fragmentclass Arguments
+        intent.putExtras(bundle);
         intent.putExtra("keyMediaType", mediaType);
         intent.putExtra("keyLocationLat", locationLat);
         intent.putExtra("keyLocationLong", locationLong);
