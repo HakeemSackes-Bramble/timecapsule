@@ -3,7 +3,11 @@ package com.timecapsule.app.feedactivity;
 import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -22,25 +26,43 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.NotificationsFragment;
 import com.timecapsule.app.R;
 import com.timecapsule.app.SearchFragment;
 import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
+import com.timecapsule.app.addmediafragment.AudioFragment;
+import com.timecapsule.app.addmediafragment.CapsuleUploadFragment;
 import com.timecapsule.app.locationpick.PlaceDetectionFragment;
+import com.timecapsule.app.locationpick.controller.MediaListener;
 import com.timecapsule.app.profilefragment.ProfileFragment;
+import com.timecapsule.app.profilefragment.model.Capsule;
 import com.timecapsule.app.users.UserListFragment;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 
-public class FeedActivity extends AppCompatActivity implements View.OnClickListener {
+public class FeedActivity extends AppCompatActivity implements View.OnClickListener, MediaListener {
 
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static final int REQUEST_LOCATION = 201;
     private static final int REQUEST_CAMERA_PERMISSION = 203;
+    private static final int TAKE_PICTURE = 200;
+    private static final int CAPTURE_VIDEO = 201;
     private BottomNavigationView bottomNavigationView;
     private ImageView iv_add_friend;
     private FloatingActionsMenu fab_add_media;
@@ -48,15 +70,23 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton fab_audio;
     private FloatingActionButton fab_videocam;
     private String mCurrentPhotoPath;
-    private FirebaseStorage firebaseStorage;
-    private StorageReference storageReference;
-    private StorageReference imagesRef;
     private GoogleApiClient googleApiClient;
     private AddCapsuleLocationFragment addCapsuleLocationFragment;
     private Fragment timePlacePickerFragment;
-    private String mediaType;
     private String place;
     private PlaceDetectionFragment placeDetectionFragment;
+    private AudioFragment audioFragment;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
+    private StorageReference imagesRef;
+    private UploadTask uploadTask;
+    private ProgressDialog mProgress;
+    private String mediaType;
+    private CapsuleUploadFragment capsuleUploadFragment;
+    private double locationLat;
+    private double locationLong;
+    private String address;
+    private File destinationFile;
 
 
     @Override
@@ -79,7 +109,14 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
         imagesRef = storageReference.child("images");
-        FacebookSdk.sdkInitialize(FacebookSdk.getApplicationContext());
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
+        mProgress = new ProgressDialog(this);
+        imagesRef = storageReference.child("images");
+//        mediaType = getIntent().getExtras().getString("keyMediaType");
+//        locationLat = getIntent().getExtras().getDouble("keyLocationLat");
+//        locationLong = getIntent().getExtras().getDouble("keyLocationLong");
+//        address = getIntent().getExtras().getString("keyAddress");
         requestLocationPermission();
         requestCameraPemission();
         requestAudioPermission();
@@ -88,6 +125,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         clickCamera();
         clickAudio();
         clickVideocam();
+//        openMedia(mediaType);
+        FacebookSdk.sdkInitialize(FacebookSdk.getApplicationContext());
 
         timePlacePickerFragment = new Fragment();
         timePlacePickerFragment.setArguments(getIntent().getExtras());
@@ -108,6 +147,97 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    //    private void openMedia(String mediaType) {
+//        switch (mediaType) {
+//            case "camera":
+//                goToNativeCamera();
+//                break;
+//            case "video":
+//                goToNativeVideo();
+//                break;
+//            case "audio":
+//                goToAudio();
+//                break;
+//        }
+//    }
+//
+//
+//
+    private void addUrlToDatabase(Uri uri) {
+        String capsuleId = UUID.randomUUID().toString().replaceAll("-", "");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users")
+                .child(FirebaseAuth.getInstance()
+                        .getCurrentUser().getUid())
+                .child("capsules").child(capsuleId);
+        myRef.setValue(uri.toString());
+        DatabaseReference capRef = database.getReference("capsules").child(capsuleId);
+        String storageLink = uri.toString();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
+        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("GO TO MEDIA", "onActivityResult: ");
+        switch (requestCode) {
+            case TAKE_PICTURE:
+                if (resultCode == RESULT_OK) {
+                    mProgress.setMessage("Uploading Photo");
+                    mProgress.setIcon(R.drawable.time_capsule_logo12);
+                    mProgress.show();
+                    if (data != null) {
+                        Bundle extras = data.getExtras();
+                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        byte[] dataBAOS = baos.toByteArray();
+                        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                        String imageFileName = "JPEG_" + timeStamp + "_";
+                        String firebaseReference = imageFileName.concat(".jpg");
+                        imagesRef = imagesRef.child(firebaseReference);
+                        StorageReference newImageRef = storageReference.child("images/".concat(firebaseReference));
+                        newImageRef.getName().equals(newImageRef.getName());
+                        newImageRef.getPath().equals(newImageRef.getPath());
+                        UploadTask uploadTask = imagesRef.putBytes(dataBAOS);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                                @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                addUrlToDatabase(downloadUrl);
+                                mProgress.dismiss();
+                                goToCapsuleUploadFragment("capsule upload");
+                            }
+                        });
+                    }
+                }
+                break;
+            case CAPTURE_VIDEO:
+                if (resultCode == RESULT_OK) {
+                    mProgress.setMessage("uploading video...");
+                    mProgress.show();
+                    if (data != null) {
+                    }
+                }
+                break;
+        }
+    }
+
+    private void goToCapsuleUploadFragment(String capsuleUpload) {
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        capsuleUploadFragment = CapsuleUploadFragment.newInstance(capsuleUpload);
+        capsuleUploadFragment.show(ft, "Capsule Uploaded");
+    }
+
+
     private void setViews() {
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         iv_add_friend = (ImageView) findViewById(R.id.iv_add_friend);
@@ -125,7 +255,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void getUserList(){
+    public void getUserList() {
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container_main, new UserListFragment())
@@ -136,7 +266,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 
     private void goToAddLocation(String mediaType) {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-        addCapsuleLocationFragment = AddCapsuleLocationFragment.newInstance(mediaType);
+        addCapsuleLocationFragment = new AddCapsuleLocationFragment();
+        addCapsuleLocationFragment.setListener(this);
+        addCapsuleLocationFragment.setMediaType(mediaType);
         addCapsuleLocationFragment.show(ft, "NearbyLocation");
     }
 
@@ -146,7 +278,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 mediaType = "camera";
-                goToAddLocation("camera");
+                goToAddLocation(mediaType);
             }
         });
     }
@@ -156,7 +288,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 mediaType = "audio";
-                goToAddLocation("audio");
+                goToAddLocation(mediaType);
             }
         });
 
@@ -167,7 +299,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 mediaType = "video";
-                goToAddLocation("video");
+                goToAddLocation(mediaType);
 
             }
         });
@@ -308,8 +440,38 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
         }
-
     }
 
+//    private void goToNativeCamera() {
+//
+//    }
+//
+//
+//    private void goToAudio() {
+//
+//    }
+//
+//
+//    public void goToNativeVideo() {
+//        Intent record = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+//        startActivityForResult(record, CAPTURE_VIDEO);
+//    }
 
+    @Override
+    public void goToCamera(Intent intent) {
+        Log.d("GO TO CAMERA LISTENER", "goToCamera: ");
+        startActivityForResult(intent, TAKE_PICTURE);
+    }
+
+    @Override
+    public void goToVideo(Intent intent) {
+        startActivityForResult(intent, CAPTURE_VIDEO);
+    }
+
+    @Override
+    public void goToAudio() {
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        audioFragment = AudioFragment.newInstance("Audio");
+        audioFragment.show(ft, "audio");
+    }
 }
