@@ -43,6 +43,7 @@ import com.timecapsule.app.locationpick.PlaceDetectionFragment;
 import com.timecapsule.app.locationpick.controller.MediaListener;
 import com.timecapsule.app.profilefragment.ProfileFragment;
 import com.timecapsule.app.profilefragment.model.Capsule;
+import com.timecapsule.app.profilefragment.model.Capsule;
 import com.timecapsule.app.users.UserListFragment;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -86,6 +87,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private double locationLong;
     private String address;
     private File destinationFile;
+    private Capsule capsule;
 
 
     @Override
