@@ -34,13 +34,14 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
 
 
 
+
     public LocationAdapter(Context context, List<NearbyLocation> nearbyLocationList, String mediaType, MediaListener listener) {
 
         this.context = context;
         this.mediaType = mediaType;
         this.listener = listener;
         this.nearbyLocationList = nearbyLocationList;
-        this.mediaType = mediatype;
+        this.mediaType = mediaType;
     }
 
     @Override

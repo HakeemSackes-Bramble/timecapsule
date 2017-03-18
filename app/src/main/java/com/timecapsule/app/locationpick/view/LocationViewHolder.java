@@ -23,8 +23,8 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
     private TextView tv_address;
     public RadioButton radioButton;
     private String mediaType;
-    private String locationLat;
-    private String locationLong;
+    private double locationLat;
+    private double locationLong;
     private String address;
     private Context context;
     private MediaListener listener;
@@ -32,7 +32,7 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
 
     public LocationViewHolder(View itemView, String mediaType, MediaListener listener) {
         super(itemView);
-        Log.d("tag", "LocationViewHolder: "+ mediaType);
+        Log.d("tag", "LocationViewHolder: " + mediaType);
         itemView.setClickable(true);
         itemView.setOnClickListener(this);
         this.mediaType = mediaType;
@@ -47,12 +47,17 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
         tv_name.setOnClickListener(this);
         tv_address.setText(location.getAddress());
         tv_address.setOnClickListener(this);
+        this.locationLat = Double.valueOf(location.getLatlong().split(",")[0].split("\\(")[1]);
+        this.locationLong = Double.valueOf(location.getLatlong().split(",")[1].replace(")", ""));
+
+
     }
 
 
     @Override
     public void onClick(View v) {
         Toast.makeText(v.getContext(), tv_name.getText(), Toast.LENGTH_SHORT).show();
+
         context = v.getContext();
         Intent intent = new Intent();
 //      set Fragmentclass Arguments

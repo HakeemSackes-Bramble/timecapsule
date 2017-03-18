@@ -78,7 +78,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
         fireBsaseDB = FirebaseDatabase.getInstance();
-        databasereff = fireBsaseDB.getReference();
+        databasereff = fireBsaseDB.getReferenceFromUrl("https://timecapsule-8b809.firebaseio.com/");
         queriedCapsules = new ArrayList<>();
 
         if (!locationObject.getmGoogleApiClient().isConnecting() || !locationObject.getmGoogleApiClient().isConnected()) {
@@ -237,10 +237,13 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     }
 
     private void capsuleDBReference() {
-        databasereff.addValueEventListener(new ValueEventListener() {
+
+        DatabaseReference currentUser = databasereff.child("capsules"); //FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        currentUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-               // queriedCapsules = dataSnapshot.getValue(Capsule.class);
+
 
             }
 

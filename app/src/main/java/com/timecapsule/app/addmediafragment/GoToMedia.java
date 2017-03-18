@@ -64,8 +64,8 @@ public class GoToMedia extends AppCompatActivity {
         mProgress = new ProgressDialog(this);
         imagesRef = storageReference.child("images");
         mediaType = getIntent().getExtras().getString("mediaType");
-        locationLat = getIntent().getExtras().getDouble("keyLocationLat");
-        locationLong = getIntent().getExtras().getDouble("keyLocationLong");
+        locationLat = getIntent().getExtras().getDouble("locationLat");
+        locationLong = getIntent().getExtras().getDouble("locationLong");
         address = getIntent().getExtras().getString("keyAddress");
         openMedia(mediaType);
     }

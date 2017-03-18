@@ -24,7 +24,7 @@ public class PlacePickerFragmentActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mediaType = getIntent().getExtras().getString("mediaType");
-        Log.d(TAG, "onCreate: "+ mediaType);
+        Log.d(TAG, "onCreate: " + mediaType);
 
 
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
