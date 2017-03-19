@@ -43,6 +43,7 @@ import com.timecapsule.app.googleplaces.LocationObject;
 import com.timecapsule.app.profilefragment.model.Capsule;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -68,7 +69,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     private StorageReference storageReference;
     private FirebaseDatabase fireBsaseDB;
     private DatabaseReference databasereff;
-    private List<Capsule> queriedCapsules;
+    private HashMap<LatLng, List<Capsule>> timeCapsuleHubs;
 
 
     @Override
@@ -79,7 +80,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         storageReference = firebaseStorage.getReference();
         fireBsaseDB = FirebaseDatabase.getInstance();
         databasereff = fireBsaseDB.getReferenceFromUrl("https://timecapsule-8b809.firebaseio.com/");
-        queriedCapsules = new ArrayList<>();
+        timeCapsuleHubs = new HashMap<>();
         capsuleDBReference();
         if (!locationObject.getmGoogleApiClient().isConnecting() || !locationObject.getmGoogleApiClient().isConnected()) {
             locationObject.getmGoogleApiClient().connect();
@@ -169,7 +170,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
             mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation2));
             mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
             mMap.setMyLocationEnabled(true);
-            addMapMarker(queriedCapsules, mMap);
+            addMapMarker(timeCapsuleHubs, mMap);
 
         }
     }
@@ -189,7 +190,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 
     @Override
     public void onResult(@NonNull Status status) {
-
     }
 
     private GeofencingRequest getGeofencingRequest() {
@@ -229,10 +229,11 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         Log.d(TAG, "populateGeofenceList: " + mGeofenceList.toString());
     }
 
-    private void addMapMarker(List<Capsule> capsules, GoogleMap map) {
-        for (Capsule capsule : capsules) {
+    private void addMapMarker(HashMap<LatLng, List<Capsule>> timeCapsuleHub, GoogleMap map) {
+        for (LatLng capsule : timeCapsuleHub.keySet()) {
             map.addMarker(new MarkerOptions().
-                    position(new LatLng(capsule.getPositionLat(), capsule.getPositionLong())));
+                    position(capsule));
+            Log.d(TAG, "addMapMarker: ");
         }
     }
 
@@ -246,22 +247,40 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
                 Iterable<DataSnapshot> timeCapsules = dataSnapshot.getChildren();
                 for (DataSnapshot snapShot : timeCapsules) {
                     Log.d(TAG, "onDataChange: " + snapShot.getValue());
-                    if (snapShot.getValue().toString().split(",").length == 5){
-                        queriedCapsules.add(new Capsule(
+                    LatLng spot = new LatLng((double) snapShot.child("positionLat").getValue(), (double) snapShot.child("positionLong").getValue());
+                    Capsule moment;
+                    if (snapShot.getValue().toString().split(",").length == 5) {
+                        moment = new Capsule(
                                 (String) snapShot.child("userId").getValue(),
                                 (String) snapShot.child("storageUrl").getValue(),
                                 (double) snapShot.child("positionLat").getValue(),
                                 (double) snapShot.child("positionLong").getValue(),
-                                (String) snapShot.child("date").getValue()));
+                                (String) snapShot.child("date").getValue());
+                    }else {
+                        moment = new Capsule(
+                                (String) snapShot.child("userId").getValue(),
+                                (String) snapShot.child("storageUrl").getValue(),
+                                (double) snapShot.child("positionLat").getValue(),
+                                (double) snapShot.child("positionLong").getValue(),
+                                (String) snapShot.child("date").getValue(),
+                                (String) snapShot.child("address").getValue());
                     }
-                }
-                Log.d(TAG, "onDataChange: " + queriedCapsules);
-            }
+                        // if (snapShot.getValue().toString().split(",").length == 5) {
+                        if (timeCapsuleHubs.containsKey(spot)) {
+                            timeCapsuleHubs.get(spot).add(moment);
+                        } else {
+                            timeCapsuleHubs.put(spot, new ArrayList<Capsule>());
+                            timeCapsuleHubs.get(spot).add(moment);
+                        }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
-        });
+                    }
+                    Log.d(TAG, "onDataChange: ");
+                }
+
+                @Override
+                public void onCancelled (DatabaseError databaseError){
+                    System.out.println("The read failed: " + databaseError.getCode());
+                }
+            });
+        }
     }
-}

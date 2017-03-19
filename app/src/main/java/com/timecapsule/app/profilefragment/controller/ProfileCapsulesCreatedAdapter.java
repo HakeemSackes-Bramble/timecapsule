@@ -6,13 +6,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.timecapsule.app.R;
+import com.timecapsule.app.profilefragment.model.Capsule;
 import com.timecapsule.app.profilefragment.view.ProfileCreatedViewHolder;
+
+import java.util.ArrayList;
 
 /**
  * Created by catwong on 3/10/17.
  */
 
 public class ProfileCapsulesCreatedAdapter extends RecyclerView.Adapter<ProfileCreatedViewHolder> {
+
+    ArrayList<Capsule> capsules;
+
+    public ProfileCapsulesCreatedAdapter(ArrayList<Capsule> capsules) {
+        this.capsules = capsules;
+    }
 
     @Override
     public ProfileCreatedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -22,15 +31,11 @@ public class ProfileCapsulesCreatedAdapter extends RecyclerView.Adapter<ProfileC
 
     @Override
     public void onBindViewHolder(ProfileCreatedViewHolder holder, int position) {
-        holder.bind(position);
+        holder.bind(capsules.get(position), position);
     }
 
     @Override
     public int getItemCount() {
-        int num = 0;
-        for (int i = 0; i < 12; i++) {
-            num = i;
-        }
-        return num;
+        return capsules.size();
     }
 }
