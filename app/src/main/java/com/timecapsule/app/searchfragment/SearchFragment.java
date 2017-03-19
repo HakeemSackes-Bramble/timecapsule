@@ -87,6 +87,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
             locationObject.getmGoogleApiClient().connect();
         }
 
+
     }
 
     @Override
@@ -97,7 +98,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
             return;
         }
         mGeofenceList = new ArrayList<>();
-        populateGeofenceList();
+
         googleApiClient = locationObject.getmGoogleApiClient();
 
 //        googleApiClient = new GoogleApiClient
@@ -210,11 +211,12 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
             return;
         }
         LocationServices.GeofencingApi.addGeofences(googleApiClient, getGeofencingRequest(), getGeofencePendingIntent()).setResultCallback(this);
+        Log.d(TAG, "addGeofences: this is a geofence");
     }
 
     private void populateGeofenceList() {
 
-        for (LatLng entry : new LatLng[]{new LatLng(40.742571, -73.935421)}) {
+        for (LatLng entry : timeCapsuleHubs.keySet()) {
             mGeofenceList.add(new Geofence.Builder()
                     .setRequestId("" + entry.latitude + entry.longitude)
                     .setCircularRegion(
@@ -235,8 +237,9 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
             map.addMarker(new MarkerOptions().
                     position(capsule).title("time capsules")
                     .snippet(timeCapsuleHub.get(capsule).size() + " Time capsules here"));
-            Log.d(TAG, "addMapMarker: ");
+
         }
+        Log.d(TAG, "addMapMarker: ");
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
@@ -257,7 +260,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> timeCapsules = dataSnapshot.getChildren();
                 for (DataSnapshot snapShot : timeCapsules) {
-                    Log.d(TAG, "onDataChange: " + snapShot.getValue());
+                    //Log.d(TAG, "onDataChange: " + snapShot.getValue());
                     LatLng spot = new LatLng((double) snapShot.child("positionLat").getValue(), (double) snapShot.child("positionLong").getValue());
                     Capsule moment;
                     if (snapShot.getValue().toString().split(",").length == 5) {
@@ -285,6 +288,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
                     }
 
                 }
+                populateGeofenceList();
                 Log.d(TAG, "onDataChange: ");
             }
 

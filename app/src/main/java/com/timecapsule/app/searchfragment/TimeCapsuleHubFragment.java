@@ -31,7 +31,6 @@ public class TimeCapsuleHubFragment extends DialogFragment {
         super.onAttach(context);
 
     }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -40,11 +39,6 @@ public class TimeCapsuleHubFragment extends DialogFragment {
         rvlist.setAdapter(new HubAdapter(capsules, getActivity()));
         rvlist.setLayoutManager(new LinearLayoutManager(getActivity()));
         return mRoot;
-
-    }
-
-    public ArrayList<Capsule> getCapsules() {
-        return capsules;
     }
 
     public void setCapsules(ArrayList<Capsule> capsules) {

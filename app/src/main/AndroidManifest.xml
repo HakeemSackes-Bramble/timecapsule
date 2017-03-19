@@ -56,7 +56,7 @@
             android:name=".cameraactivity.CameraActivity"
             android:configChanges="keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
-        <service android:name=".googleplaces.TransitionIntentService"/>
+        <service android:name=".searchfragment.TransitionIntentService"/>
         <service android:name=".geofence.GeofenceTransitionsIntentService"/>
 
     </application>

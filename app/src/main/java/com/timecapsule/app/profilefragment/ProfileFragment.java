@@ -28,6 +28,8 @@ import com.timecapsule.app.profilefragment.model.Capsule;
 
 import java.util.ArrayList;
 
+import static com.facebook.internal.FacebookDialogFragment.TAG;
+
 
 public class ProfileFragment extends Fragment {
 
@@ -134,11 +136,15 @@ public class ProfileFragment extends Fragment {
                 tv_profile_username.setText((String) dataSnapshot.child("username").getValue());
                 tv_profile_name.setText((String) dataSnapshot.child("name").getValue());
 
-                Log.d("TAG", "onDataChange: " + dataSnapshot.child("username").getValue() + " "
+                Log.d("TAG", "onDataChange1: " + dataSnapshot.child("username").getValue() + " "
                         + dataSnapshot.child("name").getValue());
                 for (DataSnapshot snapShot : timeCapsules) {
-                    Log.d("TAG", "onDataChange: " + snapShot.getValue());
+                    Log.d("TAG", "onDataChange2: " + snapShot.getValue());
                     Capsule moment;
+                    if(snapShot.child("positionLat").getValue() == null|| snapShot.child("positionLong").getValue()==null){
+                        Log.d(TAG, "onDataChange: skipped cap image");
+                        continue;
+                    }
                     if (snapShot.getValue().toString().split(",").length == 5) {
                         moment = new Capsule(
                                 (String) snapShot.child("userId").getValue(),
