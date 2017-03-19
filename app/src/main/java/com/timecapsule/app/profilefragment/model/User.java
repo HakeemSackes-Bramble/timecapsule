@@ -1,9 +1,11 @@
 package com.timecapsule.app.profilefragment.model;
 
+import java.io.Serializable;
+
 /**
  * Created by catwong on 3/7/17.
  */
-public class User {
+public class User implements Serializable {
 
     public String name;
     public String username;
@@ -17,13 +19,17 @@ public class User {
         this.email = email;
     }
 
+    public User(String name, String username) {
+        this.name = name;
+        this.username = username;
+    }
+
     public User(String name, String username, String email, String userId) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.userId = userId;
     }
-
 
     public String getName() {
         return name;

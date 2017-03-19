@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/colorPink"
     android:layout_height="match_parent"
+    android:background="@color/colorPink"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_nearby_locations"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="NEARBY LOCATIONS"
-        android:gravity="center"
-        android:background="#4be0ef"
         android:layout_gravity="center"
-        android:textSize="20dp"/>
+        android:background="@color/colorDarkBlue"
+        android:gravity="center"
+        android:text="NEARBY LOCATIONS"
+        android:textColor="@color/colorPink"
+        android:textSize="20dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_nearbyLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:layout_marginRight="@dimen/activity_vertical_margin" />
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_marginTop="10dp" />
 
 
 </LinearLayout>

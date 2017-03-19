@@ -51,6 +51,7 @@ public class LocationObject implements GoogleApiClient.OnConnectionFailedListene
     public double getmLongitude() {
         return mLongitude;
     }
+
     public LocationObject(Context context) {
         this.context = context;
         builder = new PlacePicker.IntentBuilder();

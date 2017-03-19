@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fragment_feed"
-    android:background="#c8dce1"
     tools:context="com.timecapsule.app.feedactivity.FeedFragment">
 
     <android.support.v7.widget.RecyclerView
@@ -11,5 +10,7 @@
         android:layout_below="@id/container_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+
 
 </FrameLayout>
