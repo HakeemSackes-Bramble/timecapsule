@@ -37,8 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_app_name"
         app:itemBackground="@color/colorPink"
-        app:itemIconTint="@color/colorAccent2"
-        app:itemTextColor="@color/colorAccent2"
+        app:itemIconTint="@color/colorWhite"
+        app:itemTextColor="@color/colorWhite"
         app:menu="@menu/bottom_nav_menu">
 
     </android.support.design.widget.BottomNavigationView>
@@ -64,9 +64,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:layout_margin="16dp"
+            app:fab_addButtonColorPressed="@color/colorPink"
             app:layout_anchorGravity="bottom|right|end"
             fab:fab_addButtonColorNormal="#342e3d"
-            app:fab_addButtonColorPressed="@color/colorPink"
             fab:fab_addButtonPlusIconColor="@color/colorWhite">
 
             <com.getbase.floatingactionbutton.FloatingActionButton
@@ -74,7 +74,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                app:fab_icon="@drawable/ic_photo_camera_black_48dp"
+                app:fab_icon="@drawable/ic_photo_camera_white_48dp"
+                app:itemIconTint="@color/colorDarkBlue"
                 fab:fab_colorNormal="@color/colorPink"
                 fab:fab_colorPressed="#342e3d"
                 fab:fab_size="normal" />
@@ -84,7 +85,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                app:fab_icon="@drawable/ic_mic_black_48dp"
+                app:fab_icon="@drawable/ic_mic_white_48dp"
+                app:itemIconTint="@color/colorDarkBlue"
                 fab:fab_colorNormal="@color/colorPink"
                 fab:fab_colorPressed="#342e3d"
                 fab:fab_size="normal" />
@@ -95,14 +97,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                app:fab_icon="@drawable/ic_videocam_black_48dp"
+                app:fab_icon="@drawable/ic_videocam_white_48dp"
+                app:itemIconTint="@color/colorDarkBlue"
                 fab:fab_colorNormal="@color/colorPink"
                 fab:fab_colorPressed="#342e3d"
                 fab:fab_size="normal" />
 
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
 
     </android.support.design.widget.CoordinatorLayout>
 
