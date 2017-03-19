@@ -1,4 +1,4 @@
-package com.timecapsule.app.googleplaces;
+package com.timecapsule.app.searchfragment;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -15,6 +15,7 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.google.android.gms.location.GeofencingEvent;
 import com.timecapsule.app.MainActivity;
+import com.timecapsule.app.feedactivity.FeedActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class TransitionIntentService extends IntentService {
 
     private void sendNotification(String notificationDetails) {
         // Create an explicit content Intent that starts MainActivity.
-        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent notificationIntent = new Intent(getApplicationContext(), FeedActivity.class);
 
         // Get a PendingIntent containing the entire back stack.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

@@ -48,6 +48,7 @@ import com.timecapsule.app.locationpick.PlaceDetectionFragment;
 import com.timecapsule.app.locationpick.controller.MediaListener;
 import com.timecapsule.app.profilefragment.ProfileFragment;
 import com.timecapsule.app.profilefragment.model.Capsule;
+
 import com.timecapsule.app.profilefragment.model.User;
 import com.timecapsule.app.users.UsersFragment;
 import java.io.ByteArrayOutputStream;
@@ -445,8 +446,10 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         DatabaseReference capRef = database.getReference("capsules").child(capsuleId);
         String storageLink = uri.toString();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Log.d(TAG, "addUrlToDatabase: "+locationLong+locationLat);
         myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address));
         capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address));
+        Log.d(TAG, "onDataChange: " + capRef);
     }
 
     @Override
