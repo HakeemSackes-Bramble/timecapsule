@@ -3,7 +3,6 @@ package com.timecapsule.app.profilefragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,7 +45,6 @@ public class ProfileFragment extends Fragment {
         mRoot = inflater.inflate(R.layout.fragment_profile, parent, false);
         sharedPreferences = getActivity().getSharedPreferences(MY_PREF, Context.MODE_PRIVATE);
         setViews();
-        setSharedPrefs();
         clickEditProfile();
         return mRoot;
     }
@@ -74,14 +72,6 @@ public class ProfileFragment extends Fragment {
 //                .into(iv_profile_photo);
     }
 
-    public void setSharedPrefs() {
-        String username = sharedPreferences.getString(USERNAME_KEY, "");
-        tv_profile_username.setText(username);
-        String name = sharedPreferences.getString(NAME_KEY, "");
-        tv_profile_name.setText(name);
-        String photo = sharedPreferences.getString(PROFILE_PHOTO_KEY, "");
-        iv_profile_photo.setImageDrawable(Drawable.createFromPath(photo));
-    }
 
     public void clickEditProfile() {
         bt_edit_profile.setOnClickListener(new View.OnClickListener() {

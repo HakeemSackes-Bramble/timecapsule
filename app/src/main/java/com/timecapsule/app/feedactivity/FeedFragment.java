@@ -82,6 +82,12 @@ public class FeedFragment extends Fragment {
         imageModel6.setAboutText("Eduardo Kobra mural");
         projectList.add(imageModel6);
 
+        ImageModel imageModel7 = new ImageModel();
+        imageModel7.setImageId(R.drawable.artichoke_pizza);
+        imageModel7.setLocationId("Artichoke Basille's Pizza");
+        imageModel7.setAboutText("Pizza perfection");
+        projectList.add(imageModel7);
+
         return projectList;
     }
 
