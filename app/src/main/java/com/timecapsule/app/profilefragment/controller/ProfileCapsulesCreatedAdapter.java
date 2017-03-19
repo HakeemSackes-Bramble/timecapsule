@@ -1,5 +1,6 @@
 package com.timecapsule.app.profilefragment.controller;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +18,12 @@ import java.util.ArrayList;
 
 public class ProfileCapsulesCreatedAdapter extends RecyclerView.Adapter<ProfileCreatedViewHolder> {
 
-    ArrayList<Capsule> capsules;
+    ArrayList<Capsule> capsules = new ArrayList<>();
+    private Context context;
 
-    public ProfileCapsulesCreatedAdapter(ArrayList<Capsule> capsules) {
+    public ProfileCapsulesCreatedAdapter(ArrayList<Capsule> capsules, Context context) {
         this.capsules = capsules;
+        this.context = context;
     }
 
     @Override
@@ -31,11 +34,12 @@ public class ProfileCapsulesCreatedAdapter extends RecyclerView.Adapter<ProfileC
 
     @Override
     public void onBindViewHolder(ProfileCreatedViewHolder holder, int position) {
-        holder.bind(capsules.get(position), position);
+        holder.bind(capsules.get(position),position, context);
     }
 
     @Override
     public int getItemCount() {
+
         return capsules.size();
     }
 }

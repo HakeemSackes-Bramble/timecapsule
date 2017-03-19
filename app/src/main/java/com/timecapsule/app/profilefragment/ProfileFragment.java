@@ -23,7 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.timecapsule.app.R;
-import com.timecapsule.app.SearchFragment;
 import com.timecapsule.app.profilefragment.controller.ProfileCapsulesCreatedAdapter;
 import com.timecapsule.app.profilefragment.model.Capsule;
 
@@ -32,7 +31,6 @@ import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment {
 
-    private static final String TAG = SearchFragment.class.getSimpleName();
     private View mRoot;
     private String MY_PREF = "MY_PREF";
     private String NAME_KEY = "nameKey";
@@ -148,7 +146,7 @@ public class ProfileFragment extends Fragment {
                                 (double) snapShot.child("positionLat").getValue(),
                                 (double) snapShot.child("positionLong").getValue(),
                                 (String) snapShot.child("date").getValue());
-                    }else {
+                    } else {
                         moment = new Capsule(
                                 (String) snapShot.child("userId").getValue(),
                                 (String) snapShot.child("storageUrl").getValue(),
@@ -157,11 +155,11 @@ public class ProfileFragment extends Fragment {
                                 (String) snapShot.child("date").getValue(),
                                 (String) snapShot.child("address").getValue());
                     }
-                    Log.d(TAG, "onDataChange: "+ moment);
-                        queriedCapsules.add(moment);
+
+                    queriedCapsules.add(moment);
                 }
                 tv_profile_capsules.setText(String.valueOf(queriedCapsules.size()));
-                recyclerView.setAdapter(new ProfileCapsulesCreatedAdapter(queriedCapsules));
+                recyclerView.setAdapter(new ProfileCapsulesCreatedAdapter(queriedCapsules, view.getContext()));
                 recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
             }
 

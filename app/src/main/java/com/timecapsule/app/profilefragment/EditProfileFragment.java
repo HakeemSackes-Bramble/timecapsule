@@ -82,7 +82,7 @@ public class EditProfileFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         sharedPreferences = getActivity().getSharedPreferences(MY_PREF, Context.MODE_PRIVATE);
         setViews();
-        saveSharedPrefs();
+        //saveSharedPrefs();
         clickCancel();
         clickDone();
         clickChangeProfilePhoto();
@@ -275,13 +275,13 @@ public class EditProfileFragment extends Fragment {
             et_email.setError(REQUIRED);
             return;
         }
-
-        setSharedPreferences(NAME_KEY, name);
-        setSharedPreferences(USERNAME_KEY, username);
-        setSharedPreferences(EMAIL_KEY, email);
-        getSharedPreferences(NAME_KEY, "");
-        getSharedPreferences(USERNAME_KEY, "");
-        getSharedPreferences(EMAIL_KEY, "");
+//
+//        setSharedPreferences(NAME_KEY, name);
+//        setSharedPreferences(USERNAME_KEY, username);
+//        setSharedPreferences(EMAIL_KEY, email);
+//        getSharedPreferences(NAME_KEY, "");
+//        getSharedPreferences(USERNAME_KEY, "");
+//        getSharedPreferences(EMAIL_KEY, "");
 
 
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
