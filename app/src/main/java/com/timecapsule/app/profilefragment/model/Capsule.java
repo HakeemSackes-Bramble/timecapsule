@@ -1,11 +1,22 @@
 package com.timecapsule.app.profilefragment.model;
 
+import android.support.annotation.Nullable;
+
 /**
  * Created by catwong on 3/7/17.
  */
 
 public class Capsule {
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String address;
     public double positionLat;
     public double positionLong;
 
@@ -43,19 +54,33 @@ public class Capsule {
 
     public String storageUrl;
     public String userId;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     public String date;
 
     public Capsule(){}
 
-    public Capsule(String userId, String storageUrl, double positionLat, double positionLong, String date){
+    public Capsule(String userId, String storageUrl, double positionLat, double positionLong, @Nullable String date, String address){
+        this.userId = userId;
+        this.storageUrl = storageUrl;
+        this.positionLat = positionLat;
+        this.positionLong = positionLong;
+        this.date = date;
+        this.address = address;
+    }
+ public Capsule(String userId, String storageUrl, double positionLat, double positionLong, @Nullable String date){
         this.userId = userId;
         this.storageUrl = storageUrl;
         this.positionLat = positionLat;
         this.positionLong = positionLong;
         this.date = date;
     }
-
-
-
 
 }

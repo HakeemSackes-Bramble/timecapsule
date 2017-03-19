@@ -11,4 +11,5 @@ public interface MediaListener {
      void goToVideo(Intent intent);
      void goToAudio();
      void setLatLongValues(double locationLatitude, double locationLongitude);
+    void setAddress(String address);
 }

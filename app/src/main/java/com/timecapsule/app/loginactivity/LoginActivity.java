@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (savedInstanceState == null) {
             getFragmentManager()
                     .beginTransaction()
-                    .add(R.id.container_credentials, new SignInFragment())
+                    .replace(R.id.container_credentials, new SignInFragment())
                     .commit();
         }
     }

@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.widget.AppInviteDialog;
@@ -427,6 +426,11 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         this.locationLong = locationLongitude;
     }
 
+    @Override
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
 
     private void addUrlToDatabase(Uri uri) {
         Calendar c = Calendar.getInstance();
@@ -441,8 +445,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         DatabaseReference capRef = database.getReference("capsules").child(capsuleId);
         String storageLink = uri.toString();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date));
-        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date));
+        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address));
+        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address));
     }
 
     @Override
