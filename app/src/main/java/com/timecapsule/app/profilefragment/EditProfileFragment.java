@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -82,7 +81,6 @@ public class EditProfileFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         sharedPreferences = getActivity().getSharedPreferences(MY_PREF, Context.MODE_PRIVATE);
         setViews();
-        saveSharedPrefs();
         clickCancel();
         clickDone();
         clickChangeProfilePhoto();
@@ -191,8 +189,6 @@ public class EditProfileFragment extends Fragment {
 
                         bitmap = BitmapFactory.decodeFile(picturePath);
                         iv_profile.setImageBitmap(bitmap);
-                        setSharedPreferences(PROFILE_PHOTO_KEY, picturePath);
-                        getSharedPreferences(PROFILE_PHOTO_KEY, "");
                     }
                 }
                 break;
@@ -213,8 +209,7 @@ public class EditProfileFragment extends Fragment {
 
                         bitmap = BitmapFactory.decodeFile(picturePath);
                         iv_profile.setImageBitmap(bitmap);
-                        setSharedPreferences(PROFILE_PHOTO_KEY, String.valueOf(picturePath));
-                        getSharedPreferences(PROFILE_PHOTO_KEY, "");
+
                     }
                 }
                 break;
@@ -276,13 +271,6 @@ public class EditProfileFragment extends Fragment {
             return;
         }
 
-        setSharedPreferences(NAME_KEY, name);
-        setSharedPreferences(USERNAME_KEY, username);
-        setSharedPreferences(EMAIL_KEY, email);
-        getSharedPreferences(NAME_KEY, "");
-        getSharedPreferences(USERNAME_KEY, "");
-        getSharedPreferences(EMAIL_KEY, "");
-
 
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -331,34 +319,7 @@ public class EditProfileFragment extends Fragment {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
-    private void setSharedPreferences(String key, String value) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(key, value);
-        editor.apply();
-    }
 
-    private void getSharedPreferences(String key, String value) {
-        sharedPreferences.getString(key, value);
-    }
-
-    public void saveSharedPrefs() {
-        if (sharedPreferences.contains(NAME_KEY)) {
-            et_name.setText(sharedPreferences.getString(NAME_KEY, ""));
-        }
-
-        if (sharedPreferences.contains(USERNAME_KEY)) {
-            et_username.setText(sharedPreferences.getString(USERNAME_KEY, ""));
-        }
-
-        if (sharedPreferences.contains(EMAIL_KEY)) {
-            et_email.setText(sharedPreferences.getString(EMAIL_KEY, ""));
-        }
-
-        if (sharedPreferences.contains(PROFILE_PHOTO_KEY)) {
-            iv_profile.setImageDrawable(Drawable.createFromPath(sharedPreferences.getString(PROFILE_PHOTO_KEY, "")));
-        }
-
-    }
 
     @Override
     public void onPause() {

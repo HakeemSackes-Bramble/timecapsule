@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +20,6 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
 
     private TextView tv_name;
     private TextView tv_address;
-    public RadioButton radioButton;
     private String mediaType;
     private double locationLat;
     private double locationLong;
