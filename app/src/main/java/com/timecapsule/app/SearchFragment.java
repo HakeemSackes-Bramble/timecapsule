@@ -232,7 +232,8 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     private void addMapMarker(HashMap<LatLng, List<Capsule>> timeCapsuleHub, GoogleMap map) {
         for (LatLng capsule : timeCapsuleHub.keySet()) {
             map.addMarker(new MarkerOptions().
-                    position(capsule));
+                    position(capsule).title("time capsules")
+                    .snippet(timeCapsuleHub.get(capsule).size() + " Time capsules here"));
             Log.d(TAG, "addMapMarker: ");
         }
     }
@@ -256,7 +257,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
                                 (double) snapShot.child("positionLat").getValue(),
                                 (double) snapShot.child("positionLong").getValue(),
                                 (String) snapShot.child("date").getValue());
-                    }else {
+                    } else {
                         moment = new Capsule(
                                 (String) snapShot.child("userId").getValue(),
                                 (String) snapShot.child("storageUrl").getValue(),
@@ -265,22 +266,22 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
                                 (String) snapShot.child("date").getValue(),
                                 (String) snapShot.child("address").getValue());
                     }
-                        // if (snapShot.getValue().toString().split(",").length == 5) {
-                        if (timeCapsuleHubs.containsKey(spot)) {
-                            timeCapsuleHubs.get(spot).add(moment);
-                        } else {
-                            timeCapsuleHubs.put(spot, new ArrayList<Capsule>());
-                            timeCapsuleHubs.get(spot).add(moment);
-                        }
-
+                    // if (snapShot.getValue().toString().split(",").length == 5) {
+                    if (timeCapsuleHubs.containsKey(spot)) {
+                        timeCapsuleHubs.get(spot).add(moment);
+                    } else {
+                        timeCapsuleHubs.put(spot, new ArrayList<Capsule>());
+                        timeCapsuleHubs.get(spot).add(moment);
                     }
-                    Log.d(TAG, "onDataChange: ");
-                }
 
-                @Override
-                public void onCancelled (DatabaseError databaseError){
-                    System.out.println("The read failed: " + databaseError.getCode());
                 }
-            });
-        }
+                Log.d(TAG, "onDataChange: ");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
     }
+}
