@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.timecapsule.app.R;
 import com.timecapsule.app.feedactivity.FeedActivity;
 
@@ -26,6 +28,8 @@ public class CapsuleUploadFragment extends DialogFragment {
     private ImageView iv_time_capsule_upload;
     private TextView tv_capsule_uploaded;
     private View mRoot;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
 
 
     public static CapsuleUploadFragment newInstance(String capsuleUpload) {

@@ -5,44 +5,65 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 import com.timecapsule.app.R;
 import com.timecapsule.app.feedactivity.controller.FeedAdapter;
 import com.timecapsule.app.feedactivity.model.ImageModel;
+import com.timecapsule.app.profilefragment.model.Capsule;
 
 import java.util.ArrayList;
+
+import static com.facebook.internal.FacebookDialogFragment.TAG;
 
 
 public class FeedFragment extends Fragment {
 
-    private View mRoot;
     private RecyclerView recyclerView;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private ImageView iv_feed_photo;
+    private ImageView iv_feed_user_photo;
+    private TextView tv_feed_username;
+    private TextView tv_feed_address;
+    private TextView tv_feed_date;
+    private ArrayList<Capsule> queriedCapsules;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReferenceFromUrl("https://timecapsule-8b809.firebaseio.com/");
+        queriedCapsules = new ArrayList<>();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        mRoot = inflater.inflate(R.layout.fragment_feed, parent, false);
-        return mRoot;
+        return inflater.inflate(R.layout.fragment_feed, parent, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView = (RecyclerView) mRoot.findViewById(R.id.rv_feed);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(new FeedAdapter(setImageData()));
+        setViews(view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.rv_feed);
+        capsuleDBReference(view);
     }
 
-    private ArrayList<ImageModel> setImageData(){
+    private ArrayList<ImageModel> setImageData() {
 
         ArrayList<ImageModel> projectList = new ArrayList<>();
 
@@ -85,6 +106,14 @@ public class FeedFragment extends Fragment {
         return projectList;
     }
 
+    public void setViews(View view) {
+        iv_feed_user_photo = (ImageView) view.findViewById(R.id.feed_card_user_photo);
+        iv_feed_photo = (ImageView) view.findViewById(R.id.iv_feed_photo);
+        tv_feed_username = (TextView) view.findViewById(R.id.feed_card_username);
+        tv_feed_address = (TextView) view.findViewById(R.id.tv_feed_photo_location);
+        tv_feed_date = (TextView) view.findViewById(R.id.feed_card_date);
+    }
+
 
     @Override
     public void onPause() {
@@ -104,6 +133,60 @@ public class FeedFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    public void capsuleDBReference(final View view) {
+        final DatabaseReference timeCapsules = databaseReference.child("capsules");
+        timeCapsules.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> timeCapsules = dataSnapshot.getChildren();
+                tv_feed_address.setText((String) dataSnapshot.child("address").getValue());
+                tv_feed_date.setText((String) dataSnapshot.child("date").getValue());
+                Picasso.with(getActivity())
+                        .load((String) dataSnapshot.child("storageUrl").getValue())
+                        .resize(125, 125)
+                        .into(iv_feed_photo);
+                Log.d("TAG", "onDataChange1: " + dataSnapshot.child("username").getValue() + " "
+                        + dataSnapshot.child("name").getValue());
+                for (DataSnapshot snapShot : timeCapsules) {
+                    Log.d("TAG", "onDataChange2: " + snapShot.getValue());
+                    Capsule moment;
+                    if (snapShot.child("positionLat").getValue() == null || snapShot.child("positionLong").getValue() == null) {
+                        Log.d(TAG, "onDataChange: skipped cap image");
+                        continue;
+                    }
+                    if (snapShot.getValue().toString().split(",").length == 5) {
+                        moment = new Capsule(
+                                (String) snapShot.child("userId").getValue(),
+                                (String) snapShot.child("storageUrl").getValue(),
+                                (double) snapShot.child("positionLat").getValue(),
+                                (double) snapShot.child("positionLong").getValue(),
+                                (String) snapShot.child("date").getValue());
+
+                    } else {
+                        moment = new Capsule(
+                                (String) snapShot.child("userId").getValue(),
+                                (String) snapShot.child("storageUrl").getValue(),
+                                (double) snapShot.child("positionLat").getValue(),
+                                (double) snapShot.child("positionLong").getValue(),
+                                (String) snapShot.child("date").getValue(),
+                                (String) snapShot.child("address").getValue());
+
+                    }
+                    queriedCapsules.add(moment);
+                }
+                recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+                recyclerView.setAdapter(new FeedAdapter(queriedCapsules, view.getContext()));
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
     }
 }
 

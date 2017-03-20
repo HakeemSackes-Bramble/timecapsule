@@ -85,4 +85,3 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
 }
 
 
-

@@ -7,9 +7,14 @@ import android.content.Intent;
  */
 
 public interface MediaListener {
-     void goToCamera(Intent intent);
-     void goToVideo(Intent intent);
-     void goToAudio();
-     void setLatLongValues(double locationLatitude, double locationLongitude);
+
+    void goToCamera(Intent intent);
+
+    void goToVideo(Intent intent);
+
+    void goToAudio();
+
+    void setLatLongValues(double locationLatitude, double locationLongitude);
+
     void setAddress(String address);
 }

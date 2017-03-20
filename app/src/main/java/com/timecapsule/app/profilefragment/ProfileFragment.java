@@ -112,9 +112,9 @@ public class ProfileFragment extends Fragment {
                 .commit();
     }
 
-    private void userDBReference(final View view) {
+    public void userDBReference(final View view) {
 
-        final DatabaseReference userCapsules = databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        final DatabaseReference userCapsules = databaseReference.child("users").child("capsule");
         Log.d("Taggger", "userDBReference: " + FirebaseAuth.getInstance().getCurrentUser().getUid());
         //FirebaseAuth.getInstance().getCurrentUser().getUid());
 
@@ -126,15 +126,14 @@ public class ProfileFragment extends Fragment {
                 tv_profile_name.setText((String) dataSnapshot.child("name").getValue());
                 Picasso.with(getActivity())
                         .load((String) dataSnapshot.child("profilePhoto").getValue())
-                        .resize(125,125)
+                        .resize(125, 125)
                         .into(iv_profile_photo);
-
                 Log.d("TAG", "onDataChange1: " + dataSnapshot.child("username").getValue() + " "
                         + dataSnapshot.child("name").getValue());
                 for (DataSnapshot snapShot : timeCapsules) {
                     Log.d("TAG", "onDataChange2: " + snapShot.getValue());
                     Capsule moment;
-                    if(snapShot.child("positionLat").getValue() == null|| snapShot.child("positionLong").getValue()==null){
+                    if (snapShot.child("positionLat").getValue() == null || snapShot.child("positionLong").getValue() == null) {
                         Log.d(TAG, "onDataChange: skipped cap image");
                         continue;
                     }
@@ -153,8 +152,8 @@ public class ProfileFragment extends Fragment {
                                 (double) snapShot.child("positionLong").getValue(),
                                 (String) snapShot.child("date").getValue(),
                                 (String) snapShot.child("address").getValue());
-                    }
 
+                    }
                     queriedCapsules.add(moment);
                 }
                 tv_profile_capsules.setText(String.valueOf(queriedCapsules.size()));
