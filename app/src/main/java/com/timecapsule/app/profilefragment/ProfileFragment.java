@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 import com.timecapsule.app.R;
 import com.timecapsule.app.profilefragment.controller.ProfileCapsulesCreatedAdapter;
 import com.timecapsule.app.profilefragment.model.Capsule;
@@ -47,21 +48,16 @@ public class ProfileFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private ImageView profile;
     private RecyclerView recyclerView;
-    private FirebaseDatabase fireBsaseDB;
-    private DatabaseReference databasereff;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
     private ArrayList<Capsule> queriedCapsules;
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fireBsaseDB = FirebaseDatabase.getInstance();
-        databasereff = fireBsaseDB.getReferenceFromUrl("https://timecapsule-8b809.firebaseio.com/");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReferenceFromUrl("https://timecapsule-8b809.firebaseio.com/");
         queriedCapsules = new ArrayList<>();
     }
 
@@ -88,13 +84,6 @@ public class ProfileFragment extends Fragment {
         tv_profile_username = (TextView) view.findViewById(R.id.tv_profile_username);
         tv_profile_name = (TextView) view.findViewById(R.id.tv_profile_name);
         tv_profile_capsules = (TextView) view.findViewById(R.id.tv_profile_created_num);
-        profile = (ImageView) view.findViewById(R.id.test_photo);
-
-//        Picasso.with(getActivity())
-//                .load(R.drawable.profile_cat) //extract as User instance method
-//                .transform(new CropCircleTransformation())
-//                .resize(125,125)
-//                .into(iv_profile_photo);
     }
 
     public void setSharedPrefs() {
@@ -125,7 +114,7 @@ public class ProfileFragment extends Fragment {
 
     private void userDBReference(final View view) {
 
-        final DatabaseReference userCapsules = databasereff.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        final DatabaseReference userCapsules = databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         Log.d("Taggger", "userDBReference: " + FirebaseAuth.getInstance().getCurrentUser().getUid());
         //FirebaseAuth.getInstance().getCurrentUser().getUid());
 
@@ -135,6 +124,10 @@ public class ProfileFragment extends Fragment {
                 Iterable<DataSnapshot> timeCapsules = dataSnapshot.child("capsules").getChildren();
                 tv_profile_username.setText((String) dataSnapshot.child("username").getValue());
                 tv_profile_name.setText((String) dataSnapshot.child("name").getValue());
+                Picasso.with(getActivity())
+                        .load((String) dataSnapshot.child("profilePhoto").getValue())
+                        .resize(125,125)
+                        .into(iv_profile_photo);
 
                 Log.d("TAG", "onDataChange1: " + dataSnapshot.child("username").getValue() + " "
                         + dataSnapshot.child("name").getValue());

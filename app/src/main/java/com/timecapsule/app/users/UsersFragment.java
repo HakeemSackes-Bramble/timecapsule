@@ -35,7 +35,6 @@ public class UsersFragment extends ListFragment {
     public static final String EXTRA_USERS = "USERS";
     List<User> users;
     ListView userListView;
-    private DatabaseReference usersReference;
     private View mRoot;
     private DatabaseReference databaseReference;
     private FirebaseDatabase usersDatabase;
