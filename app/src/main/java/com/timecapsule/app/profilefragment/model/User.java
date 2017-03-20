@@ -11,17 +11,19 @@ public class User implements Serializable {
     public String username;
     public String email;
     public String userId;
+    public String profilePhoto;
 
 
     public User() {}
 
-    public User(String email) {
+    public User (String email) {
         this.email = email;
     }
 
-    public User(String name, String username) {
+    public User(String name, String username, String profilePhoto) {
         this.name = name;
         this.username = username;
+        this.profilePhoto = profilePhoto;
     }
 
     public User(String name, String username, String email, String userId) {
@@ -29,6 +31,15 @@ public class User implements Serializable {
         this.username = username;
         this.email = email;
         this.userId = userId;
+    }
+
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
     }
 
     public String getName() {
