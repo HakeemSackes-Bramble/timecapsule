@@ -9,9 +9,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -53,6 +56,7 @@ import com.timecapsule.app.profilefragment.model.User;
 import com.timecapsule.app.users.UsersFragment;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -102,6 +106,8 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private ListView userListView;
     List<User> users = new ArrayList<>();
     private Capsule capsule;
+    private String mPhotoPath;
+    private Uri photoURI;
 
 
     @Override
@@ -409,7 +415,28 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void goToCamera(Intent intent) {
         Log.d("GO TO CAMERA LISTENER", "goToCamera: ");
-        startActivityForResult(intent, TAKE_PICTURE);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(intent, TAKE_PICTURE);
+            }
+        }
+        //startActivityForResult(intent, TAKE_PICTURE);
+
+
+
     }
 
     @Override
@@ -465,12 +492,14 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                     mProgress.setMessage("Uploading Photo");
                     mProgress.setIcon(R.drawable.time_capsule_logo12);
                     mProgress.show();
-                    if (data != null) {
-                        Bundle extras = data.getExtras();
-                        Bitmap imageBitmap = (Bitmap) extras.get("data");
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                        byte[] dataBAOS = baos.toByteArray();
+                    if (data == null) {
+//                        Bundle extras = data.getExtras();
+//                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+//                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//                        byte[] dataBAOS = baos.toByteArray();
+//                        Bundle extras = data.getExtras();
+//                        Uri uri = (Uri)extras.get("EXTRA_OUTPUT");
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         String imageFileName = "JPEG_" + timeStamp + "_";
                         String firebaseReference = imageFileName.concat(".jpg");
@@ -478,7 +507,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                         StorageReference newImageRef = storageReference.child("images/".concat(firebaseReference));
                         newImageRef.getName().equals(newImageRef.getName());
                         newImageRef.getPath().equals(newImageRef.getPath());
-                        UploadTask uploadTask = imagesRef.putBytes(dataBAOS);
+//                        UploadTask uploadTask = imagesRef.putBytes(dataBAOS);
+                        UploadTask uploadTask = imagesRef.putFile(photoURI);
+
                         uploadTask.addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
@@ -506,5 +537,20 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
         }
+    }
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mPhotoPath = image.getAbsolutePath();
+        return image;
     }
 }

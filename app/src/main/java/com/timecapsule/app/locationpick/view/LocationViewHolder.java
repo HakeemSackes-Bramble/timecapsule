@@ -2,6 +2,11 @@ package com.timecapsule.app.locationpick.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +16,10 @@ import android.widget.Toast;
 import com.timecapsule.app.R;
 import com.timecapsule.app.locationpick.controller.MediaListener;
 import com.timecapsule.app.locationpick.model.NearbyLocation;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created by catwong on 3/15/17.
@@ -26,6 +35,7 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
     private String address;
     private Context context;
     private MediaListener listener;
+    private String mPhotoPath;
 
 
     public LocationViewHolder(View itemView, String mediaType, MediaListener listener) {
@@ -71,6 +81,7 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
         switch (mediaType) {
             case "camera":
                 intent.setAction(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
                 listener.goToCamera(intent);
                 break;
             case "video":
@@ -82,6 +93,8 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
                 break;
         }
     }
+
+
 }
 
 
