@@ -47,7 +47,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
 
         User user = getItem(position);
         holder.tvUserName.setText(user.getName());
-        holder.tvEmail.setText(user.getEmail());
+        holder.tvEmail.setText(user.getUsername());
 
         return convertView;
     }
