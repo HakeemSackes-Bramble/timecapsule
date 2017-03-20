@@ -13,7 +13,6 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -413,26 +412,11 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void goToCamera(Intent intent) {
         Log.d("GO TO CAMERA LISTENER", "goToCamera: ");
-        //startActivityForResult(intent, TAKE_PICTURE);
+        startActivityForResult(intent, TAKE_PICTURE);
         //Ensure that there's a camera activity to handle the intent
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
-                        photoFile);
-                intent.putExtra("data", photoURI);
-                startActivityForResult(intent, TAKE_PICTURE);
-            }
+
         }
-    }
+
 
     @Override
     public void goToVideo(Intent intent) {
