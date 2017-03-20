@@ -52,7 +52,6 @@ public class ProfileFragment extends Fragment {
     private DatabaseReference databaseReference;
     private ArrayList<Capsule> queriedCapsules;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +117,7 @@ public class ProfileFragment extends Fragment {
         Log.d("Taggger", "userDBReference: " + FirebaseAuth.getInstance().getCurrentUser().getUid());
         //FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        userCapsules.addValueEventListener(new ValueEventListener() {
+        userCapsules.orderByChild("date").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> timeCapsules = dataSnapshot.child("capsules").getChildren();
@@ -126,7 +125,7 @@ public class ProfileFragment extends Fragment {
                 tv_profile_name.setText((String) dataSnapshot.child("name").getValue());
                 Picasso.with(getActivity())
                         .load((String) dataSnapshot.child("profilePhoto").getValue())
-                        .resize(125,125)
+                        .resize(125, 125)
                         .into(iv_profile_photo);
 
                 Log.d("TAG", "onDataChange1: " + dataSnapshot.child("username").getValue() + " "
@@ -134,7 +133,7 @@ public class ProfileFragment extends Fragment {
                 for (DataSnapshot snapShot : timeCapsules) {
                     Log.d("TAG", "onDataChange2: " + snapShot.getValue());
                     Capsule moment;
-                    if(snapShot.child("positionLat").getValue() == null|| snapShot.child("positionLong").getValue()==null){
+                    if (snapShot.child("positionLat").getValue() == null || snapShot.child("positionLong").getValue() == null) {
                         Log.d(TAG, "onDataChange: skipped cap image");
                         continue;
                     }

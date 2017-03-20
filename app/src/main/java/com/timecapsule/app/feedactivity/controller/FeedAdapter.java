@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.timecapsule.app.R;
 import com.timecapsule.app.feedactivity.model.ImageModel;
 import com.timecapsule.app.feedactivity.view.FeedViewHolder;
+import com.timecapsule.app.profilefragment.model.Capsule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +21,17 @@ import java.util.List;
 public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
 
     private List<ImageModel> mImageList;
+    ArrayList<Capsule> capsules = new ArrayList<>();
+    private Context context;
 
-
-    public FeedAdapter(ArrayList<ImageModel> mImageList) {
-        this.mImageList = mImageList;
+    public FeedAdapter(ArrayList<Capsule> capsules, Context context) {
+        this.capsules = capsules;
+        this.context = context;
     }
+
+//    public FeedAdapter(ArrayList<ImageModel> mImageList) {
+//        this.mImageList = mImageList;
+//    }
 
 
     @Override
@@ -37,11 +44,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
 
     @Override
     public void onBindViewHolder(FeedViewHolder holder, int position) {
-        holder.bind(mImageList.get(position));
+//        holder.bind(mImageList.get(position));
+        holder.bind(capsules.get(position), context);
     }
 
     @Override
     public int getItemCount() {
-        return mImageList.size();
+//        return mImageList.size();
+        return capsules.size();
     }
 }
