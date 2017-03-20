@@ -192,7 +192,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 users.clear();
                 for (DataSnapshot child : children) {
                     Log.d(TAG, "USERS: " + dataSnapshot.getChildren());
-                    user = new User((String) child.child("name").getValue(), (String) child.child("username").getValue());
+                    user = new User((String) child.child("name").getValue(),
+                            (String) child.child("username").getValue(),
+                            (String) child.child("profilePhoto").getValue());
                     Log.d(TAG, "USERS: " + user);
                     users.add(user);
                 }

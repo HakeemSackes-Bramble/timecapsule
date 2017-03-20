@@ -1,6 +1,5 @@
 package com.timecapsule.app.users;
 
-import android.app.Fragment;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,6 +36,7 @@ public class UsersFragment extends ListFragment {
     public static final String TAG = UsersFragment.class.getSimpleName();
     public static final String EXTRA_USERS = "USERS";
     List<User> users;
+    ListView userListView;
     private DatabaseReference usersReference;
     private View mRoot;
     private DatabaseReference databaseReference;
@@ -44,8 +45,6 @@ public class UsersFragment extends ListFragment {
     private TextView username;
     private FirebaseStorage firebaseStorage;
     private ArrayAdapter<User> userAdapter;
-    ListView userListView;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,7 +112,9 @@ public class UsersFragment extends ListFragment {
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
                 for (DataSnapshot child : children) {
                     Log.d(TAG, "USERS: " + dataSnapshot.getChildren());
-                    user = new User((String) child.child("name").getValue(), (String) child.child("username").getValue());
+                    user = new User((String) child.child("name").getValue(),
+                            (String) child.child("username").getValue(),
+                            (String) child.child("profilePhoto").getValue());
                     Log.d(TAG, "USERS: " + user);
                     users.add(user);
                 }
@@ -125,15 +126,17 @@ public class UsersFragment extends ListFragment {
             }
         });
     }
-    static class ViewHolder {
-        public TextView tvUserName;
-        public TextView tvEmail;
-    }
 
     public void setUsers(List<User> users) {
         this.users.clear();
         this.users.addAll(users);
         userAdapter.clear();
         userAdapter.addAll(users);
+    }
+
+    static class ViewHolder {
+        public TextView tvName;
+        public TextView tvUsername;
+        public ImageView ivProfilePhoto;
     }
 }
