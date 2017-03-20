@@ -1,5 +1,6 @@
 package com.timecapsule.app.users;
 
+import android.app.Fragment;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -41,13 +42,15 @@ public class UsersFragment extends ListFragment {
     private TextView username;
     private FirebaseStorage firebaseStorage;
     private ArrayAdapter<User> userAdapter;
-    private ListView userListView;
+    ListView userListView;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         users = new ArrayList<>();
+
+
         if (getArguments() != null) {
             users.addAll((List<User>) getArguments().getSerializable(EXTRA_USERS));
         }
@@ -57,7 +60,7 @@ public class UsersFragment extends ListFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        userAdapter = new ArrayAdapter<User>(getActivity(), R.layout.fragment_user_list, users);
+        userAdapter = new UserListAdapter(getActivity(), users);
         setListAdapter(userAdapter);
     }
 
@@ -109,6 +112,10 @@ public class UsersFragment extends ListFragment {
 
             }
         });
+    }
+    static class ViewHolder {
+        public TextView tvUserName;
+        public TextView tvEmail;
     }
 
     public void setUsers(List<User> users) {
