@@ -47,7 +47,8 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
     public void bind(Capsule capsule, Context context) {
         Picasso.with(context)
                 .load(capsule.getStorageUrl())
-                .resize(200, 200)
+                .resize(1000,1000).centerCrop()
+                .rotate(90f)
                 .into(iv_feed_photo);
         tv_feed_date.setText(capsule.getDate());
         tv_feed_address.setText(capsule.getAddress());

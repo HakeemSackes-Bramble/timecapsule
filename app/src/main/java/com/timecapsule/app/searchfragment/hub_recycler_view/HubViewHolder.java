@@ -31,7 +31,12 @@ public class HubViewHolder extends RecyclerView.ViewHolder {
     }
     public void bind(Capsule capsule, Context context){
         cardDate.setText(capsule.getDate());
-        Picasso.with(context).load(capsule.getStorageUrl()).into(cardPhoto);
+        Picasso.with(context)
+                .load(capsule.getStorageUrl())
+                .resize(800,800)
+                .centerCrop()
+                .rotate(90f)
+                .into(cardPhoto);
 
 
     }

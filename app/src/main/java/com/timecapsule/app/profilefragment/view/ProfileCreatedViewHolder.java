@@ -20,7 +20,6 @@ import com.timecapsule.app.profilefragment.model.User;
 public class ProfileCreatedViewHolder extends RecyclerView.ViewHolder {
 
     private final TextView buildingName;
-    private TextView tv_numbers;
     private TextView tv_location_name;
     private TextView tv_date;
     private ImageView iv_profile_photo;
@@ -32,7 +31,6 @@ public class ProfileCreatedViewHolder extends RecyclerView.ViewHolder {
 
     public ProfileCreatedViewHolder(View itemView) {
         super(itemView);
-        tv_numbers = (TextView) itemView.findViewById(R.id.profile_card_tc_created_num);
         tv_location_name = (TextView) itemView.findViewById(R.id.profile_card_tc_created_location_address);
         tv_date = (TextView) itemView.findViewById(R.id.profile_card_date);
         imageView = (ImageView) itemView.findViewById(R.id.iv_profile_card_tc_logo);
@@ -42,11 +40,11 @@ public class ProfileCreatedViewHolder extends RecyclerView.ViewHolder {
 
 
     public void bind(Capsule capsule, int numbers, Context context) {
-        tv_numbers.setText(String.valueOf(numbers + 1));
         //tv_location_name.setText(capsule.getAddress());
         Picasso.with(context)
                 .load(capsule.getStorageUrl())
                 .resize(200, 200)
+                .rotate(90f)
                 .into(imageView);
         tv_date.setText(capsule.getDate());
         buildingName.setText(capsule.getAddress());
