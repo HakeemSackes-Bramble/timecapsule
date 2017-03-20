@@ -30,8 +30,6 @@ public class ProfileCreatedViewHolder extends RecyclerView.ViewHolder {
     private DatabaseReference databaseReference;
 
 
-
-
     public ProfileCreatedViewHolder(View itemView) {
         super(itemView);
         tv_numbers = (TextView) itemView.findViewById(R.id.profile_card_tc_created_num);
@@ -52,10 +50,7 @@ public class ProfileCreatedViewHolder extends RecyclerView.ViewHolder {
                 .into(imageView);
         tv_date.setText(capsule.getDate());
         buildingName.setText(capsule.getAddress());
-//        Picasso.with(context)
-//                .load((String) user.child("profilePhoto").getValue())
-//                .resize(125, 125)
-//                .into(iv_profile_photo);
+
 
 
 //        URL url = null;

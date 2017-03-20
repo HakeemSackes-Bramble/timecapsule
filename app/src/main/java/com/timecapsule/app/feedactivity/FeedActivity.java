@@ -105,7 +105,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 
 
     @Override
-
     protected void onStart() {
         super.onStart();
         googleApiClient.connect();

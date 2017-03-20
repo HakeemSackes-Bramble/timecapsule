@@ -24,10 +24,10 @@ public class HubViewHolder extends RecyclerView.ViewHolder {
 
     public HubViewHolder(View itemView) {
         super(itemView);
-        cardDate = (TextView) itemView.findViewById(R.id.feed_card_date);
-        cardUserName = (TextView) itemView.findViewById(R.id.feed_card_username);
-        cardPhoto = (ImageView) itemView.findViewById(R.id.iv_feed_photo);
-        cardUserNameComment= (TextView) itemView.findViewById(R.id.tv_feed_username_comment);
+        cardDate = (TextView) itemView.findViewById(R.id.search_card_date);
+        cardUserName = (TextView) itemView.findViewById(R.id.search_card_username);
+        cardPhoto = (ImageView) itemView.findViewById(R.id.iv_search_card_photo);
+        cardUserNameComment= (TextView) itemView.findViewById(R.id.tv_search_username_comment);
     }
     public void bind(Capsule capsule, Context context){
         cardDate.setText(capsule.getDate());

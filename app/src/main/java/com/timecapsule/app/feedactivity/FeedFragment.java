@@ -17,7 +17,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 import com.timecapsule.app.R;
 import com.timecapsule.app.feedactivity.controller.FeedAdapter;
 import com.timecapsule.app.feedactivity.model.ImageModel;
@@ -30,6 +29,7 @@ import static com.facebook.internal.FacebookDialogFragment.TAG;
 
 public class FeedFragment extends Fragment {
 
+
     private RecyclerView recyclerView;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -38,7 +38,7 @@ public class FeedFragment extends Fragment {
     private TextView tv_feed_username;
     private TextView tv_feed_address;
     private TextView tv_feed_date;
-    private ArrayList<Capsule> queriedCapsules;
+    private ArrayList<Capsule> queryCapsules;
 
 
     @Override
@@ -46,7 +46,7 @@ public class FeedFragment extends Fragment {
         super.onCreate(savedInstanceState);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReferenceFromUrl("https://timecapsule-8b809.firebaseio.com/");
-        queriedCapsules = new ArrayList<>();
+        queryCapsules = new ArrayList<>();
     }
 
     @Nullable
@@ -61,6 +61,7 @@ public class FeedFragment extends Fragment {
         setViews(view);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_feed);
         capsuleDBReference(view);
+
     }
 
     private ArrayList<ImageModel> setImageData() {
@@ -114,7 +115,6 @@ public class FeedFragment extends Fragment {
         tv_feed_date = (TextView) view.findViewById(R.id.feed_card_date);
     }
 
-
     @Override
     public void onPause() {
         super.onPause();
@@ -135,18 +135,12 @@ public class FeedFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    public void capsuleDBReference(final View view) {
+    private void capsuleDBReference(final View view) {
         final DatabaseReference timeCapsules = databaseReference.child("capsules");
         timeCapsules.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> timeCapsules = dataSnapshot.getChildren();
-                tv_feed_address.setText((String) dataSnapshot.child("address").getValue());
-                tv_feed_date.setText((String) dataSnapshot.child("date").getValue());
-                Picasso.with(getActivity())
-                        .load((String) dataSnapshot.child("storageUrl").getValue())
-                        .resize(125, 125)
-                        .into(iv_feed_photo);
                 Log.d("TAG", "onDataChange1: " + dataSnapshot.child("username").getValue() + " "
                         + dataSnapshot.child("name").getValue());
                 for (DataSnapshot snapShot : timeCapsules) {
@@ -174,10 +168,10 @@ public class FeedFragment extends Fragment {
                                 (String) snapShot.child("address").getValue());
 
                     }
-                    queriedCapsules.add(moment);
+                    queryCapsules.add(moment);
                 }
                 recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-                recyclerView.setAdapter(new FeedAdapter(queriedCapsules, view.getContext()));
+                recyclerView.setAdapter(new FeedAdapter(queryCapsules, view.getContext()));
 
 
             }

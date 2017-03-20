@@ -45,70 +45,68 @@
         android:id="@+id/tv_profile_created_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_below="@+id/tv_profile_username"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="5dp"
-        app:layout_widthPercent="25%"
-        android:layout_below="@+id/tv_profile_username"
-        android:layout_toEndOf="@+id/iv_profile_photo" />
+        android:layout_toEndOf="@+id/iv_profile_photo"
+        android:gravity="center"
+        app:layout_widthPercent="25%" />
 
     <TextView
         android:id="@+id/tv_profile_created"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginLeft="30dp"
-        android:text="Capsules"
-        app:layout_widthPercent="25%"
         android:layout_alignBaseline="@+id/tv_profile_friends"
         android:layout_alignBottom="@+id/tv_profile_friends"
-        android:layout_toEndOf="@+id/iv_profile_photo" />
+        android:layout_marginLeft="30dp"
+        android:layout_toEndOf="@+id/iv_profile_photo"
+        android:gravity="center"
+        android:text="Capsules"
+        app:layout_widthPercent="25%" />
 
     <TextView
         android:id="@+id/tv_profile_friends_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="4"
-        android:layout_marginRight="30dp"
-        app:layout_widthPercent="25%"
         android:layout_alignBaseline="@+id/tv_profile_created_num"
         android:layout_alignBottom="@+id/tv_profile_created_num"
-        android:layout_toEndOf="@+id/tv_profile_created_num" />
+        android:layout_marginRight="30dp"
+        android:layout_toEndOf="@+id/tv_profile_created_num"
+        android:gravity="center"
+        android:text="4"
+        app:layout_widthPercent="25%" />
 
     <TextView
         android:id="@+id/tv_profile_friends"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_profile_created_num"
+        android:layout_marginRight="30dp"
+        android:layout_toEndOf="@+id/tv_profile_created"
         android:gravity="center"
         android:text="Friends"
-        android:layout_marginRight="30dp"
-        app:layout_widthPercent="25%"
-        android:layout_below="@+id/tv_profile_created_num"
-        android:layout_toEndOf="@+id/tv_profile_created" />
+        app:layout_widthPercent="25%" />
 
 
     <Button
         android:id="@+id/bt_edit_profile"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
+        android:layout_above="@+id/tv_profile_name"
+        android:layout_alignLeft="@id/tv_profile_created"
+        android:layout_alignRight="@id/tv_profile_friends"
         android:background="@color/colorDarkBlue"
         android:onClick="onClick"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
         android:text="Edit Profile"
-        android:textColor="@color/colorWhite"
-        android:layout_alignLeft="@id/tv_profile_created"
-        android:layout_alignRight="@id/tv_profile_friends"
-        android:layout_above="@+id/tv_profile_name"
-         />
+        android:textColor="@color/colorWhite" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_profile"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tv_profile_name"
-        />
+        android:layout_below="@+id/tv_profile_name" />
 
 </android.support.percent.PercentRelativeLayout>
 

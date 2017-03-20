@@ -24,7 +24,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
     ArrayList<Capsule> capsules = new ArrayList<>();
     private Context context;
 
-    public FeedAdapter(ArrayList<Capsule> queriedCapsules, Context context) {
+    public FeedAdapter(ArrayList<Capsule> capsules, Context context) {
         this.capsules = capsules;
         this.context = context;
     }
@@ -45,7 +45,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
     @Override
     public void onBindViewHolder(FeedViewHolder holder, int position) {
 //        holder.bind(mImageList.get(position));
-        holder.bind(capsules.get(position), position, context);
+        holder.bind(capsules.get(position), context);
     }
 
     @Override

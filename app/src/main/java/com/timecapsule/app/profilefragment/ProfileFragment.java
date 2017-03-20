@@ -52,7 +52,6 @@ public class ProfileFragment extends Fragment {
     private DatabaseReference databaseReference;
     private ArrayList<Capsule> queriedCapsules;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,13 +111,13 @@ public class ProfileFragment extends Fragment {
                 .commit();
     }
 
-    public void userDBReference(final View view) {
+    private void userDBReference(final View view) {
 
-        final DatabaseReference userCapsules = databaseReference.child("users").child("capsule");
+        final DatabaseReference userCapsules = databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         Log.d("Taggger", "userDBReference: " + FirebaseAuth.getInstance().getCurrentUser().getUid());
         //FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        userCapsules.addValueEventListener(new ValueEventListener() {
+        userCapsules.orderByChild("date").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> timeCapsules = dataSnapshot.child("capsules").getChildren();
@@ -128,6 +127,7 @@ public class ProfileFragment extends Fragment {
                         .load((String) dataSnapshot.child("profilePhoto").getValue())
                         .resize(125, 125)
                         .into(iv_profile_photo);
+
                 Log.d("TAG", "onDataChange1: " + dataSnapshot.child("username").getValue() + " "
                         + dataSnapshot.child("name").getValue());
                 for (DataSnapshot snapShot : timeCapsules) {
@@ -152,8 +152,8 @@ public class ProfileFragment extends Fragment {
                                 (double) snapShot.child("positionLong").getValue(),
                                 (String) snapShot.child("date").getValue(),
                                 (String) snapShot.child("address").getValue());
-
                     }
+
                     queriedCapsules.add(moment);
                 }
                 tv_profile_capsules.setText(String.valueOf(queriedCapsules.size()));

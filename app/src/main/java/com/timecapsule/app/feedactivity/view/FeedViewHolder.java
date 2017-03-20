@@ -44,7 +44,7 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
         image_description.setText(imageModel.getAboutText());
     }
 
-    public void bind(Capsule capsule, int position, Context context) {
+    public void bind(Capsule capsule, Context context) {
         Picasso.with(context)
                 .load(capsule.getStorageUrl())
                 .resize(200, 200)
