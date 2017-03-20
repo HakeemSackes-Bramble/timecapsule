@@ -9,9 +9,11 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.widget.AppInviteDialog;
@@ -40,7 +43,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.NotificationsFragment;
 import com.timecapsule.app.R;
-import com.timecapsule.app.searchfragment.SearchFragment;
 import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
 import com.timecapsule.app.addmediafragment.AudioFragment;
 import com.timecapsule.app.addmediafragment.CapsuleUploadFragment;
@@ -48,11 +50,13 @@ import com.timecapsule.app.locationpick.PlaceDetectionFragment;
 import com.timecapsule.app.locationpick.controller.MediaListener;
 import com.timecapsule.app.profilefragment.ProfileFragment;
 import com.timecapsule.app.profilefragment.model.Capsule;
-
 import com.timecapsule.app.profilefragment.model.User;
+import com.timecapsule.app.searchfragment.SearchFragment;
 import com.timecapsule.app.users.UsersFragment;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -409,7 +413,25 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void goToCamera(Intent intent) {
         Log.d("GO TO CAMERA LISTENER", "goToCamera: ");
-        startActivityForResult(intent, TAKE_PICTURE);
+        //startActivityForResult(intent, TAKE_PICTURE);
+        //Ensure that there's a camera activity to handle the intent
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                intent.putExtra("data", photoURI);
+                startActivityForResult(intent, TAKE_PICTURE);
+            }
+        }
     }
 
     @Override
@@ -449,7 +471,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         DatabaseReference capRef = database.getReference("capsules").child(capsuleId);
         String storageLink = uri.toString();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.d(TAG, "addUrlToDatabase: "+locationLong+locationLat);
+        Log.d(TAG, "addUrlToDatabase: " + locationLong + locationLat);
         myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address));
         capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address));
         Log.d(TAG, "onDataChange: " + capRef);
@@ -469,7 +491,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                         Bundle extras = data.getExtras();
                         Bitmap imageBitmap = (Bitmap) extras.get("data");
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 40, baos);
                         byte[] dataBAOS = baos.toByteArray();
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -489,6 +511,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                Log.d(TAG, "onSuccess: " + downloadUrl.toString());
                                 addUrlToDatabase(downloadUrl);
                                 mProgress.dismiss();
                                 goToCapsuleUploadFragment("capsule upload");
@@ -501,10 +524,27 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 if (resultCode == RESULT_OK) {
                     mProgress.setMessage("uploading video...");
                     mProgress.show();
+
                     if (data != null) {
                     }
                 }
                 break;
         }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 }

@@ -45,3 +45,67 @@ public class TimeCapsuleHubFragment extends DialogFragment {
         this.capsules = capsules;
     }
 }
+
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Log.d("GO TO MEDIA", "onActivityResult: ");
+//        String imageFileName;
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        imageFileName = "JPEG_" + timeStamp + "_";
+//        String firebaseReference = imageFileName.concat(".jpg");
+//        switch (requestCode) {
+//            case TAKE_PICTURE:
+//                String mPath = Environment.getExternalStorageDirectory().toString() + "/Pictures/" + imageFileName + ".jpg";
+//                File imageFile = new File(mPath);
+//                Log.d(TAG, "onActivityResult: "+ imageFile.toString());
+//                Uri outputFileUri = Uri.fromFile(imageFile);
+//
+//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+//                if (resultCode == RESULT_OK) {
+//                    mProgress.setMessage("Uploading Photo");
+//                    mProgress.setIcon(R.drawable.time_capsule_logo12);
+//                    mProgress.show();
+//                    if (data != null) {
+//                        Bundle extras = data.getExtras();
+//                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+//                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//                        byte[] dataBAOS = baos.toByteArray();
+//
+//                        imagesRef = imagesRef.child(firebaseReference);
+//                        StorageReference newImageRef = storageReference.child("images/".concat(firebaseReference));
+////                        newImageRef.getName().equals(newImageRef.getName());
+////                        newImageRef.getPath().equals(newImageRef.getPath());
+////                        UploadTask uploadTask = imagesRef.putBytes(dataBAOS);
+////                        uploadTask.addOnFailureListener(new OnFailureListener() {
+////                            @Override
+////                            public void onFailure(@NonNull Exception exception) {
+////                                // Handle unsuccessful uploads
+////                            }
+////                        })
+//                        Uri uri = data.getData();
+//                        newImageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                            @Override
+//                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+//                                @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+//
+//                                addUrlToDatabase(downloadUrl);
+//                                mProgress.dismiss();
+//                                goToCapsuleUploadFragment("capsule upload");
+//                            }
+//                        });
+//                    }
+//                }
+//                break;
+//            case CAPTURE_VIDEO:
+//                if (resultCode == RESULT_OK) {
+//                    mProgress.setMessage("uploading video...");
+//                    mProgress.show();
+//                    if (data != null) {
+//                    }
+//                }
+//                break;
+//        }
+//    }
