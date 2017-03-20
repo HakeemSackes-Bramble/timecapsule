@@ -6,13 +6,14 @@ import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -53,7 +54,6 @@ import com.timecapsule.app.profilefragment.model.User;
 import com.timecapsule.app.searchfragment.SearchFragment;
 import com.timecapsule.app.users.UsersFragment;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -105,6 +105,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private ListView userListView;
     List<User> users = new ArrayList<>();
     private Capsule capsule;
+    private String mPhotoPath;
+    private Uri photoURI;
+    private String userName;
 
 
     @Override
@@ -412,10 +415,30 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void goToCamera(Intent intent) {
         Log.d("GO TO CAMERA LISTENER", "goToCamera: ");
-        startActivityForResult(intent, TAKE_PICTURE);
-        //Ensure that there's a camera activity to handle the intent
 
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(intent, TAKE_PICTURE);
+            }
         }
+        //startActivityForResult(intent, TAKE_PICTURE);
+
+
+
+    }
 
 
     @Override
@@ -442,7 +465,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+
     private void addUrlToDatabase(Uri uri) {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         Calendar c = Calendar.getInstance();
         String date = c.getTime().toString();
         String capsuleId = UUID.randomUUID().toString().replaceAll("-", "");
@@ -455,9 +480,11 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         DatabaseReference capRef = database.getReference("capsules").child(capsuleId);
         String storageLink = uri.toString();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        Log.d(TAG, "addUrlToDatabase: " + userName);
         Log.d(TAG, "addUrlToDatabase: " + locationLong + locationLat);
-        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address));
-        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address));
+        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address, userName, timeStamp ));
+        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address, userName, timeStamp));
         Log.d(TAG, "onDataChange: " + capRef);
     }
 
@@ -471,12 +498,16 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                     mProgress.setMessage("Uploading Photo");
                     mProgress.setIcon(R.drawable.time_capsule_logo12);
                     mProgress.show();
-                    if (data != null) {
-                        Bundle extras = data.getExtras();
-                        Bitmap imageBitmap = (Bitmap) extras.get("data");
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 40, baos);
-                        byte[] dataBAOS = baos.toByteArray();
+
+                    if (data == null) {
+//                        Bundle extras = data.getExtras();
+//                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+//                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//                        byte[] dataBAOS = baos.toByteArray();
+//                        Bundle extras = data.getExtras();
+//                        Uri uri = (Uri)extras.get("EXTRA_OUTPUT");
+
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         String imageFileName = "JPEG_" + timeStamp + "_";
                         String firebaseReference = imageFileName.concat(".jpg");
@@ -484,7 +515,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                         StorageReference newImageRef = storageReference.child("images/".concat(firebaseReference));
                         newImageRef.getName().equals(newImageRef.getName());
                         newImageRef.getPath().equals(newImageRef.getPath());
-                        UploadTask uploadTask = imagesRef.putBytes(dataBAOS);
+//                        UploadTask uploadTask = imagesRef.putBytes(dataBAOS);
+                        UploadTask uploadTask = imagesRef.putFile(photoURI);
+
                         uploadTask.addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
@@ -528,7 +561,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
+
+        mPhotoPath = image.getAbsolutePath();
+
         return image;
     }
 }

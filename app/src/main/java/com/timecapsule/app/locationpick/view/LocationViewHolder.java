@@ -26,6 +26,7 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
     private String address;
     private Context context;
     private MediaListener listener;
+    private String mPhotoPath;
 
 
     public LocationViewHolder(View itemView, String mediaType, MediaListener listener) {
@@ -71,6 +72,7 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
         switch (mediaType) {
             case "camera":
                 intent.setAction(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
                 listener.goToCamera(intent);
                 break;
             case "video":
@@ -82,5 +84,7 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
                 break;
         }
     }
+
+
 }
 

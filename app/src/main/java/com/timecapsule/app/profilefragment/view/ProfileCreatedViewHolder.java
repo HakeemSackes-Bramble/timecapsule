@@ -44,6 +44,7 @@ public class ProfileCreatedViewHolder extends RecyclerView.ViewHolder {
         buildingName.setText(capsule.getAddress());
 
 
+
 //        URL url = null;
 //        try {
 //            url = new URL(capsule.getStorageUrl().toString());

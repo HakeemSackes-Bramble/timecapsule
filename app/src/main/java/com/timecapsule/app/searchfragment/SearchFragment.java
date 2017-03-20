@@ -37,7 +37,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.timecapsule.app.R;
 import com.timecapsule.app.geofence.Constants;
-import com.timecapsule.app.geofence.GeofenceTransitionsIntentService;
 import com.timecapsule.app.googleplaces.LocationObject;
 import com.timecapsule.app.profilefragment.model.Capsule;
 
@@ -177,7 +176,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     }
 
 
-
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         isconnected = true;
@@ -203,7 +201,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     }
 
     private PendingIntent getGeofencePendingIntent() {
-        Intent intent = new Intent(getApplicationContext(), GeofenceTransitionsIntentService.class);
+        Intent intent = new Intent(getApplicationContext(), TransitionIntentService.class);
         return PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
@@ -280,7 +278,8 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
                                 (double) snapShot.child("positionLat").getValue(),
                                 (double) snapShot.child("positionLong").getValue(),
                                 (String) snapShot.child("date").getValue(),
-                                (String) snapShot.child("address").getValue());
+                                (String) snapShot.child("address").getValue(),
+                                (String) snapShot.child("userName").getValue());
                     }
                     // if (snapShot.getValue().toString().split(",").length == 5) {
                     if (timeCapsuleHubs.containsKey(spot)) {
