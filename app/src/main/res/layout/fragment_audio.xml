@@ -54,7 +54,7 @@
         android:layout_below="@id/seek_bar"
         android:background="@color/colorPrimaryDark"
         android:gravity="center_horizontal"
-        android:src="@drawable/ic_fiber_manual_record_black_48dp"
+        android:src="@drawable/ic_fiber_manual_record_white_48dp"
         app:layout_widthPercent="33.33%" />
 
     <ImageView
@@ -65,7 +65,7 @@
         android:layout_toStartOf="@+id/iv_audio_stop_record"
         android:background="@color/colorPrimaryDark"
         android:gravity="center_horizontal"
-        android:src="@drawable/ic_play_arrow_black_48dp"
+        android:src="@drawable/ic_play_arrow_white_48dp"
         app:layout_widthPercent="33.33%" />
 
     <ImageView
@@ -76,7 +76,7 @@
         android:layout_alignTop="@+id/iv_audio_play"
         android:background="@color/colorPrimaryDark"
         android:gravity="center_horizontal"
-        android:src="@drawable/ic_stop_black_48dp"
+        android:src="@drawable/ic_stop_white_48dp"
         app:layout_widthPercent="33.33%" />
 
     <TextView

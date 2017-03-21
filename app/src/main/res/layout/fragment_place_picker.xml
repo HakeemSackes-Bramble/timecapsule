@@ -13,7 +13,7 @@
         android:background="@color/colorDarkBlue"
         android:gravity="center"
         android:text="NEARBY LOCATIONS"
-        android:textColor="@color/colorSlateGray"
+        android:textColor="#e2e2e2"
         android:textSize="20dp" />
 
     <android.support.v7.widget.RecyclerView
