@@ -34,7 +34,7 @@ public class ProfileCapsulesCreatedAdapter extends RecyclerView.Adapter<ProfileC
 
     @Override
     public void onBindViewHolder(ProfileCreatedViewHolder holder, int position) {
-        holder.bind(capsules.get(position),position, context);
+        holder.bind(capsules.get(position), context);
     }
 
     @Override

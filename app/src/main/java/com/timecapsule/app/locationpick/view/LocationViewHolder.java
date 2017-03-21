@@ -48,7 +48,7 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
         tv_address.setOnClickListener(this);
         this.locationLat = Double.valueOf(location.getLatlong().split(",")[0].split("\\(")[1]);
         this.locationLong = Double.valueOf(location.getLatlong().split(",")[1].replace(")", ""));
-        this.address = location.getAddress();
+        this.address = location.getName() + ", " + location.getAddress();
 
     }
 
@@ -63,12 +63,12 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
         intent.putExtra("keyLocationLat", locationLat);
         intent.putExtra("keyLocationLong", locationLong);
         intent.putExtra("keyAddress", address);
-        openMedia(mediaType,intent);
-        listener.setLatLongValues(locationLat,locationLong);
+        openMedia(mediaType, intent);
+        listener.setLatLongValues(locationLat, locationLong);
         listener.setAddress(address);
     }
 
-    private void openMedia(String mediaType,Intent intent) {
+    private void openMedia(String mediaType, Intent intent) {
         switch (mediaType) {
             case "camera":
                 intent.setAction(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
