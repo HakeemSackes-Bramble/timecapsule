@@ -95,7 +95,7 @@
                 android:id="@+id/tv_feed_username_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="heycatwonton"
+                android:text=""
                 android:textSize="@dimen/time_username_comment_loc_size"
                 android:textStyle="bold"
                 android:layout_alignParentBottom="true"
