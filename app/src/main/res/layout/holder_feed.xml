@@ -37,7 +37,7 @@
                 android:layout_marginTop="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:src="@drawable/profile_cat" />
+                android:src="@drawable/cat_photo" />
 
             <TextView
                 android:id="@+id/feed_card_username"

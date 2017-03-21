@@ -37,7 +37,7 @@
                 android:paddingLeft="5dp"
                 android:layout_marginTop="5dp"
                 android:paddingRight="5dp"
-                android:src="@drawable/profile_cat"
+                android:src="@drawable/cat_photo"
                 android:layout_alignParentTop="true"
                 android:layout_alignStart="@+id/iv_profile_card_tc_logo" />
 
@@ -49,6 +49,7 @@
                 android:layout_alignTop="@id/profile_card_photo"
                 android:layout_toEndOf="@+id/profile_card_photo"
                 android:gravity="center"
+                android:textStyle="bold"
                 android:text="heycatwonton"
                 android:textSize="11dp" />
 
