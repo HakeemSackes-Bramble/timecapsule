@@ -13,6 +13,8 @@ import com.timecapsule.app.R;
 import com.timecapsule.app.profilefragment.model.Capsule;
 import com.timecapsule.app.profilefragment.model.User;
 
+import static com.timecapsule.app.R.id.profile_card_tc_created_location_address;
+
 /**
  * Created by catwong on 3/10/17.
  */
@@ -20,6 +22,7 @@ import com.timecapsule.app.profilefragment.model.User;
 public class ProfileCreatedViewHolder extends RecyclerView.ViewHolder {
 
     private final TextView buildingName;
+    private final TextView address2;
     private TextView tv_location_name;
     private TextView tv_date;
     private ImageView iv_profile_photo;
@@ -31,15 +34,16 @@ public class ProfileCreatedViewHolder extends RecyclerView.ViewHolder {
 
     public ProfileCreatedViewHolder(View itemView) {
         super(itemView);
-        tv_location_name = (TextView) itemView.findViewById(R.id.profile_card_tc_created_location_address);
+        tv_location_name = (TextView) itemView.findViewById(profile_card_tc_created_location_address);
         tv_date = (TextView) itemView.findViewById(R.id.profile_card_date);
         imageView = (ImageView) itemView.findViewById(R.id.iv_profile_card_tc_logo);
         buildingName = (TextView) itemView.findViewById(R.id.profile_card_tc_created_location_name);
         iv_profile_photo = (ImageView) itemView.findViewById(R.id.profile_card_photo);
+        address2 = (TextView) itemView.findViewById(R.id.profile_card_tc_created_location_address);
     }
 
 
-    public void bind(Capsule capsule, int numbers, Context context) {
+    public void bind(Capsule capsule, Context context) {
         //tv_location_name.setText(capsule.getAddress());
         Picasso.with(context)
                 .load(capsule.getStorageUrl())
@@ -47,9 +51,8 @@ public class ProfileCreatedViewHolder extends RecyclerView.ViewHolder {
                 .rotate(90f)
                 .into(imageView);
         tv_date.setText(capsule.getDate());
-        buildingName.setText(capsule.getAddress());
-
-
+        buildingName.setText(capsule.getAddress().split(",")[0]);
+        address2.setText(capsule.getAddress().replace(capsule.getAddress().split(",")[0]+",", ""));
 
 //        URL url = null;
 //        try {

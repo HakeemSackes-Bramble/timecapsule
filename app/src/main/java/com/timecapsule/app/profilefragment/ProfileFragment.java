@@ -128,6 +128,7 @@ public class ProfileFragment extends Fragment {
                         .resize(125, 125)
                         .into(iv_profile_photo);
 
+
                 Log.d("TAG", "onDataChange1: " + dataSnapshot.child("username").getValue() + " "
                         + dataSnapshot.child("name").getValue());
                 for (DataSnapshot snapShot : timeCapsules) {
