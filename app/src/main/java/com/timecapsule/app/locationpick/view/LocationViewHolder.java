@@ -72,7 +72,6 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
         switch (mediaType) {
             case "camera":
                 intent.setAction(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
                 listener.goToCamera(intent);
                 break;
             case "video":
@@ -87,4 +86,3 @@ public class LocationViewHolder extends RecyclerView.ViewHolder implements View.
 
 
 }
-

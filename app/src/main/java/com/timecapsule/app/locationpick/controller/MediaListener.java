@@ -7,6 +7,7 @@ import android.content.Intent;
  */
 
 public interface MediaListener {
+
     void goToCamera(Intent intent);
 
     void goToVideo(Intent intent);

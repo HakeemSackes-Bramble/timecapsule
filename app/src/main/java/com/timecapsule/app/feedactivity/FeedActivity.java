@@ -111,7 +111,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 
 
     @Override
-
     protected void onStart() {
         super.onStart();
         googleApiClient.connect();
@@ -480,7 +479,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         DatabaseReference capRef = database.getReference("capsules").child(capsuleId);
         String storageLink = uri.toString();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.d(TAG, "addUrlToDatabase: " + userName);
         Log.d(TAG, "addUrlToDatabase: " + locationLong + locationLat);
         myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address, userName, timeStamp ));
