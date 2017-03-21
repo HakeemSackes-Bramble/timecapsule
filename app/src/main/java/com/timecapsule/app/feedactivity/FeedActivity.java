@@ -449,6 +449,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     public void goToAudio() {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         audioFragment = AudioFragment.newInstance("Audio");
+        audioFragment.setListener(this);
         audioFragment.show(ft, "audio");
     }
 
@@ -463,6 +464,10 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         this.address = address;
     }
 
+    @Override
+    public void uploadAudio(Uri downloadUrl) {
+        addUrlToDatabase(downloadUrl);
+    }
 
 
     private void addUrlToDatabase(Uri uri) {

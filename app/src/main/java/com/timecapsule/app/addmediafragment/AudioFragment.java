@@ -28,6 +28,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.R;
+import com.timecapsule.app.locationpick.controller.MediaListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +55,7 @@ public class AudioFragment extends DialogFragment {
     private ImageView iv_audio_play;
     private TextView tv_audio_time;
     private TextView tv_add_audio;
+
     Runnable UpdatePlayTime = new Runnable() {
         public void run() {
             if (mPlayer.isPlaying()) {
@@ -91,6 +93,7 @@ public class AudioFragment extends DialogFragment {
             }
         }
     };
+    private MediaListener listener;
 
 
     public static AudioFragment newInstance(String audio) {
@@ -111,11 +114,15 @@ public class AudioFragment extends DialogFragment {
         handler = new Handler();
         isRecording = false;
     }
+    public void setListener(MediaListener listener) {
+        this.listener = listener;
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         mRoot = inflater.inflate(R.layout.fragment_audio, parent, false);
+
         setViews();
         setMaxSeekBar();
         setRecord();
@@ -195,6 +202,7 @@ public class AudioFragment extends DialogFragment {
         StorageReference audioRef = storageReference.child("audio/" + file.getLastPathSegment());
         uploadTask = audioRef.putFile(file);
 
+
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -204,7 +212,7 @@ public class AudioFragment extends DialogFragment {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
-
+                listener.uploadAudio(downloadUrl);
             }
         });
     }
