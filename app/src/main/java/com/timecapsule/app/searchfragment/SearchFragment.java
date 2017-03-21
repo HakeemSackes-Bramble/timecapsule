@@ -236,8 +236,8 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     private void addMapMarker(final HashMap<LatLng, List<Capsule>> timeCapsuleHub, GoogleMap map) {
         for (LatLng capsule : timeCapsuleHub.keySet()) {
             map.addMarker(new MarkerOptions().
-                    position(capsule).title("time capsules")
-                    .snippet(timeCapsuleHub.get(capsule).size() + " Time capsules here"));
+                    position(capsule).title("Time Capsules")
+                    .snippet(timeCapsuleHub.get(capsule).size() + " Time Capsules here"));
 
         }
         Log.d(TAG, "addMapMarker: ");
@@ -247,7 +247,8 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
                 android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
                 hubFragment = new TimeCapsuleHubFragment();
                 hubFragment.setCapsules((ArrayList<Capsule>) timeCapsuleHub.get(marker.getPosition()));
-                hubFragment.show(ft, "newarbyCapsules");
+                hubFragment.show(ft,"nearbyCapsules");
+
             }
         });
     }
