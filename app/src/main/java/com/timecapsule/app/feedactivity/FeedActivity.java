@@ -6,7 +6,6 @@ import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,6 +21,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.widget.AppInviteDialog;
@@ -43,7 +43,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.NotificationsFragment;
 import com.timecapsule.app.R;
-import com.timecapsule.app.searchfragment.SearchFragment;
 import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
 import com.timecapsule.app.addmediafragment.AudioFragment;
 import com.timecapsule.app.addmediafragment.CapsuleUploadFragment;
@@ -51,10 +50,10 @@ import com.timecapsule.app.locationpick.PlaceDetectionFragment;
 import com.timecapsule.app.locationpick.controller.MediaListener;
 import com.timecapsule.app.profilefragment.ProfileFragment;
 import com.timecapsule.app.profilefragment.model.Capsule;
-
 import com.timecapsule.app.profilefragment.model.User;
+import com.timecapsule.app.searchfragment.SearchFragment;
 import com.timecapsule.app.users.UsersFragment;
-import java.io.ByteArrayOutputStream;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -108,6 +107,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     private Capsule capsule;
     private String mPhotoPath;
     private Uri photoURI;
+    private String userName;
 
 
     @Override
@@ -414,6 +414,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void goToCamera(Intent intent) {
         Log.d("GO TO CAMERA LISTENER", "goToCamera: ");
+
         if (intent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
             File photoFile = null;
@@ -437,6 +438,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
+
 
     @Override
     public void goToVideo(Intent intent) {
@@ -462,7 +464,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+
     private void addUrlToDatabase(Uri uri) {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         Calendar c = Calendar.getInstance();
         String date = c.getTime().toString();
         String capsuleId = UUID.randomUUID().toString().replaceAll("-", "");
@@ -475,9 +479,11 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         DatabaseReference capRef = database.getReference("capsules").child(capsuleId);
         String storageLink = uri.toString();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.d(TAG, "addUrlToDatabase: "+locationLong+locationLat);
-        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address));
-        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address));
+        userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Log.d(TAG, "addUrlToDatabase: " + userName);
+        Log.d(TAG, "addUrlToDatabase: " + locationLong + locationLat);
+        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address, userName, timeStamp ));
+        capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address, userName, timeStamp));
         Log.d(TAG, "onDataChange: " + capRef);
     }
 
@@ -491,6 +497,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                     mProgress.setMessage("Uploading Photo");
                     mProgress.setIcon(R.drawable.time_capsule_logo12);
                     mProgress.show();
+
                     if (data == null) {
 //                        Bundle extras = data.getExtras();
 //                        Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -499,6 +506,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 //                        byte[] dataBAOS = baos.toByteArray();
 //                        Bundle extras = data.getExtras();
 //                        Uri uri = (Uri)extras.get("EXTRA_OUTPUT");
+
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         String imageFileName = "JPEG_" + timeStamp + "_";
                         String firebaseReference = imageFileName.concat(".jpg");
@@ -519,6 +527,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                Log.d(TAG, "onSuccess: " + downloadUrl.toString());
                                 addUrlToDatabase(downloadUrl);
                                 mProgress.dismiss();
                                 goToCapsuleUploadFragment("capsule upload");
@@ -531,12 +540,14 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
                 if (resultCode == RESULT_OK) {
                     mProgress.setMessage("uploading video...");
                     mProgress.show();
+
                     if (data != null) {
                     }
                 }
                 break;
         }
     }
+
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -549,7 +560,9 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         );
 
         // Save a file: path for use with ACTION_VIEW intents
+
         mPhotoPath = image.getAbsolutePath();
+
         return image;
     }
 }

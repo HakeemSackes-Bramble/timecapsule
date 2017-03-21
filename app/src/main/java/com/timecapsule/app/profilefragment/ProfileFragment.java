@@ -117,7 +117,7 @@ public class ProfileFragment extends Fragment {
         Log.d("Taggger", "userDBReference: " + FirebaseAuth.getInstance().getCurrentUser().getUid());
         //FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        userCapsules.orderByChild("date").addValueEventListener(new ValueEventListener() {
+        userCapsules.orderByChild("timestamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> timeCapsules = dataSnapshot.child("capsules").getChildren();
@@ -151,7 +151,8 @@ public class ProfileFragment extends Fragment {
                                 (double) snapShot.child("positionLat").getValue(),
                                 (double) snapShot.child("positionLong").getValue(),
                                 (String) snapShot.child("date").getValue(),
-                                (String) snapShot.child("address").getValue());
+                                (String) snapShot.child("address").getValue(),
+                                (String) snapShot.child("timestamp").getValue());
                     }
 
                     queriedCapsules.add(moment);

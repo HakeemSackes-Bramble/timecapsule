@@ -17,4 +17,5 @@ public interface MediaListener {
     void setLatLongValues(double locationLatitude, double locationLongitude);
 
     void setAddress(String address);
+
 }

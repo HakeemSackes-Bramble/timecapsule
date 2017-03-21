@@ -35,11 +35,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.timecapsule.app.R;
 import com.timecapsule.app.geofence.Constants;
-import com.timecapsule.app.geofence.GeofenceTransitionsIntentService;
 import com.timecapsule.app.googleplaces.LocationObject;
 import com.timecapsule.app.profilefragment.model.Capsule;
 
@@ -65,20 +62,18 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     private LocationObject locationObject;
     private MapFragment mapFragment;
     private String MY_LOCATION_ID = "MY_LOCATION";
-    private FirebaseStorage firebaseStorage;
-    private StorageReference storageReference;
     private FirebaseDatabase fireBsaseDB;
     private DatabaseReference databasereff;
     private HashMap<LatLng, List<Capsule>> timeCapsuleHubs;
     private TimeCapsuleHubFragment hubFragment;
+    private boolean isconnected;
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mGeofenceList = new ArrayList<>();
         locationObject = new LocationObject(getApplicationContext());
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference();
         fireBsaseDB = FirebaseDatabase.getInstance();
         databasereff = fireBsaseDB.getReferenceFromUrl("https://timecapsule-8b809.firebaseio.com/");
         timeCapsuleHubs = new HashMap<>();
@@ -97,7 +92,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        mGeofenceList = new ArrayList<>();
+
 
         googleApiClient = locationObject.getmGoogleApiClient();
 
@@ -175,11 +170,15 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
             addMapMarker(timeCapsuleHubs, mMap);
 
         }
+        if (isconnected) {
+            addGeofences();
+        }
     }
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        addGeofences();
+        isconnected = true;
     }
 
     @Override
@@ -202,12 +201,14 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     }
 
     private PendingIntent getGeofencePendingIntent() {
-        Intent intent = new Intent(getApplicationContext(), GeofenceTransitionsIntentService.class);
+        Intent intent = new Intent(getApplicationContext(), TransitionIntentService.class);
         return PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     void addGeofences() {
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            Log.d(TAG, "addGeofencesONE: this is a geofence");
             return;
         }
         LocationServices.GeofencingApi.addGeofences(googleApiClient, getGeofencingRequest(), getGeofencePendingIntent()).setResultCallback(this);
@@ -247,6 +248,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
                 hubFragment = new TimeCapsuleHubFragment();
                 hubFragment.setCapsules((ArrayList<Capsule>) timeCapsuleHub.get(marker.getPosition()));
                 hubFragment.show(ft,"nearbyCapsules");
+
             }
         });
     }
@@ -277,7 +279,8 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
                                 (double) snapShot.child("positionLat").getValue(),
                                 (double) snapShot.child("positionLong").getValue(),
                                 (String) snapShot.child("date").getValue(),
-                                (String) snapShot.child("address").getValue());
+                                (String) snapShot.child("address").getValue(),
+                                (String) snapShot.child("userName").getValue());
                     }
                     // if (snapShot.getValue().toString().split(",").length == 5) {
                     if (timeCapsuleHubs.containsKey(spot)) {

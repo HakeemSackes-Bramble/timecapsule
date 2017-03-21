@@ -7,9 +7,9 @@ import android.support.annotation.Nullable;
  */
 
 public class Capsule {
-
+    public String timestamp;
+    public String userName;
     public String address;
-    public String locationName;
     public double positionLat;
     public double positionLong;
     public String storageUrl;
@@ -43,6 +43,27 @@ public class Capsule {
         this.date = date;
     }
 
+    public Capsule(String userId, String storageUrl, double positionLat, double positionLong, String date, String address, String userName, String timeStamp) {
+        this.userId = userId;
+        this.storageUrl = storageUrl;
+        this.positionLat = positionLat;
+        this.positionLong = positionLong;
+        this.date = date;
+        this.address = address;
+        this.userName = userName;
+        this.timestamp = timeStamp;
+    }
+
+    public Capsule(String userId, String storageUrl, double positionLat, double positionLong, String date, String address, String userName) {
+        this.userName = userName;
+        this.userId = userId;
+        this.storageUrl = storageUrl;
+        this.positionLat = positionLat;
+        this.positionLong = positionLong;
+        this.date = date;
+        this.address = address;
+    }
+
 
     public String getAddress() {
         return address;
@@ -50,14 +71,6 @@ public class Capsule {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getLocationName() {
-        return locationName;
-    }
-
-    public void setLocationName(String locationName) {
-        this.locationName = locationName;
     }
 
     public double getPositionLat() {
@@ -99,4 +112,5 @@ public class Capsule {
     public void setDate(String date) {
         this.date = date;
     }
+
 }
