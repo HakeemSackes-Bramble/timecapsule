@@ -50,6 +50,11 @@ public class ProfileFragment extends Fragment {
     private RecyclerView recyclerView;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+
+    public void setQueriedCapsules(ArrayList<Capsule> queriedCapsules) {
+        this.queriedCapsules = queriedCapsules;
+    }
+
     private ArrayList<Capsule> queriedCapsules;
 
     @Override
@@ -72,6 +77,9 @@ public class ProfileFragment extends Fragment {
         setViews(view);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_profile);
         userDBReference(view);
+        tv_profile_capsules.setText(String.valueOf(queriedCapsules.size()));
+        recyclerView.setAdapter(new ProfileCapsulesCreatedAdapter(queriedCapsules, view.getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         clickEditProfile();
 
     }
@@ -117,7 +125,7 @@ public class ProfileFragment extends Fragment {
         Log.d("Taggger", "userDBReference: " + FirebaseAuth.getInstance().getCurrentUser().getUid());
         //FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        userCapsules.orderByChild("timestamp").addValueEventListener(new ValueEventListener() {
+        userCapsules.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> timeCapsules = dataSnapshot.child("capsules").getChildren();
@@ -127,7 +135,6 @@ public class ProfileFragment extends Fragment {
                         .load((String) dataSnapshot.child("profilePhoto").getValue())
                         .resize(125, 125)
                         .into(iv_profile_photo);
-
 
                 Log.d("TAG", "onDataChange1: " + dataSnapshot.child("username").getValue() + " "
                         + dataSnapshot.child("name").getValue());
@@ -170,20 +177,6 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

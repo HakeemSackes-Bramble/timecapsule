@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -50,7 +51,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by catwong on 3/4/17.
  */
 
-public class SearchFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+public class SearchFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
 
     private static final String TAG = SearchFragment.class.getSimpleName();
@@ -66,7 +67,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     private DatabaseReference databasereff;
     private HashMap<LatLng, List<Capsule>> timeCapsuleHubs;
     private TimeCapsuleHubFragment hubFragment;
-    private boolean isconnected;
 
 
     @Override
@@ -92,8 +92,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
-
         googleApiClient = locationObject.getmGoogleApiClient();
 
 //        googleApiClient = new GoogleApiClient
@@ -112,8 +110,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 //            Log.d(TAG, "Wasn't connected");
 //            googleApiClient.connect();
 //        }
-
-
     }
 
     @Nullable
@@ -127,13 +123,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
                 .commit();
         mapFragment.getMapAsync(this);
         return mRoot;
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
     }
 
     @Override
@@ -168,21 +157,8 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
             mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
             mMap.setMyLocationEnabled(true);
             addMapMarker(timeCapsuleHubs, mMap);
-
-        }
-        if (isconnected) {
             addGeofences();
         }
-    }
-
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        isconnected = true;
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
     }
 
     @Override
@@ -233,10 +209,10 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         Log.d(TAG, "populateGeofenceList: " + mGeofenceList.toString());
     }
 
-    private void addMapMarker(final HashMap<LatLng, List<Capsule>> timeCapsuleHub, GoogleMap map) {
+    private void addMapMarker(final HashMap<LatLng, List<Capsule>> timeCapsuleHub, final GoogleMap map) {
         for (LatLng capsule : timeCapsuleHub.keySet()) {
             map.addMarker(new MarkerOptions().
-                    position(capsule).title("Time Capsules")
+                    position(capsule).title(timeCapsuleHub.get(capsule).get(0).getAddress().split(",")[0])
                     .snippet(timeCapsuleHub.get(capsule).size() + " Time Capsules here"));
 
         }
@@ -244,13 +220,21 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-                hubFragment = new TimeCapsuleHubFragment();
-                hubFragment.setCapsules((ArrayList<Capsule>) timeCapsuleHub.get(marker.getPosition()));
-                hubFragment.show(ft,"nearbyCapsules");
-
+                LatLng myloc = new LatLng(locationObject.getmLatitude(),locationObject.getmLongitude());
+                if (distanceFromPoint(marker.getPosition(), myloc ) <= 1 / 69) {
+                    android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    hubFragment = new TimeCapsuleHubFragment();
+                    hubFragment.setCapsules((ArrayList<Capsule>) timeCapsuleHub.get(marker.getPosition()));
+                    hubFragment.show(ft, "nearbyCapsules");
+                }else {
+                    Toast.makeText(getActivity(),"capsule is too far to view",Toast.LENGTH_LONG).show();
+                }
             }
         });
+    }
+
+    private double distanceFromPoint(LatLng a, LatLng b) {
+        return Math.sqrt(Math.pow(a.longitude - b.longitude, 2) + Math.pow(a.latitude - b.latitude, 2));
     }
 
     private void capsuleDBReference() {

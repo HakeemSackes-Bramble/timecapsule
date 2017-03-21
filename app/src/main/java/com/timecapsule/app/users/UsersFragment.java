@@ -62,6 +62,7 @@ public class UsersFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
         userAdapter = new UserListAdapter(getActivity(), users);
         setListAdapter(userAdapter);
+        Log.d(TAG, "onActivityCreated: "+ users + "\n" + userListView +"\n"+ userAdapter);
     }
 
     @Override
@@ -78,6 +79,7 @@ public class UsersFragment extends ListFragment {
                         .commit();
             }
         });
+        Log.d(TAG, "onCreateView: " + users + "\n" + userListView +"\n"+ userAdapter);
         return mRoot;
     }
 
