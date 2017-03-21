@@ -16,28 +16,20 @@ import com.timecapsule.app.profilefragment.model.Capsule;
 
 public class HubViewHolder extends RecyclerView.ViewHolder {
 
-
-    private final TextView cardDate;
     private final TextView cardUserName;
     private final ImageView cardPhoto;
-    private final TextView cardUserNameComment;
 
     public HubViewHolder(View itemView) {
         super(itemView);
-        cardDate = (TextView) itemView.findViewById(R.id.search_card_date);
         cardUserName = (TextView) itemView.findViewById(R.id.search_card_username);
         cardPhoto = (ImageView) itemView.findViewById(R.id.iv_search_card_photo);
-        cardUserNameComment= (TextView) itemView.findViewById(R.id.tv_search_username_comment);
     }
     public void bind(Capsule capsule, Context context){
-        cardDate.setText(capsule.getDate());
         Picasso.with(context)
                 .load(capsule.getStorageUrl())
                 .resize(800,800)
                 .centerCrop()
                 .rotate(90f)
                 .into(cardPhoto);
-
-
     }
 }
