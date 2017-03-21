@@ -221,7 +221,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public void onInfoWindowClick(Marker marker) {
                 LatLng myloc = new LatLng(locationObject.getmLatitude(),locationObject.getmLongitude());
-                if (distanceFromPoint(marker.getPosition(), myloc ) <= .5 / 69) {
+                if (distanceFromPoint(marker.getPosition(), myloc ) <= 1 / 69) {
                     android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
                     hubFragment = new TimeCapsuleHubFragment();
                     hubFragment.setCapsules((ArrayList<Capsule>) timeCapsuleHub.get(marker.getPosition()));
