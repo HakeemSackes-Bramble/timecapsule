@@ -248,6 +248,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 mediaType = "camera";
                 goToAddLocation(mediaType);
+
             }
         });
     }
@@ -471,7 +472,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void addUrlToDatabase(Uri uri) {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()).replace("_","");
         Calendar c = Calendar.getInstance();
         String date = c.getTime().toString();
         String capsuleId = UUID.randomUUID().toString().replaceAll("-", "");
@@ -484,10 +485,10 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         DatabaseReference capRef = database.getReference("capsules").child(capsuleId);
         String storageLink = uri.toString();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        userName = " ";
         Log.d(TAG, "addUrlToDatabase: " + userName);
         Log.d(TAG, "addUrlToDatabase: " + locationLong + locationLat);
-        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address, userName, timeStamp ));
+        myRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address, userName, timeStamp));
         capRef.setValue(new Capsule(userId, storageLink, locationLat, locationLong, date, address, userName, timeStamp));
         Log.d(TAG, "onDataChange: " + capRef);
     }
