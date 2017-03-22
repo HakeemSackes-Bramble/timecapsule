@@ -14,7 +14,7 @@ import android.util.Log;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.google.android.gms.location.GeofencingEvent;
-import com.timecapsule.app.MainActivity;
+import com.timecapsule.app.R;
 import com.timecapsule.app.feedactivity.FeedActivity;
 
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public class TransitionIntentService extends IntentService {
 
         // Get a PendingIntent containing the entire back stack.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class).addNextIntent(notificationIntent);
+        stackBuilder.addParentStack(FeedActivity.class).addNextIntent(notificationIntent);
         PendingIntent notificationPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -71,7 +71,8 @@ public class TransitionIntentService extends IntentService {
                 .setContentTitle(notificationDetails)
                 .setContentText("Click notification to return to App")
                 .setContentIntent(notificationPendingIntent)
-                .setAutoCancel(true);
+                .setAutoCancel(true)
+        .setSmallIcon(R.drawable.time_capsule_logo12_sm);
 
         // Fire and notify the built Notification.
         NotificationManager notificationManager =
