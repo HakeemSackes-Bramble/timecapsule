@@ -2,6 +2,7 @@ package com.timecapsule.app.feedactivity.view;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -52,5 +53,6 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
                 .into(iv_feed_photo);
         tv_feed_date.setText(capsule.getDate());
         tv_feed_address.setText(capsule.getAddress());
+        Linkify.addLinks(tv_feed_address, Linkify.MAP_ADDRESSES);
     }
 }
