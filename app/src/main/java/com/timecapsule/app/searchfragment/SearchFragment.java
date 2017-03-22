@@ -43,7 +43,9 @@ import com.timecapsule.app.profilefragment.model.Capsule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -55,7 +57,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
 
     private static final String TAG = SearchFragment.class.getSimpleName();
-    protected ArrayList<Geofence> mGeofenceList;
+    protected Set<Geofence> mGeofenceSet;
     private View mRoot;
     private GoogleMap mMap;
     private FusedLocationProviderApi location;
@@ -67,12 +69,14 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback,
     private DatabaseReference databasereff;
     private HashMap<LatLng, List<Capsule>> timeCapsuleHubs;
     private TimeCapsuleHubFragment hubFragment;
+    private Set<Geofence> mNewGeofenceSet;
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mGeofenceList = new ArrayList<>();
+        mGeofenceSet = new HashSet<>();
+        mNewGeofenceSet = new HashSet<>();
         locationObject = new LocationObject(getApplicationContext());
         fireBsaseDB = FirebaseDatabase.getInstance();
         databasereff = fireBsaseDB.getReferenceFromUrl("https://timecapsule-8b809.firebaseio.com/");
@@ -172,7 +176,8 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback,
     private GeofencingRequest getGeofencingRequest() {
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
         builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
-        builder.addGeofences(mGeofenceList);
+        builder.addGeofences(new ArrayList<>(mNewGeofenceSet));
+        mNewGeofenceSet.clear();
         return builder.build();
     }
 
@@ -194,19 +199,34 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback,
     private void populateGeofenceList() {
 
         for (LatLng entry : timeCapsuleHubs.keySet()) {
-            mGeofenceList.add(new Geofence.Builder()
-                    .setRequestId("" + entry.latitude + entry.longitude)
-                    .setCircularRegion(
-                            entry.latitude,
-                            entry.longitude,
-                            50
-                    )
-                    .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                            Geofence.GEOFENCE_TRANSITION_EXIT)
-                    .build());
+            if (mGeofenceSet.contains(entry)) {
+                continue;
+            } else {
+                mNewGeofenceSet.add(new Geofence.Builder()
+                        .setRequestId("" + entry.latitude + entry.longitude)
+                        .setCircularRegion(
+                                entry.latitude,
+                                entry.longitude,
+                                50
+                        )
+                        .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                                Geofence.GEOFENCE_TRANSITION_EXIT).build());
+
+                mGeofenceSet.add(new Geofence.Builder()
+                        .setRequestId("" + entry.latitude + entry.longitude)
+                        .setCircularRegion(
+                                entry.latitude,
+                                entry.longitude,
+                                50
+                        )
+                        .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                                Geofence.GEOFENCE_TRANSITION_EXIT)
+                        .build());
+            }
         }
-        Log.d(TAG, "populateGeofenceList: " + mGeofenceList.toString());
+        Log.d(TAG, "populateGeofenceList: " + mGeofenceSet.toString());
     }
 
     private void addMapMarker(final HashMap<LatLng, List<Capsule>> timeCapsuleHub, final GoogleMap map) {
@@ -220,21 +240,26 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback,
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                LatLng myloc = new LatLng(locationObject.getmLatitude(),locationObject.getmLongitude());
-                if (distanceFromPoint(marker.getPosition(), myloc ) <= 1 / 69) {
+
+                LatLng myloc = new LatLng(locationObject.getmLatitude(), locationObject.getmLongitude());
+                Log.d(TAG, "onInfoWindowClick: " + myloc.toString() + marker.getPosition());
+                Double dist = distanceFromPoint(marker.getPosition(), myloc);
+                if (dist <= (1 / 69d)) {
                     android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
                     hubFragment = new TimeCapsuleHubFragment();
                     hubFragment.setCapsules((ArrayList<Capsule>) timeCapsuleHub.get(marker.getPosition()));
                     hubFragment.show(ft, "nearbyCapsules");
-                }else {
-                    Toast.makeText(getActivity(),"capsule is too far to view",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), "capsule is too far to view", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
 
     private double distanceFromPoint(LatLng a, LatLng b) {
+        Log.d(TAG, "distanceFromPoint: "+ Math.sqrt(Math.pow(a.longitude - b.longitude, 2) + Math.pow(a.latitude - b.latitude, 2)));
         return Math.sqrt(Math.pow(a.longitude - b.longitude, 2) + Math.pow(a.latitude - b.latitude, 2));
+
     }
 
     private void capsuleDBReference() {
