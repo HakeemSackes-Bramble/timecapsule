@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -70,6 +71,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback,
     private HashMap<LatLng, List<Capsule>> timeCapsuleHubs;
     private TimeCapsuleHubFragment hubFragment;
     private Set<Geofence> mNewGeofenceSet;
+    private SharedPreferences.Editor mEditor;
 
 
     @Override
@@ -250,7 +252,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback,
                     hubFragment.setCapsules((ArrayList<Capsule>) timeCapsuleHub.get(marker.getPosition()));
                     hubFragment.show(ft, "nearbyCapsules");
                 } else {
-                    Toast.makeText(getActivity(), "capsule is too far to view", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "capsule is too far to view", Toast.LENGTH_SHORT).show();
                 }
             }
         });

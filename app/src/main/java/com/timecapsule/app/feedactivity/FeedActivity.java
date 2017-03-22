@@ -475,7 +475,7 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()).replace("_","");
         Calendar c = Calendar.getInstance();
         String date = c.getTime().toString();
-        String capsuleId = UUID.randomUUID().toString().replaceAll("-", "");
+        String capsuleId = timeStamp.replaceAll("-", "");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users")
                 .child(FirebaseAuth.getInstance()
