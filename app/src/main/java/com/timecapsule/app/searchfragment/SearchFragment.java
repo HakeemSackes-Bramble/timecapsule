@@ -250,7 +250,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback,
                     hubFragment.setCapsules((ArrayList<Capsule>) timeCapsuleHub.get(marker.getPosition()));
                     hubFragment.show(ft, "nearbyCapsules");
                 } else {
-                    Toast.makeText(getActivity(), "capsule is too far to view", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Capsule is too far to view!", Toast.LENGTH_SHORT).show();
                 }
             }
         });

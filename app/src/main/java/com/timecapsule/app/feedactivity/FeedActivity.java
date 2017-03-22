@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.AppInviteContent;
@@ -182,7 +181,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_add_friend:
-                Toast.makeText(this, "CLICKED", Toast.LENGTH_SHORT).show();
                 setUsersDatabase();
                 getUserList();
         }
