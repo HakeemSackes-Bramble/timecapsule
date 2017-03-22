@@ -114,8 +114,6 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     @Override
     public Loader<List<NearbyLocation>> onCreateLoader(int id, Bundle args) {
         Log.d(TAG, "onCreateLoader() called");
-        location.setVisibility(View.VISIBLE);
-        mRoot.setVisibility(View.VISIBLE);
         return new LocationLoader(getActivity());
     }
 
