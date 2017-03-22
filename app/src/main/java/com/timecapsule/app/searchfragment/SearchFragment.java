@@ -28,6 +28,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -233,7 +234,8 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback,
         for (LatLng capsule : timeCapsuleHub.keySet()) {
             map.addMarker(new MarkerOptions().
                     position(capsule).title(timeCapsuleHub.get(capsule).get(0).getAddress().split(",")[0])
-                    .snippet(timeCapsuleHub.get(capsule).size() + " Time Capsules here"));
+                    .snippet(timeCapsuleHub.get(capsule).size() + " Time Capsules here")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.time_capsule_markericon)));
 
         }
         Log.d(TAG, "addMapMarker: ");
@@ -257,7 +259,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private double distanceFromPoint(LatLng a, LatLng b) {
-        Log.d(TAG, "distanceFromPoint: "+ Math.sqrt(Math.pow(a.longitude - b.longitude, 2) + Math.pow(a.latitude - b.latitude, 2)));
+        Log.d(TAG, "distanceFromPoint: " + Math.sqrt(Math.pow(a.longitude - b.longitude, 2) + Math.pow(a.latitude - b.latitude, 2)));
         return Math.sqrt(Math.pow(a.longitude - b.longitude, 2) + Math.pow(a.latitude - b.latitude, 2));
 
     }
