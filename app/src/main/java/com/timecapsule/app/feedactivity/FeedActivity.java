@@ -501,7 +501,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
             case TAKE_PICTURE:
                 if (resultCode == RESULT_OK) {
                     mProgress.setMessage("Uploading Photo");
-                    mProgress.setIcon(R.drawable.time_capsule_logo12);
                     mProgress.show();
 
                     if (data == null) {

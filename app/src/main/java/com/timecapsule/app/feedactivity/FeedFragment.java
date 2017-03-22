@@ -39,6 +39,7 @@ public class FeedFragment extends Fragment {
     private TextView tv_feed_address;
     private TextView tv_feed_date;
     private ArrayList<Capsule> queryCapsules;
+    private FeedAdapter feedAdapter;
 
 
     @Override
@@ -60,8 +61,7 @@ public class FeedFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setViews(view);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_feed);
-        capsuleDBReference(view);
-
+        capsuleDBReference(view);;
     }
 
     private ArrayList<ImageModel> setImageData() {
@@ -168,12 +168,11 @@ public class FeedFragment extends Fragment {
                                 (String) snapShot.child("address").getValue());
 
                     }
-                    queryCapsules.add(moment);
+                    queryCapsules.add(0, moment);
                 }
                 recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-                recyclerView.setAdapter(new FeedAdapter(queryCapsules, view.getContext()));
-
-
+                feedAdapter = new FeedAdapter(queryCapsules, view.getContext());
+                recyclerView.setAdapter(feedAdapter);
             }
 
             @Override
@@ -181,6 +180,13 @@ public class FeedFragment extends Fragment {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
+
+    }
+
+    public void addToTop(Capsule capsule){
+        this.queryCapsules.add(0, capsule);
+        feedAdapter.notifyItemInserted(0);
+        recyclerView.smoothScrollToPosition(0);
     }
 }
 

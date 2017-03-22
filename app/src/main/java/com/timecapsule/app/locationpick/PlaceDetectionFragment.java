@@ -41,6 +41,8 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     private List<NearbyLocation> nearbyLocationList;
     private LocationAdapter mLocationAdapter;
     private MediaListener listener;
+    private TextView location;
+
 
     public PlaceDetectionFragment() {
 
@@ -87,10 +89,14 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
         return dialog;
     }
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, Bundle savedInstanceState) {
         mRoot = inflater.inflate(R.layout.fragment_place_picker, parent, false);
+        location = (TextView) mRoot.findViewById(R.id.tv_nearby_locations);
+        location.setVisibility(View.INVISIBLE);
+        mRoot.setVisibility(View.GONE);
         return mRoot;
     }
 
@@ -100,7 +106,7 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
         Log.d(TAG, "onCreateView: " + mediaType);
         recyclerView = (RecyclerView) mRoot.findViewById(R.id.rv_nearbyLocation);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        mLocationAdapter = new LocationAdapter(getActivity(), new ArrayList<NearbyLocation>(),mediaType, listener);
+        mLocationAdapter = new LocationAdapter(getActivity(), new ArrayList<NearbyLocation>(), mediaType, listener);
         recyclerView.setAdapter(mLocationAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
@@ -108,12 +114,16 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
     @Override
     public Loader<List<NearbyLocation>> onCreateLoader(int id, Bundle args) {
         Log.d(TAG, "onCreateLoader() called");
+        location.setVisibility(View.VISIBLE);
+        mRoot.setVisibility(View.VISIBLE);
         return new LocationLoader(getActivity());
     }
 
     @Override
     public void onLoadFinished(Loader<List<NearbyLocation>> loader, List<NearbyLocation> nearbyLocations) {
         Log.d(TAG, "onLoadFinished() called");
+        location.setVisibility(View.VISIBLE);
+        mRoot.setVisibility(View.VISIBLE);
         mLocationAdapter.addPlaces(nearbyLocations);
 
     }
@@ -124,14 +134,4 @@ public class PlaceDetectionFragment extends DialogFragment implements LoaderMana
         mLocationAdapter.removeNearByPlaces();
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        Window window = getDialog().getWindow();
-//        if(window == null) return;
-//        WindowManager.LayoutParams params = window.getAttributes();
-//        params.width = 1000;
-//        params.height = 800;
-//        window.setAttributes(params);
-//    }
 }
