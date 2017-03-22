@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 
 import com.timecapsule.app.R;
 import com.timecapsule.app.profilefragment.model.Capsule;
@@ -59,14 +58,14 @@ public class TimeCapsuleHubFragment extends DialogFragment {
         this.capsules = capsules;
     }
 
-        @Override
-    public void onResume() {
-        super.onResume();
-        Window window = getDialog().getWindow();
-        if(window == null) return;
-        WindowManager.LayoutParams params = window.getAttributes();
-        params.width = 1440;
-        params.height = 1550;
-        window.setAttributes(params);
-    }
+//        @Override
+//    public void onResume() {
+//        super.onResume();
+//        Window window = getDialog().getWindow();
+//        if(window == null) return;
+//        WindowManager.LayoutParams params = window.getAttributes();
+//        params.width = 1440;
+//        params.height = 1550;
+//        window.setAttributes(params);
+//    }
 }
