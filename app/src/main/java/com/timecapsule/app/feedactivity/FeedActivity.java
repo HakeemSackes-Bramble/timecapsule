@@ -6,7 +6,6 @@ import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,6 +21,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.widget.AppInviteDialog;
@@ -43,7 +43,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.timecapsule.app.NotificationsFragment;
 import com.timecapsule.app.R;
-import com.timecapsule.app.searchfragment.SearchFragment;
 import com.timecapsule.app.addmediafragment.AddCapsuleLocationFragment;
 import com.timecapsule.app.addmediafragment.AudioFragment;
 import com.timecapsule.app.addmediafragment.CapsuleUploadFragment;
@@ -51,10 +50,10 @@ import com.timecapsule.app.locationpick.PlaceDetectionFragment;
 import com.timecapsule.app.locationpick.controller.MediaListener;
 import com.timecapsule.app.profilefragment.ProfileFragment;
 import com.timecapsule.app.profilefragment.model.Capsule;
-
 import com.timecapsule.app.profilefragment.model.User;
+import com.timecapsule.app.searchfragment.SearchFragment;
 import com.timecapsule.app.users.UsersFragment;
-import java.io.ByteArrayOutputStream;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -489,7 +488,6 @@ public class FeedActivity extends AppCompatActivity implements View.OnClickListe
             case TAKE_PICTURE:
                 if (resultCode == RESULT_OK) {
                     mProgress.setMessage("Uploading Photo");
-                    mProgress.setIcon(R.drawable.time_capsule_logo12);
                     mProgress.show();
                     if (data == null) {
 //                        Bundle extras = data.getExtras();

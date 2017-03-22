@@ -50,20 +50,8 @@ public class LocationLoader extends Loader<List<NearbyLocation>> implements Goog
         super(context);
     }
 
-    /**
-     * Stores away the application context associated with context.
-     * Since Loaders can be used across multiple activities it's dangerous to
-     * store the context directly; always use {@link #getContext()} to retrieve
-     * the Loader's Context, don't use the constructor argument directly.
-     * The Context returned by {@link #getContext} is safe to use across
-     * Activity instances.
-     *
-     * @param context used to retrieve the application context.
-     */
-
     @Override
     protected void onStartLoading() {
-        Log.d(TAG, "onStartLoading() called");
         if (mNearbyLocations != null) {
             deliverResult(mNearbyLocations);
         }
@@ -98,6 +86,7 @@ public class LocationLoader extends Loader<List<NearbyLocation>> implements Goog
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected() called");
         callPlaceDetectionApi();
+
     }
 
     private void callPlaceDetectionApi() {
@@ -115,6 +104,7 @@ public class LocationLoader extends Loader<List<NearbyLocation>> implements Goog
         PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
                 .getCurrentPlace(mGoogleApiClient, null);
         result.setResultCallback(this);
+
     }
 
     @Override
